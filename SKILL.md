@@ -8,7 +8,9 @@ description: |
   触发词：Agnes AI、agnes、接入、API Key、401、400、排查、错误、视频生成、图像生成、
   thinking、stream、tool calling、模型选择、Base URL、apihub、agnes-2.0-flash、
   agnes-image、agnes-video、响应格式、timeout、超时、轮询、FAQ、问题排查、调试、
-  platform.agnes-ai.com、免费调用、RPM、video_id、task_id。
+  platform.agnes-ai.com、免费调用、RPM、video_id、task_id、
+  OpenClaw、Hermes、Claude CLI、Claude Desktop、WorkBuddy、Cherry Studio、Opencode、
+  CC-Switch、自定义模型、模型映射、供应商配置。
 ---
 
 # Agnes AI API 接入支持与问题排查
@@ -736,6 +738,556 @@ model_provider = "deepseek"  # 使用 DeepSeek
 - 可以。Agnes 2.0 Flash 支持 OpenAI 兼容的工具调用格式
 - 在 Codex 中正常使用 `tools` 即可
 - 模型返回 `finish_reason: "tool_calls"` 时，Codex 会自动处理
+
+---
+
+> Agnes AI，让世界级 AI 属于每一个人。
+
+---
+
+## 11. OpenClaw 接入指南
+
+> 官方文档：https://agnes-ai.com/doc/cid1
+
+### 11.1 概述
+
+OpenClaw 是一款支持自定义模型服务商的 Agent 工具。配置完成后，OpenClaw 可以通过 Agnes AI API 网关调用模型，用于本地 Agent 任务。
+
+### 11.2 配置步骤
+
+**Step 1 — 打开终端**
+
+- macOS / Linux：使用终端
+- Windows：使用命令提示符、PowerShell 或开发环境中的终端
+
+**Step 2 — 进入 OpenClaw 配置界面**
+
+```bash
+openclaw config
+```
+
+**Step 3 — 选择本地配置**
+
+在配置菜单中选择：`Local`，按 Enter。
+
+**Step 4 — 进入模型配置**
+
+选择：`Model`，按 Enter。
+
+**Step 5 — 选择定制服务商**
+
+选择：`Custom Provider`，按 Enter。
+
+**Step 6 — 配置 API Base URL**
+
+输入：
+```
+https://apihub.agnes-ai.com/v1
+```
+
+**Step 7 — 填写 API Key**
+
+输入你的 Agnes API Key（`sk-` 开头）。
+
+**⚠️ 注意：** 通常不需要手动添加 `Bearer`，除非 OpenClaw 明确要求输入完整的授权标头。
+
+**Step 8 — 填写模型名称**
+
+输入：
+```
+agnes-2.0-flash
+```
+
+**Step 9 — 保存配置**
+
+完成所有必填项后，确认并保存。
+
+### 11.3 完整配置示例
+
+```
+Provider Type: Custom Provider
+API Base URL: https://apihub.agnes-ai.com/v1
+API Key: YOUR_API_KEY
+Model: agnes-2.0-flash
+```
+
+### 11.4 验证配置
+
+配置完成后，运行一个 OpenClaw 任务或启动测试会话。如果能正常返回模型响应，说明配置成功。
+
+### 11.5 常见问题
+
+**Q: API 请求失败？**
+- 检查 API Base URL 是否正确：`https://apihub.agnes-ai.com/v1`
+- 确认 API Key 是否有效
+
+**Q: 提示"缺乏模型"？**
+- 确认模型名称填写正确，区分大小写
+- 建议直接复制平台提供的模型名称
+
+**Q: 鉴权失败？**
+- 检查 API Key 是否过期
+- 确认账户余额充足
+- 确认该 Key 具备访问目标模型的权限
+
+**Q: 网络错误？**
+- 确认设备可正常访问 API
+- 检查防火墙、代理或 VPN 设置
+
+**Q: API Base URL 到底要不要填 `/chat/completions`？**
+- **不要**。只填写到 `/v1`
+- 正确：`https://apihub.agnes-ai.com/v1`
+- 错误：`https://apihub.agnes-ai.com/v1/chat/completions`
+- 除非 OpenClaw 明确要求输入完整接口地址
+
+---
+
+## 12. HermesAgents 接入指南
+
+> 官方文档：https://agnes-ai.com/doc/cid2
+
+### 12.1 概述
+
+HermesAgents 是一款支持自定义模型服务商的 Agent 工具。配置完成后，HermesAgents 将模型请求发送到 Agnes AI API 网关，并使用 Agnes 模型完成 Agent 任务。
+
+### 12.2 配置步骤
+
+HermesAgents 使用命令行配置，格式为：
+```bash
+hermes config set <配置项> <值>
+```
+
+**Step 1 — 配置模型服务商**
+
+```bash
+hermes config set model.provider custom
+```
+
+**Step 2 — 配置 API Base URL**
+
+```bash
+hermes config set model.base_url https://apihub.agnes-ai.com/v1
+```
+
+**Step 3 — 配置 API Key**
+
+```bash
+hermes config set model.api_key YOUR_API_KEY
+```
+
+**⚠️ 注意：** 通常不需要手动添加 `Bearer`，除非 HermesAgents 明确要求输入完整的授权标头。
+
+也可以通过环境变量配置：
+```bash
+hermes config set OPENAI_API_KEY YOUR_API_KEY
+```
+
+但在自定义模型服务商配置中，推荐优先使用 `model.api_key`。
+
+**Step 4 — 配置模型名称**
+
+```bash
+hermes config set model.default agnes-2.0-flash
+```
+
+### 12.3 完整配置示例
+
+```bash
+hermes config set model.provider custom
+hermes config set model.base_url https://apihub.agnes-ai.com/v1
+hermes config set model.api_key sk-xxxxxxxxxxxxxxxx
+hermes config set model.default agnes-2.0-flash
+```
+
+### 12.4 验证配置
+
+配置完成后，运行一个 HermesAgents 任务或启动测试会话。如果能正常返回模型响应，说明配置成功。
+
+### 12.5 常见问题
+
+**Q: 鉴权失败？**
+- 重新执行 `hermes config set model.api_key YOUR_API_KEY`
+- 确认账户余额或积分充足
+
+**Q: API 请求失败？**
+- 确认 API Base URL 正确：`https://apihub.agnes-ai.com/v1`
+- 确认网络、防火墙、代理或 VPN 设置正常
+
+**Q: 模型名称不生效？**
+- 确认模型 ID 区分大小写
+- 建议直接复制平台提供的模型名称
+
+**Q: API Base URL 要不要填 `/chat/completions`？**
+- **不要**。只填写到 `/v1`
+- 正确：`https://apihub.agnes-ai.com/v1`
+- 错误：`https://apihub.agnes-ai.com/v1/chat/completions`
+
+---
+
+## 13. Claude CLI 接入指南（通过 CC-Switch）
+
+> 官方文档：https://agnes-ai.com/doc/cid3
+
+### 13.1 概述
+
+Claude CLI 是 Anthropic 官方的终端 AI 编程工具。由于 Claude CLI 原生不支持自定义 OpenAI-Compatible API，需要通过 **CC-Switch** 作为代理路由，将请求转发到 Agnes AI API 网关。
+
+**所需工具：**
+- Claude CLI（已安装）
+- CC-Switch v3.16.1+（下载：https://github.com/farion1231/cc-switch/releases）
+- Agnes AI API Key
+
+### 13.2 配置步骤
+
+**Step 1 — 获取 Agnes API Key**
+
+访问 https://platform.agnes-ai.com/，登录后进入 API Key 页面，创建并复制 API Key。
+
+**Step 2 — 打开 CC-Switch**
+
+启动 CC-Switch，在顶部工具栏选择：`Claude CLI`
+
+**Step 3 — 添加新供应商**
+
+点击右上角加号，添加新供应商：
+- 供应商类型选择：`Claude Provider` → `Custom Provider`
+
+**Step 4 — 填写配置信息**
+
+| 配置项 | 填写内容 |
+|--------|----------|
+| API Key | 你的 Agnes API Key（`sk-` 开头） |
+| 请求地址 | `https://apihub.agnes-ai.com/v1` |
+| API 格式 | `OpenAI Chat Completions` |
+| 认证字段 | 默认即可，或手动配置 `ANTHROPIC_AUTH_TOKEN` |
+
+**⚠️ 注意：** 通常不需要手动添加 `Bearer` 前缀。
+
+**Step 5 — 模型映射**
+
+点击"获取模型列表"，确认可正常连接 Agnes API。
+
+然后将 Claude CLI 的模型映射到 Agnes 模型：
+
+| Claude 模型 | 映射到 Agnes 模型 |
+|-------------|------------------|
+| Sonnet | `agnes-2.0-flash` |
+| Opus | `agnes-2.0-flash` |
+| Haiku | `agnes-2.0-flash` |
+
+**Step 6 — 添加自定义参数（重要）**
+
+为避免模型请求中出现不兼容参数，建议在自定义参数中加入：
+
+```json
+{
+  "allowed_openai_params": [
+    "thinking",
+    "context_management"
+  ],
+  "litellm_settings": {
+    "drop_params": true
+  }
+}
+```
+
+**作用：**
+- 允许指定的 OpenAI 参数通过
+- 自动丢弃模型不兼容的未知参数
+- 提高 Claude CLI 通过代理调用 OpenAI-Compatible API 时的兼容性
+
+**Step 7 — 保存并启用**
+
+- 保存供应商配置
+- 进入 CC-Switch 设置 → `Route` → 打开 `Local Route`
+- 在本地路由中启用 Claude 路由切换
+- 返回供应商列表，启用 Agnes Provider
+
+### 13.3 验证配置
+
+打开 Claude CLI，执行一次测试对话或代码任务。如果能正常返回 Agnes 模型响应，说明配置成功。
+
+### 13.4 常见问题
+
+**Q: 无法获取模型列表？**
+- 检查 API Base URL：`https://apihub.agnes-ai.com/v1`
+- 确认 API Key 有效
+- 确认网络可正常访问 Agnes API
+
+**Q: Claude CLI 返回错误或不兼容参数？**
+- 确认已添加自定义参数（`allowed_openai_params` + `litellm_settings.drop_params`）
+- 确认 API 格式选择为 `OpenAI Chat Completions`
+
+**Q: 配置保存后 Claude CLI 仍走官方 Anthropic？**
+- 确认 CC-Switch 的 Local Route 已开启
+- 确认 Claude 路由切换已启用
+- 确认 Agnes Provider 已启用
+
+---
+
+## 14. Claude Desktop 接入指南（通过 CC-Switch）
+
+> 官方文档：https://agnes-ai.com/doc/cid4
+
+### 14.1 概述
+
+Claude Desktop 是 Anthropic 官方的桌面端 AI 应用。与 Claude CLI 类似，需要通过 **CC-Switch** 作为代理路由，将请求转发到 Agnes AI API 网关。
+
+**所需工具：**
+- Claude Desktop（下载：https://claude.com/download）
+- CC-Switch v3.16.1+（下载：https://github.com/farion1231/cc-switch/releases）
+- Agnes AI API Key
+
+### 14.2 配置步骤
+
+**Step 1 — 安装 Claude Desktop**
+
+根据系统选择安装包：
+- Windows：`.exe`
+- macOS：`.dmg`
+- Linux：`AppImage`
+
+**Step 2 — 打开 CC-Switch**
+
+启动 CC-Switch，在顶部切换到：`Claude Desktop` 或 `ClaudeCode Desktop`
+
+**Step 3 — 添加新供应商**
+
+点击"添加新供应商"：
+- 选择：`Custom Provider`
+
+**Step 4 — 填写配置信息**
+
+| 配置项 | 填写内容 |
+|--------|----------|
+| API Key | 你的 Agnes API Key（`sk-` 开头） |
+| 请求地址 | `https://apihub.agnes-ai.com/v1` |
+| API 格式 | `OpenAI Chat Completions` |
+
+**Step 5 — 开启模型映射并获取模型列表**
+
+- 开启"模型映射"功能
+- 点击"获取模型列表"，确认可正常连接 Agnes API
+
+**Step 6 — 配置模型映射**
+
+| Claude 模型 | 映射到 Agnes 模型 |
+|-------------|------------------|
+| Sonnet | `agnes-2.0-flash` |
+| Opus | `agnes-2.0-flash` |
+| Haiku | `agnes-2.0-flash` |
+
+**Step 7 — 保存并启用路由**
+
+- 保存配置
+- 进入 CC-Switch 设置 → `Route` → 打开本地路由开关
+- 启用 Claude 路由
+- 返回供应商列表，启用 Agnes Provider
+
+### 14.3 验证配置
+
+打开 Claude Desktop，发起一次测试对话。如果能正常通过 Agnes 模型返回响应，说明配置成功。
+
+### 14.4 常见问题
+
+**Q: Claude Desktop 无法调用模型？**
+- 确认 CC-Switch 本地路由已开启
+- 确认 Claude 路由已启用
+
+**Q: 无法获取模型列表？**
+- 检查 API Base URL：`https://apihub.agnes-ai.com/v1`
+- 确认 API Key 有效
+
+**Q: 模型映射失败？**
+- 确认已开启模型映射功能
+- 确认 Claude 模型已映射到 Agnes 模型
+
+**Q: API 请求失败或鉴权失败？**
+- 检查网络、防火墙、代理或 VPN 设置
+- 确认 API Key 正确，账户余额充足
+
+---
+
+## 15. WorkBuddy 接入指南
+
+> 官方文档：https://agnes-ai.com/doc/cid5
+
+### 15.1 概述
+
+WorkBuddy 是一款支持自定义模型的 AI 工作助手。配置完成后，WorkBuddy 可以直接调用 Agnes 文本模型进行对话、代码和 Agent 任务，也可以通过 Skill 方式使用 Agnes 图像和视频模型。
+
+**本教程基于 WorkBuddy v4.24.5 版本。**
+
+### 15.2 文本模型配置步骤
+
+**Step 1 — 获取 Agnes API Key**
+
+访问 https://platform.agnes-ai.com/，登录后进入 API Key 页面，创建并复制 API Key。
+
+**Step 2 — 进入自定义模型配置**
+
+打开 WorkBuddy，点击：`Auto` → `配置自定义模型`
+
+**Step 3 — 选择自定义提供商**
+
+在提供商列表中向下滑动到最后，选择：`其他` 或 `Custom`
+
+**Step 4 — 添加 Agnes 文本模型**
+
+点击"添加模型"，填写：
+
+| 配置项 | 填写内容 |
+|--------|----------|
+| Provider | Custom |
+| API Base URL | `https://apihub.agnes-ai.com/v1` |
+| API Key | 你的 Agnes API Key |
+| Model Name | `agnes-2.0-flash` |
+
+**Step 5 — 保存并选择模型**
+
+保存后，在 WorkBuddy 对话界面中选择：`agnes-2.0-flash`
+
+**Step 6 — 验证**
+
+发起一次普通对话，例如："你好，请介绍一下你自己。"正常返回即配置成功。
+
+### 15.3 图像和视频模型配置（通过 Skill）
+
+Agnes 的图像和视频模型可以通过创建 Skill 的方式在 WorkBuddy 中使用。
+
+**创建 Skill 的提示词：**
+```
+我想要使用 Agnes Image 2.0 模型生图生视频，访问它的 API 平台 https://agnes-ai.com/doc/overview，并将它打包成一份 Skill。
+```
+
+WorkBuddy 会根据 Agnes API 文档自动生成图像和视频相关 Skill。
+
+**使用图像 Skill：**
+- 点击技能列表，选择图像生成 Skill（如 `agnes-image-gen`）
+- 输入提示词，例如："生成一张赛博朋克城市夜景，霓虹灯光，电影感，高细节。"
+
+**使用视频 Skill：**
+- 选择视频生成 Skill（如 `agnes-video-gen`）
+- 输入提示词，例如："生成一段亚洲女生模特在白色摄影棚中展示黑色连衣裙的视频，从全景缓慢切到半身特写，保持自然转身，5 秒。"
+
+### 15.4 常见问题
+
+**Q: 文本模型无法返回？**
+- 检查 API Base URL：`https://apihub.agnes-ai.com/v1`
+- 确认 API Key 有效
+
+**Q: 模型列表中看不到 `agnes-2.0-flash`？**
+- 确认模型名称填写正确，区分大小写
+- 建议直接复制平台提供的模型名称
+
+**Q: 图像或视频 Skill 创建失败？**
+- 确认 WorkBuddy 可以正常访问 Agnes 文档地址
+- 确认当前模型具备读取文档和创建 Skill 的能力
+
+**Q: 视频任务长时间没有完成？**
+- 视频生成通常需要一定时间，请耐心等待
+- 确认使用 `video_id` 查询结果（不要用 `task_id`）
+
+**Q: 鉴权失败？**
+- 检查 API Key 是否正确
+- 确认账户余额或 credits 充足
+
+---
+
+## 16. Cherry Studio 接入指南
+
+> 官方文档：https://agnes-ai.com/doc/cid6
+
+### 16.1 概述
+
+Cherry Studio 是一款支持多模型服务商的 AI 客户端。配置完成后，Cherry Studio 可以调用 Agnes 文本模型进行对话，也可以通过技能或智能体绑定的方式使用 Agnes 图像和视频模型。
+
+### 16.2 文本模型配置步骤
+
+**Step 1 — 获取 Agnes API Key**
+
+访问 https://platform.agnes-ai.com/，登录后进入 API Key 页面，创建并复制 API Key。
+
+**Step 2 — 添加提供商**
+
+进入 Cherry Studio 的 API 服务商或模型设置页面，点击：`添加提供商`
+
+**Step 3 — 选择提供商类型**
+
+提供商类型选择：`OpenAI`（或支持 OpenAI-Compatible API 的自定义类型）
+
+**Step 4 — 填写配置信息**
+
+| 配置项 | 填写内容 |
+|--------|----------|
+| 提供商名称 | `Agnes` 或 `Agnes AI` |
+| API Key | 你的 Agnes API Key（`sk-` 开头） |
+| API 地址 | `https://apihub.agnes-ai.com/v1` |
+
+**⚠️ 注意：** 通常不需要手动添加 `Bearer`。
+
+**Step 5 — 获取模型列表**
+
+点击"获取模型列表"，确认可正常连接 Agnes API。选择文本模型：`agnes-2.0-flash`
+
+**Step 6 — 保存并验证**
+
+保存后，在 Cherry Studio 中新建对话框，选择 `agnes-2.0-flash`，发送测试消息。正常返回即配置成功。
+
+### 16.3 图像和视频模型使用方式
+
+Cherry Studio 中，图像和视频模型建议通过**创建技能并绑定智能体**的方式使用。
+
+- 创建图像 Skill（如 `Agnes Image Skill`），绑定到智能体
+- 创建视频 Skill（如 `Agnes Video Skill`），绑定到智能体
+- 通过对话方式生成图片或视频
+
+### 16.4 常见问题
+
+**Q: 无法获取模型列表？**
+- 检查 API 地址：`https://apihub.agnes-ai.com/v1`
+- 确认 API Key 有效
+
+**Q: 鉴权失败？**
+- 确认 API Key 填写正确
+- 确认账户余额充足
+
+**Q: 文本模型可用，但图片或视频不能用？**
+- Cherry Studio 的普通 OpenAI 兼容文本模型配置通常只适合文本对话
+- 图像和视频模型建议通过技能或智能体工具绑定方式使用
+
+**Q: API 地址要不要填 `/chat/completions`？**
+- **不要**。只填写到 `/v1`
+- 正确：`https://apihub.agnes-ai.com/v1`
+- 错误：`https://apihub.agnes-ai.com/v1/chat/completions`
+
+---
+
+## 17. Opencode 接入指南
+
+> 官方文档：https://agnes-ai.com/doc/cid7
+
+### 17.1 概述
+
+Opencode 是一款支持 OpenAI-Compatible API 的 AI 编程工具。当前 Agnes 官方文档中仅提供通用接入模板，以下为推荐配置参数。
+
+### 17.2 推荐配置参数
+
+如果 Opencode 支持 OpenAI-Compatible API，可以使用以下配置：
+
+| 配置项 | 填写内容 |
+|--------|----------|
+| Provider Type | `OpenAI-Compatible` |
+| API Base URL | `https://apihub.agnes-ai.com/v1` |
+| API Key | 你的 Agnes API Key |
+| Model | `agnes-2.0-flash` |
+
+### 17.3 注意事项
+
+- API Base URL 通常以 `/v1` 结尾
+- **正确：** `https://apihub.agnes-ai.com/v1`
+- **不推荐：** `https://apihub.agnes-ai.com/v1/chat/completions`
+- 除非 Opencode 明确要求填写完整的接口地址
 
 ---
 

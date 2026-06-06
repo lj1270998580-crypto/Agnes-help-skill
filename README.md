@@ -25,7 +25,7 @@
 |------|------|------|
 | `agnes-ai-assistant.html` | 交互式接入助手 | 浏览器打开，自助完成接入、排查问题 |
 | `agnes-ai-api-documentation.md` | 完整 API 文档 | 整合官方全部接口信息，供 Agent 读取 |
-| `SKILL.md` | 通用支持 Skill | 兼容 OpenClaw / Claude Code / Hermes / Codex / Kimi Work |
+| `SKILL.md` | 通用支持 Skill | 兼容 OpenClaw / Claude Code / Claude Desktop / Hermes / Codex / WorkBuddy / Cherry Studio / Opencode / Kimi Work |
 
 ---
 
@@ -68,9 +68,10 @@
 - 诊断 401/400/429/500/503 等错误
 - 排查视频排队过长、图像生成失败等问题
 - 指导 Thinking 模式、流式输出、工具调用等高级功能
-- 指导 Codex 集成、社区 Skill 安装
+- 指导 Codex、OpenClaw、Hermes、Claude CLI/Desktop、WorkBuddy、Cherry Studio、Opencode 等工具集成
+- 指导社区 Skill 安装与使用
 
-**兼容工具：** OpenClaw、Claude Code、Hermes、Codex、Kimi Work
+**兼容工具：** OpenClaw、Claude Code、Claude Desktop、Hermes、Codex、WorkBuddy、Cherry Studio、Opencode、Kimi Work
 
 **📋 一键安装（复制发给 Agent）：**
 ```
@@ -85,7 +86,7 @@
 | [kangarooking 免费模型 Skills](https://github.com/kangarooking/agnes-free-model-skills) | Codex 用户，需要独立文本/图片/视频 Skill | 复制到 `~/.codex/skills/` |
 | [16nic ComfyUI 节点](https://github.com/16nic/comfyui-agnes-ai) | ComfyUI 用户，需要可视化节点工作流 | `git clone` 到 `ComfyUI/custom_nodes` |
 
-详见 `SKILL.md` 第 9-10 章的完整接入指南。
+详见 `SKILL.md` 第 9-17 章的完整接入指南。
 
 ---
 
@@ -118,6 +119,14 @@ Headers:
 | 官方文档 | https://agnes-ai.com/doc/overview |
 | 操作手册 | https://agnes-ai.com/doc/常用接入文档 |
 | 视频文档 | https://agnes-ai.com/doc/agnes-video-v20 |
+| OpenClaw 接入 | https://agnes-ai.com/doc/cid1 |
+| Hermes 接入 | https://agnes-ai.com/doc/cid2 |
+| Claude CLI 接入 | https://agnes-ai.com/doc/cid3 |
+| Claude Desktop 接入 | https://agnes-ai.com/doc/cid4 |
+| WorkBuddy 接入 | https://agnes-ai.com/doc/cid5 |
+| Cherry Studio 接入 | https://agnes-ai.com/doc/cid6 |
+| Opencode 接入 | https://agnes-ai.com/doc/cid7 |
+| Codex++ 接入 | https://agnes-ai.com/doc/cid8 |
 | 常见问题 QA | https://icn1d2hdv39m.feishu.cn/wiki/R7TEwjadJibD62kWeS9cubtpnPi |
 | 社区教程 | https://github.com/Yacey/agnes-ai-generation-skill |
 | 社区 Skill | https://github.com/kangarooking/agnes-free-model-skills |
@@ -131,6 +140,8 @@ Headers:
 | 日期 | 更新内容 |
 |------|----------|
 | 2026-06-06 | 初始版本：整合官方文档、创建交互式 HTML 助手、编写通用 Skill |
+| 2026-06-06 | 补充 Codex++ 官方接入指南（区分 GUI 工具与 CLI 工具） |
+| 2026-06-06 | 补充 OpenClaw、Hermes、Claude CLI/Desktop、WorkBuddy、Cherry Studio、Opencode 官方接入指南（cid1-cid7） |
 
 ---
 
