@@ -1,6 +1,6 @@
 # Agnes AI API 完整文档
 
-> **文档版本：** v1.2.0
+> **文档版本：** v1.2.1
 > **来源：** https://agnes-ai.com/doc/overview 及其子页面
 > **整理时间：** 2026-06-06
 > **GitHub 仓库：** https://github.com/lj1270998580-crypto/Agnes-help-skill
@@ -715,17 +715,33 @@ agnes-image-2.0-flash
   "size": "1024x768"
 }
 2.图生图需传 image
+
+**⚠️ 重要：image 参数必须放在 `extra_body` 中，不能放在请求体顶层！**
+
+- ❌ 错误（顶层）：`"image": ["url"]` → 实际执行 text-to-image，image_tokens: 0
+- ✅ 正确（extra_body）：`"extra_body": {"image": ["url"]}` → 实际执行 i2i-general
+
+```json
 {
-  "image": [
-    "https://example.com/input.png"
-  ]
+  "extra_body": {
+    "image": [
+      "https://example.com/input.png"
+    ]
+  }
 }
+```
+
+多图合成时同样放在 extra_body 中：
+```json
 {
-  "image": [
-    "https://example.com/character-1.png",
-    "https://example.com/character-2.png"
-  ]
+  "extra_body": {
+    "image": [
+      "https://example.com/character-1.png",
+      "https://example.com/character-2.png"
+    ]
+  }
 }
+```
 3.图生图不需要传 tags
 {
   "tags": ["img2img"]
@@ -812,7 +828,9 @@ curl https://apihub.agnes-ai.com/v1/images/generations \
   }'
 data[0].b64_json
 5. 图生图：Data URI Base64 输入
+
 data:image/png;base64,BASE64_HERE
+
 curl https://apihub.agnes-ai.com/v1/images/generations \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
@@ -820,12 +838,10 @@ curl https://apihub.agnes-ai.com/v1/images/generations \
     "model": "agnes-image-2.0-flash",
     "prompt": "Make the object matte black while preserving the original composition",
     "size": "1024x768",
-
-用于将多张输入图像组合成一个新场景。
-    "image": [
-      "data:image/png;base64,BASE64_HERE"
-    ],
     "extra_body": {
+      "image": [
+        "data:image/png;base64,BASE64_HERE"
+      ],
       "response_format": "b64_json"
     }
   }'
@@ -836,13 +852,13 @@ curl https://apihub.agnes-ai.com/v1/images/generations \
   -H "Content-Type: application/json" \
   -d '{
     "model": "agnes-image-2.0-flash",
-    "prompt": "Combine the two characters into an intense fantasy battle scene, dynamic lighting
+    "prompt": "Combine the two characters into an intense fantasy battle scene, dynamic lighting",
     "size": "1024x768",
-    "image": [
-      "https://example.com/character-1.png",
-      "https://example.com/character-2.png"
-    ],
     "extra_body": {
+      "image": [
+        "https://example.com/character-1.png",
+        "https://example.com/character-2.png"
+      ],
       "response_format": "url"
     }
   }'
@@ -1014,8 +1030,14 @@ https://apihub.agnes-ai.com
 文生图和图生图均使用以下模型名称：
 请使用 agnes-image-2.1-flash  作为模型名称。
 文生图请求中，model 、prompt 、size  为必填参数。
-图生图请求中，需要输入图片放在大量 image  存储中。
-image  支持公网图片URL，也支持Data URI Base64。
+图生图请求中，需要输入图片放在 `extra_body.image` 数组中。
+
+**⚠️ 重要：image 参数必须放在 `extra_body` 中，不能放在请求体顶层！**
+
+- ❌ 错误（顶层）：`"image": ["url"]` → 实际执行 text-to-image，image_tokens: 0
+- ✅ 正确（extra_body）：`"extra_body": {"image": ["url"]}` → 实际执行 i2i-general
+
+image 支持公网图片URL，也支持Data URI Base64。
 不要将 response_format  请求体放在一起，否则可能返回 400 错误。
 URL 写作，满足 "response_format": "url"  放在 extra_body  中。
 有了文生图Base64输出，可使用大量参数 "return_base64": true 。
@@ -1249,10 +1271,10 @@ A large fantasy harbor city built on cliffs, hundreds of small boats, layered st
   "model": "agnes-image-2.1-flash",
   "prompt": "Make the object blue while preserving the original composition",
   "size": "1024x768",
-  "image": [
-    "https://example.com/input.png"
-  ],
   "extra_body": {
+    "image": [
+      "https://example.com/input.png"
+    ],
     "response_format": "url"
   }
 }
@@ -1270,24 +1292,30 @@ A large fantasy harbor city built on cliffs, hundreds of small boats, layered st
 3.输入图片URL不可访问
 4.请求超时
 60s 到 360s
-5.图生图请求需求 image
-{
-  "model": "agnes-image-2.1-flash",
-  "prompt": "Make the image cyberpunk style",
-  "size": "1024x768"
-}
+5.图生图请求需要 image（必须放在 extra_body 中）
+
+**⚠️ 重要：image 参数必须放在 `extra_body` 中，不能放在请求体顶层！**
+
+```json
 {
   "model": "agnes-image-2.1-flash",
   "prompt": "Make the image cyberpunk style while preserving the original composition",
   "size": "1024x768",
-  "image": [
+  "extra_body": {
+    "image": [
+      "https://example.com/input.png"
+    ],
+    "response_format": "url"
+  }
+}
+```
 
 类型 ### ### 价格
 生成图片 0  $0.003  / 张
 模型名称固定使用 agnes-image-2.1-flash 。
 API端点使用 https://apihub.agnes-ai.com/v1/images/generations 。
 文生图请求中，、、model 为prompt 必填size  。
-图生图请求中，需要输入图片 URL 或 Data URI Base64 放在大量 image  负载中。
+图生图请求中，需要输入图片 URL 或 Data URI Base64 放在 `extra_body.image` 数组中。
 需要图片URL输出时，使用 extra_body.response_format: "url" 。
 文生图需要Base64输出时，使用 return_base64: true 。
 图生图需要Base64输出时，使用 extra_body.response_format: "b64_json" 。

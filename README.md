@@ -155,7 +155,7 @@ Headers:
 |------|----------|
 | 2026-06-06 | 初始版本：整合官方文档、创建交互式 HTML 助手、编写通用 Skill |
 | 2026-06-06 | 补充 Codex++ 官方接入指南（区分 GUI 工具与 CLI 工具） |
-| 2026-06-06 | 补充 OpenClaw、Hermes、Claude CLI/Desktop、WorkBuddy、Cherry Studio、Opencode 官方接入指南（cid1-cid7） |
+| 2026-06-06 | 修复图生图 `image` 参数位置：必须放在 `extra_body` 中，不能放请求体顶层（官方文档错误修正） |
 
 ---
 

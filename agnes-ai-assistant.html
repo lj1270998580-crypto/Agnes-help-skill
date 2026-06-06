@@ -514,7 +514,7 @@ Headers:
 
       <h3>🖼️ 图像模型</h3>
       <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">response_format 放错位置报 400？<span class="faq-toggle">+</span></div><div class="faq-a"><strong>不要</strong>把 <code>response_format</code> 放在请求体根级。正确做法：放在 <code>extra_body</code> 中：<code>{"extra_body":{"response_format":"url"}}</code>。文生图 Base64 可用 <code>return_base64: true</code>。</div></div>
-      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">图生图需要传 tags: ["img2img"] 吗？<span class="faq-toggle">+</span></div><div class="faq-a"><strong>不需要。</strong>当前接口已简化，图生图只需在 <code>image</code> 数组中提供输入图片 URL 即可。传 tags 反而可能报错。</div></div>
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">图生图需要传 tags: ["img2img"] 吗？<span class="faq-toggle">+</span></div><div class="faq-a"><strong>不需要。</strong>当前接口已简化，图生图只需在 <code>extra_body.image</code> 数组中提供输入图片 URL 即可。<strong>注意：image 必须放在 extra_body 中，不能放请求体顶层！</strong>放 tags 反而可能报错。</div></div>
       <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">输入图片 URL 不可访问怎么办？<span class="faq-toggle">+</span></div><div class="faq-a">1. 换用公网 HTTPS 地址<br>2. 或使用 Data URI Base64 格式：<code>data:image/png;base64,BASE64_HERE</code><br>3. 检查图片是否需登录/有防盗链</div></div>
       <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">图像生成超时？<span class="faq-toggle">+</span></div><div class="faq-a">图像生成通常需要数秒到几十秒。建议客户端超时设置为 <strong>60s - 360s</strong>。复杂提示词、大尺寸图片或服务高负载时会延长。</div></div>
       <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">2.0 和 2.1 图像模型怎么选？<span class="faq-toggle">+</span></div><div class="faq-a">新用户直接用 <code>agnes-image-2.1-flash</code>。2.1 在高信息密度、复杂布局、细节丰富场景表现更好，且支持结构保持。</div></div>
@@ -621,7 +621,7 @@ async function callWithRetry(fn, maxRetries = 3) {
           <div class="card-title">🖼️ 图像检查</div>
           <label style="display:block; font-size: 14px; margin: 8px 0; cursor: pointer;"><input type="checkbox"> 模型名称正确：<code>agnes-image-2.1-flash</code></label>
           <label style="display:block; font-size: 14px; margin: 8px 0; cursor: pointer;"><input type="checkbox"> 文生图传了 model + prompt + size</label>
-          <label style="display:block; font-size: 14px; margin: 8px 0; cursor: pointer;"><input type="checkbox"> 图生图传了 image 数组</label>
+          <label style="display:block; font-size: 14px; margin: 8px 0; cursor: pointer;"><input type="checkbox"> 图生图传了 <code>extra_body.image</code> 数组（<strong>不能放顶层！</strong>）</label>
           <label style="display:block; font-size: 14px; margin: 8px 0; cursor: pointer;"><input type="checkbox"> response_format 放在 extra_body 中</label>
           <label style="display:block; font-size: 14px; margin: 8px 0; cursor: pointer;"><input type="checkbox"> 未传 <code>tags: ["img2img"]</code></label>
           <label style="display:block; font-size: 14px; margin: 8px 0; cursor: pointer;"><input type="checkbox"> 输入图片 URL 公网可访问</label>
@@ -760,7 +760,7 @@ async function callWithRetry(fn, maxRetries = 3) {
 
   // Diagnose
   // ===== 版本检查与更新提醒 =====
-  const LOCAL_VERSION = '1.2.0';
+  const LOCAL_VERSION = '1.2.1';
   const GITHUB_REPO = 'lj1270998580-crypto/Agnes-help-skill';
   const GITHUB_API = `https://api.github.com/repos/${GITHUB_REPO}/commits?path=agnes-ai-assistant.html&per_page=1`;
   const STORAGE_KEY = 'agnes_assistant_last_commit';
@@ -848,8 +848,8 @@ async function callWithRetry(fn, maxRetries = 3) {
     image_fail: `<div class="alert alert-err"><strong>🖼️ 图像生成失败排查</strong></div>
       <ol style="font-size:14px; line-height:2; margin-left:20px;">
         <li>确认 response_format 放在 extra_body 中，不在根级</li>
+        <li>图生图：确认 <code>image</code> 放在 <code>extra_body</code> 中，不在根级</li>
         <li>图生图不需要传 tags: ["img2img"]</li>
-        <li>确认 image 数组中的 URL 公网可访问</li>
         <li>Data URI Base64 格式：data:image/png;base64,BASE64_HERE</li>
         <li>增加客户端超时到 60-360s</li>
         <li>检查 size 格式：1024x768 / 1024x1024 / 768x1024</li>

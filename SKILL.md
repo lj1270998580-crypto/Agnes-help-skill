@@ -16,7 +16,7 @@ description: |
 
 # Agnes AI API 接入支持与问题排查
 
-> **Skill 版本：** v1.2.0
+> **Skill 版本：** v1.2.1
 > **适用工具：** OpenClaw / Claude Code / Claude Desktop / Hermes / Codex / WorkBuddy / Cherry Studio / Opencode / Kimi Work
 > **更新日期：** 2026-06-06
 > **GitHub 仓库：** https://github.com/lj1270998580-crypto/Agnes-help-skill
@@ -145,7 +145,7 @@ curl https://apihub.agnes-ai.com/v1/chat/completions \
 
 **图像模型 400：**
 - 文生图必填：`model` + `prompt` + `size`
-- 图生图必填：`model` + `prompt` + `size` + `image`
+- 图生图必填：`model` + `prompt` + `size` + `extra_body.image`（**image 必须放在 extra_body 中，不能放顶层！**）
 - **response_format 必须放在 `extra_body` 中**，放根级会 400
 - 图生图**不需要**传 `tags: ["img2img"]`
 - `size` 格式：`1024x768` / `1024x1024` / `768x1024`
@@ -309,7 +309,7 @@ curl https://apihub.agnes-ai.com/v1/chat/completions \
 ### agnes-image-2.0/2.1-flash
 - 端点：`POST /v1/images/generations`
 - 必填：model, prompt, size
-- 图生图必填：image（URL 数组或 Data URI Base64）
+- 图生图必填：`extra_body.image`（URL 数组或 Data URI Base64，**必须放在 extra_body 中！**）
 - size：1024x768 / 1024x1024 / 768x1024
 - 输出：URL 或 Base64
 - 价格：$0.003/image（**现价 $0，RPM ≤ 20**）
@@ -357,7 +357,7 @@ curl https://apihub.agnes-ai.com/v1/chat/completions \
 ### 图像
 - [ ] 模型名称正确（推荐 2.1）
 - [ ] 文生图传 model + prompt + size
-- [ ] 图生图传 image 数组
+- [ ] 图生图传了 `extra_body.image` 数组（**不能放顶层！**）
 - [ ] response_format 在 extra_body 中
 - [ ] 未传 tags: ["img2img"]
 - [ ] 输入图片 URL 公网可访问
