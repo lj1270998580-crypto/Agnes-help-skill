@@ -68,6 +68,7 @@
 - 诊断 401/400/429/500/503 等错误
 - 排查视频排队过长、图像生成失败等问题
 - 指导 Thinking 模式、流式输出、工具调用等高级功能
+- 指导 Codex 集成、社区 Skill 安装
 
 **兼容工具：** OpenClaw、Claude Code、Hermes、Codex、Kimi Work
 
@@ -75,6 +76,16 @@
 ```
 请读取并安装 Agnes AI 支持 Skill：https://raw.githubusercontent.com/lj1270998580-crypto/Agnes-help-skill/main/SKILL.md
 ```
+
+### 方式四：社区 Skill（推荐进阶用户）
+
+| 社区资源 | 适用场景 | 安装方式 |
+|----------|----------|----------|
+| [Yacey 生成 Skill](https://github.com/Yacey/agnes-ai-generation-skill) | Agent 用户，需要中文提示词自动翻译 | `npx skills add Yacey/agnes-ai-generation-skill` |
+| [kangarooking 免费模型 Skills](https://github.com/kangarooking/agnes-free-model-skills) | Codex 用户，需要独立文本/图片/视频 Skill | 复制到 `~/.codex/skills/` |
+| [16nic ComfyUI 节点](https://github.com/16nic/comfyui-agnes-ai) | ComfyUI 用户，需要可视化节点工作流 | `git clone` 到 `ComfyUI/custom_nodes` |
+
+详见 `SKILL.md` 第 9-10 章的完整接入指南。
 
 ---
 

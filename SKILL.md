@@ -384,4 +384,311 @@ curl https://apihub.agnes-ai.com/v1/chat/completions \
 
 ---
 
+## 9. 社区 Skill 接入指南
+
+以下社区资源提供了更丰富的 Agnes AI 集成方式，可根据你的使用场景选择。
+
+### 9.1 Yacey 的 Agnes AI 生成 Skill（推荐 Agent 用户）
+
+**仓库：** https://github.com/Yacey/agnes-ai-generation-skill
+
+**特点：**
+- 封装 Agnes 官方文本、图片、视频 API 的标准 Skill
+- 支持中文提示词自动翻译为英文（提升视频生成稳定性）
+- 提供 Python 脚本直接调用
+- 兼容 Codex、Claude Code、OpenClaw、Cursor、Windsurf
+
+**安装方式：**
+```bash
+# 安装到当前 Agent
+npx skills add Yacey/agnes-ai-generation-skill
+
+# 安装到所有支持的 Agent
+npx skills add Yacey/agnes-ai-generation-skill --all
+```
+
+**配置 API Key：**
+```bash
+# 临时配置（当前 PowerShell 会话）
+$env:AGNES_API_KEY="YOUR_API_KEY"
+
+# Windows 用户级持久配置
+[Environment]::SetEnvironmentVariable("AGNES_API_KEY", "YOUR_API_KEY", "User")
+```
+
+**脚本也识别以下变量名：**
+- `AGNES_API_KEY`
+- `AGNES_API_TOKEN`
+- `APIHUB_AGNES_API_KEY`
+
+**使用示例：**
+```bash
+# 文本生成
+python scripts/agnes_api.py text --prompt "Write a product tagline for an AI assistant."
+
+# 文生图
+python scripts/agnes_api.py image --prompt "A luminous floating city above a misty canyon at sunrise, cinematic realism" --size 1024x768
+
+# 图生图
+python scripts/agnes_api.py image --prompt "Turn the scene into a rainy cyberpunk night" --image https://example.com/input.png
+
+# 文生视频（默认 num_frames=121, frame_rate=24）
+python scripts/agnes_api.py video --prompt "A cinematic shot of a cat walking on the beach at sunset" --poll
+
+# 图生视频
+python scripts/agnes_api.py video --prompt "Animate subtle camera movement" --image https://example.com/image.png --poll
+
+# 多图 / 关键帧视频
+python scripts/agnes_api.py video --prompt "Create a smooth transition" --image https://example.com/a.png --image https://example.com/b.png --mode keyframes --poll
+
+# 查询视频任务
+python scripts/agnes_api.py video-get task_123456
+
+# 运行测试
+python scripts/agnes_api.py smoke-test
+```
+
+**⚠️ 重要提醒：**
+- 该 Skill 的视频查询默认使用 `task_id`，但 Agnes 官方已更新为推荐使用 `video_id` 查询
+- 如视频排队超过 5 分钟，请检查是否使用了正确的查询方式
+- 中文提示词会自动翻译为英文后再调用 API
+
+---
+
+### 9.2 kangarooking 的免费模型 Skills（推荐 Codex 用户）
+
+**仓库：** https://github.com/kangarooking/agnes-free-model-skills
+
+**特点：**
+- 3 个独立 Skill：文本、图片、视频
+- 可直接放入 Codex skills 目录使用
+- 提供 Python 辅助脚本
+
+**包含 Skill：**
+
+| Skill | 能力 | 触发场景 |
+|-------|------|----------|
+| `agnes-free-text` | Agnes-2.0-Flash 文本模型，支持 Chat、流式、工具调用 | 用户说"用免费的文本模型""Agnes 文本" |
+| `agnes-free-image` | Agnes Image 2.1 Flash 图片模型，支持文生图、图生图 | 用户说"用免费的图片模型""Agnes 图片" |
+| `agnes-free-video` | Agnes-Video-V2.0 视频模型，异步任务+轮询+下载 | 用户说"用免费视频模型""Agnes 视频" |
+
+**安装方式：**
+```bash
+# 克隆仓库
+git clone https://github.com/kangarooking/agnes-free-model-skills.git
+
+# 复制需要的 skill 到 Codex skills 目录
+cp -R agnes-free-model-skills/agnes-free-text ~/.codex/skills/
+cp -R agnes-free-model-skills/agnes-free-image ~/.codex/skills/
+cp -R agnes-free-model-skills/agnes-free-video ~/.codex/skills/
+```
+
+**配置环境变量：**
+```bash
+export AGNES_API_KEY="your_api_key_here"
+```
+
+**备用变量名：**
+- `AGNES_TOKEN`
+- `AGNES_API_BASE`（可覆盖默认地址）
+
+**使用示例：**
+```bash
+# 文本
+python3 agnes-free-text/scripts/agnes_text.py chat --message "解释 Agent skill 是什么"
+
+# 图片
+python3 agnes-free-image/scripts/agnes_image.py generate --prompt "科技感插画，干净明亮"
+
+# 视频
+python3 agnes-free-video/scripts/agnes_video.py create --prompt "竖屏短视频，医疗科普画面"
+
+# 视频轮询并下载
+python3 agnes-free-video/scripts/agnes_video.py status --task-id task_123456 --wait --download-dir downloads
+```
+
+---
+
+### 9.3 16nic 的 ComfyUI 节点（推荐 ComfyUI 用户）
+
+**仓库：** https://github.com/16nic/comfyui-agnes-ai
+
+**特点：**
+- ComfyUI 自定义节点插件
+- 7 个功能节点，覆盖 Agnes 全模态能力
+- 支持 API Key 持久化、画质选择、宽高比选择
+- 视频输出支持 ComfyUI 原生 VIDEO 类型
+
+**功能节点：**
+
+| 节点 | 功能 | 模型 |
+|------|------|------|
+| Agnes API Key Config | 持久化保存 API Key | — |
+| Agnes LLM Chat | 文本对话 | agnes-2.0-flash |
+| Agnes Image Reverse Prompt | 图像反推提示词 | agnes-2.0-flash (vision) |
+| Agnes Image-to-Image | 图生图/编辑（支持多图） | agnes-image-2.1-flash |
+| Agnes Text-to-Image | 文生图 | agnes-image-2.1-flash |
+| Agnes Image-to-Video | 图生视频（支持多图/关键帧） | agnes-video-v2.0 |
+| Agnes Text-to-Video | 文生视频 | agnes-video-v2.0 |
+
+**安装方式：**
+```bash
+cd ComfyUI/custom_nodes
+git clone https://github.com/16nic/comfyui-agnes-ai.git
+cd comfyui-agnes-ai
+pip install -r requirements.txt
+```
+
+**配置 API Key（推荐方式）：**
+1. 在节点菜单 → **Agnes AI** → 添加 **Agnes API Key Config**
+2. 在 `api_key` 输入框填入你的 API Key
+3. 运行一次（Ctrl+Enter / Queue Prompt）
+4. Key 自动保存到 `api_key_config.json`
+5. 之后其他 Agnes 节点的 `api_key` 字段留空即可自动加载
+
+**API Key 加载优先级：**
+```
+环境变量 AGNES_API_KEY > api_key_config.json > 运行时回退加载 > 节点输入框手动填写
+```
+
+**画质 × 宽高比对照表（图片）：**
+
+| 比例 | 1K | 2K | 4K |
+|------|-----|-----|-----|
+| 1:1 | 1024×1024 | 2048×2048 | 4096×4096 |
+| 16:9 | 1816×1024 | 3640×2048 | 7280×4096 |
+| 9:16 | 1024×1816 | 2048×3640 | 4096×7280 |
+
+**注意事项：**
+- 视频生成是异步任务，通常需要 2-6 分钟
+- 免费 API 高峰期可能有排队（503）或 GPU OOM（500）
+- 建议首次使用先测试文生图，确认 API Key 正常工作
+
+---
+
+## 10. Codex 集成指南
+
+Codex 是 OpenAI 开源的终端 AI 编程智能体，支持通过自定义 Provider 接入 Agnes AI。
+
+### 10.1 配置方式选择
+
+**推荐方案：使用 `openai` provider + `openai_base_url`**
+
+对于 OpenAI-compatible 网关（Agnes 正是此类），建议保留 `openai` provider 身份，只覆盖 base_url。这样可以：
+- 请求走 Agnes 网关
+- `codex resume --all` 仍能看到原有历史会话
+- 恢复旧会话后可继续正常工作
+
+**不推荐：** 使用 `model_provider = "custom"`，会导致历史会话分桶，旧会话不显示。
+
+### 10.2 配置步骤
+
+**Step 1 — 创建配置目录**
+```bash
+mkdir -p ~/.codex
+```
+
+**Step 2 — 编辑 `~/.codex/config.toml`**
+
+```toml
+#:schema https://developers.openai.com/codex/config-schema.json
+
+# 使用 Agnes AI 作为后端
+model = "agnes-2.0-flash"
+model_provider = "openai"
+openai_base_url = "https://apihub.agnes-ai.com/v1"
+
+# 推荐日常配置
+sandbox_mode = "workspace-write"
+approval_policy = "on-request"
+web_search = "disabled"
+```
+
+**Step 3 — 配置 API Key**
+
+方式 A：环境变量（推荐）
+```bash
+# macOS / Linux
+export OPENAI_API_KEY="YOUR_AGNES_API_KEY"
+
+# Windows PowerShell
+$env:OPENAI_API_KEY="YOUR_AGNES_API_KEY"
+```
+
+方式 B：认证文件
+编辑 `~/.codex/auth.json`：
+```json
+{
+  "OPENAI_API_KEY": "YOUR_AGNES_API_KEY"
+}
+```
+
+**Step 4 — 验证配置**
+```bash
+codex doctor
+```
+
+`codex doctor` 会自动检测运行时、认证、网络连通性和 config.toml 格式，所有项目绿色即配置成功。
+
+### 10.3 多 Provider 配置（灵活切换）
+
+如果你需要同时使用 Agnes AI 和其他 Provider：
+
+```toml
+# 默认使用 Agnes
+model = "agnes-2.0-flash"
+model_provider = "openai"
+openai_base_url = "https://apihub.agnes-ai.com/v1"
+
+# 同时保留官方 OpenAI 配置
+[model_providers.openai]
+name = "OpenAI Official"
+base_url = "https://api.openai.com/v1"
+env_key = "OPENAI_API_KEY"
+
+# 或其他 Provider
+[model_providers.deepseek]
+name = "DeepSeek"
+base_url = "https://api.deepseek.com/v1"
+env_key = "DEEPSEEK_API_KEY"
+```
+
+切换 Provider 时只需修改：
+```toml
+model_provider = "openai"  # 使用 Agnes
+# 或
+model_provider = "deepseek"  # 使用 DeepSeek
+```
+
+### 10.4 使用 Agnes 的各模型
+
+| 模型 | Codex 配置 |
+|------|-----------|
+| 通用对话 | `model = "agnes-1.5-flash"` |
+| 编程/Agent | `model = "agnes-2.0-flash"` |
+
+**注意：** Codex 主要使用 Chat Completions API，图像和视频生成需要通过 Agnes 的独立端点调用。如需在 Codex 中使用图像/视频生成，建议：
+1. 安装 kangarooking 的 `agnes-free-image` / `agnes-free-video` Skill
+2. 或直接使用 curl / Python 脚本调用
+
+### 10.5 常见问题
+
+**Q: Codex 提示 "自定义配置不生效"？**
+- 确认 `config.toml` 路径正确（`~/.codex/config.toml`）
+- 确认 `model_provider` 名称匹配
+- 确认 `base_url` 完整（包含 `/v1`）
+- 确认环境变量名与 `env_key` 一致
+- 确认 Agnes 服务兼容 `responses` 协议
+
+**Q: 如何同时使用 Agnes 和官方 OpenAI？**
+- 使用多 Provider 配置（见 10.3）
+- 通过修改 `model_provider` 切换
+
+**Q: Codex 的 Agent 模式能调用 Agnes 的工具调用吗？**
+- 可以。Agnes 2.0 Flash 支持 OpenAI 兼容的工具调用格式
+- 在 Codex 中正常使用 `tools` 即可
+- 模型返回 `finish_reason: "tool_calls"` 时，Codex 会自动处理
+
+---
+
 > Agnes AI，让世界级 AI 属于每一个人。
