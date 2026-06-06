@@ -1,8 +1,13 @@
 # Agnes AI API 完整文档
 
-> 来源：https://agnes-ai.com/doc/overview 及其子页面
-> 整理时间：2026-06-06
-> 本文档整合了 Agnes AI API 官方在线文档的全部内容，方便 Agent 快速获取信息
+> **文档版本：** v1.2.0
+> **来源：** https://agnes-ai.com/doc/overview 及其子页面
+> **整理时间：** 2026-06-06
+> **GitHub 仓库：** https://github.com/lj1270998580-crypto/Agnes-help-skill
+> **本文档整合了 Agnes AI API 官方在线文档的全部内容，方便 Agent 快速获取信息**
+
+> 📢 **更新检查：** 建议定期从 GitHub 仓库获取最新版文档，确保信息准确。
+> 仓库地址：https://github.com/lj1270998580-crypto/Agnes-help-skill
 
 ---
 

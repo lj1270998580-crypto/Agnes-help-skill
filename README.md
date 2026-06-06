@@ -23,9 +23,9 @@
 
 | 文件 | 说明 | 用途 |
 |------|------|------|
-| `agnes-ai-assistant.html` | 交互式接入助手 | 浏览器打开，自助完成接入、排查问题 |
-| `agnes-ai-api-documentation.md` | 完整 API 文档 | 整合官方全部接口信息，供 Agent 读取 |
-| `SKILL.md` | 通用支持 Skill | 兼容 OpenClaw / Claude Code / Claude Desktop / Hermes / Codex / WorkBuddy / Cherry Studio / Opencode / Kimi Work |
+| `agnes-ai-assistant.html` | 交互式接入助手 | 浏览器打开，自助完成接入、排查问题（**自动检查 GitHub 更新**） |
+| `agnes-ai-api-documentation.md` | 完整 API 文档 | 整合官方全部接口信息，供 Agent 读取（**带版本号**） |
+| `SKILL.md` | 通用支持 Skill | 兼容 OpenClaw / Claude Code / Claude Desktop / Hermes / Codex / WorkBuddy / Cherry Studio / Opencode / Kimi Work（**加载时检查更新**） |
 
 ---
 
@@ -77,6 +77,20 @@
 ```
 请读取并安装 Agnes AI 支持 Skill：https://raw.githubusercontent.com/lj1270998580-crypto/Agnes-help-skill/main/SKILL.md
 ```
+
+### 自动更新提醒
+
+本仓库的所有文件都支持**版本检查与更新提醒**：
+
+- **HTML 助手**：每次打开页面时自动检查 GitHub 是否有新版本，有更新则显示顶部横幅提醒
+- **SKILL.md**：每次被 Agent 加载时，Agent 会检查 GitHub 最新 commit，有更新则在回复开头提醒用户
+- **API 文档**：文件头部标注版本号，建议定期同步最新版
+
+**手动检查更新方式：**
+1. 访问 GitHub 仓库查看最新 commit：https://github.com/lj1270998580-crypto/Agnes-help-skill
+2. 或直接让 Agent 执行：`请检查 Agnes AI 支持 Skill 是否有更新`
+
+---
 
 ### 方式四：社区 Skill（推荐进阶用户）
 

@@ -134,6 +134,25 @@
   .status-dot.ok { background: var(--ok); }
   .status-dot.warn { background: var(--warn); }
   .status-dot.err { background: var(--err); }
+  /* 更新提醒横幅 */
+  .update-banner {
+    position: fixed; top: 0; left: 260px; right: 0; z-index: 1000;
+    background: linear-gradient(90deg, #fef3c7, #fffbeb);
+    border-bottom: 2px solid var(--warn);
+    padding: 10px 20px;
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 14px; color: #92400e;
+    animation: slideDown .3s ease;
+  }
+  @keyframes slideDown { from { transform: translateY(-100%); } to { transform: translateY(0); } }
+  .update-banner a { color: var(--accent); font-weight: 600; text-decoration: underline; }
+  .update-banner .close-btn {
+    background: none; border: none; font-size: 18px; cursor: pointer; color: #92400e;
+  }
+  .main.has-update { padding-top: 60px; }
+  @media (max-width: 768px) {
+    .update-banner { left: 0; }
+  }
 </style>
 </head>
 <body>
@@ -166,6 +185,15 @@
   </aside>
 
   <main class="main">
+    <!-- 更新提醒横幅（由 JS 控制显示） -->
+    <div id="update-banner" class="update-banner" style="display:none;">
+      <span>📢 <strong>有新版本可用！</strong> 当前版本 <span id="local-ver"></span>，GitHub 已更新。建议下载最新版以获得完整功能。</span>
+      <div>
+        <a href="https://github.com/lj1270998580-crypto/Agnes-help-skill" target="_blank">查看更新 →</a>
+        <button class="close-btn" onclick="dismissUpdate()">×</button>
+      </div>
+    </div>
+
     <!-- 快速接入向导 -->
     <section id="quickstart" class="section active">
       <h2>⚡ 快速接入向导</h2>
@@ -731,6 +759,49 @@ async function callWithRetry(fn, maxRetries = 3) {
   }
 
   // Diagnose
+  // ===== 版本检查与更新提醒 =====
+  const LOCAL_VERSION = '1.2.0';
+  const GITHUB_REPO = 'lj1270998580-crypto/Agnes-help-skill';
+  const GITHUB_API = `https://api.github.com/repos/${GITHUB_REPO}/commits?path=agnes-ai-assistant.html&per_page=1`;
+  const STORAGE_KEY = 'agnes_assistant_last_commit';
+
+  async function checkUpdate() {
+    try {
+      const resp = await fetch(GITHUB_API, { cache: 'no-store' });
+      if (!resp.ok) return;
+      const data = await resp.json();
+      if (!data || !data[0] || !data[0].sha) return;
+      const remoteSha = data[0].sha;
+      const localSha = localStorage.getItem(STORAGE_KEY);
+      if (localSha && localSha !== remoteSha) {
+        showUpdateBanner();
+      }
+      localStorage.setItem(STORAGE_KEY, remoteSha);
+    } catch (e) {
+      // 静默失败，不影响正常使用
+    }
+  }
+
+  function showUpdateBanner() {
+    const banner = document.getElementById('update-banner');
+    const verSpan = document.getElementById('local-ver');
+    if (banner && verSpan) {
+      verSpan.textContent = LOCAL_VERSION;
+      banner.style.display = 'flex';
+      document.querySelector('.main').classList.add('has-update');
+    }
+  }
+
+  function dismissUpdate() {
+    const banner = document.getElementById('update-banner');
+    if (banner) banner.style.display = 'none';
+    document.querySelector('.main').classList.remove('has-update');
+  }
+
+  // 页面加载时检查更新
+  document.addEventListener('DOMContentLoaded', checkUpdate);
+
+  // ===== 原有功能代码 =====
   const diagnoseData = {
     auth: `<div class="alert alert-err"><strong>🔐 认证问题排查</strong></div>
       <ol style="font-size:14px; line-height:2; margin-left:20px;">

@@ -1,5 +1,6 @@
 ---
 name: agnes-ai-support
+version: "1.2.0"
 description: |
   Agnes AI API 接入支持与问题排查 Skill。帮助新用户完成 Agnes AI API 的接入配置，
   诊断和解决接入过程中遇到的认证、参数、响应、图像生成、视频生成等各类问题。
@@ -15,15 +16,42 @@ description: |
 
 # Agnes AI API 接入支持与问题排查
 
-> 适用工具：OpenClaw / Claude Code / Hermes / Codex / Kimi Work
-> 更新日期：2026-06-06
-> 官方平台：https://platform.agnes-ai.com
-> 官方文档：https://agnes-ai.com/doc/overview
-> 操作手册：https://agnes-ai.com/doc/%E5%B8%B8%E7%94%A8%E6%8E%A5%E5%85%A5%E6%96%87%E6%A1%A3
-> 社区教程：https://github.com/Yacey/agnes-ai-generation-skill
-> 社区 Skill：https://github.com/kangarooking/agnes-free-model-skills
-> ComfyUI 节点：https://github.com/16nic/comfyui-agnes-ai
-> 常见问题 QA（飞书）：https://icn1d2hdv39m.feishu.cn/wiki/R7TEwjadJibD62kWeS9cubtpnPi
+> **Skill 版本：** v1.2.0
+> **适用工具：** OpenClaw / Claude Code / Claude Desktop / Hermes / Codex / WorkBuddy / Cherry Studio / Opencode / Kimi Work
+> **更新日期：** 2026-06-06
+> **GitHub 仓库：** https://github.com/lj1270998580-crypto/Agnes-help-skill
+> **官方平台：** https://platform.agnes-ai.com
+> **官方文档：** https://agnes-ai.com/doc/overview
+> **操作手册：** https://agnes-ai.com/doc/%E5%B8%B8%E7%94%A8%E6%8E%A5%E5%85%A5%E6%96%87%E6%A1%A3
+> **社区教程：** https://github.com/Yacey/agnes-ai-generation-skill
+> **社区 Skill：** https://github.com/kangarooking/agnes-free-model-skills
+> **ComfyUI 节点：** https://github.com/16nic/comfyui-agnes-ai
+> **常见问题 QA（飞书）：** https://icn1d2hdv39m.feishu.cn/wiki/R7TEwjadJibD62kWeS9cubtpnPi
+
+---
+
+## 版本检查与更新提醒
+
+**每次加载本 Skill 时，请执行以下检查：**
+
+1. 读取 GitHub 仓库最新版本信息：
+   ```
+   https://api.github.com/repos/lj1270998580-crypto/Agnes-help-skill/commits?per_page=1
+   ```
+
+2. 比较远程最新 commit 的 `sha` 与本地记录的版本。
+
+3. 如果检测到更新，**在回复开头提醒用户**：
+   > 📢 **本 Skill 有新版本可用！** 建议从 GitHub 获取最新版以获得完整功能和最新接入指南。
+   > 
+   > 仓库地址：https://github.com/lj1270998580-crypto/Agnes-help-skill
+   > 
+   > 一键更新指令：
+   > ```
+   > 请读取并安装 Agnes AI 支持 Skill 最新版：https://raw.githubusercontent.com/lj1270998580-crypto/Agnes-help-skill/main/SKILL.md
+   > ```
+
+4. 如果用户正在使用 HTML 助手或 API 文档，同样提醒检查对应文件是否有更新。
 
 ---
 
