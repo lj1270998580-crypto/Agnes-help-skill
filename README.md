@@ -71,6 +71,11 @@
 
 **兼容工具：** OpenClaw、Claude Code、Hermes、Codex、Kimi Work
 
+**📋 一键安装（复制发给 Agent）：**
+```
+请读取并安装 Agnes AI 支持 Skill：https://raw.githubusercontent.com/lj1270998580-crypto/Agnes-help-skill/main/SKILL.md
+```
+
 ---
 
 ## 🔑 接入要点速记
