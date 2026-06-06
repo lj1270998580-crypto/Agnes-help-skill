@@ -568,20 +568,62 @@ pip install -r requirements.txt
 
 ## 10. Codex 集成指南
 
-Codex 是 OpenAI 开源的终端 AI 编程智能体，支持通过自定义 Provider 接入 Agnes AI。
+> **区分两个工具：**
+> - **Codex++**（Agnes 官方文档推荐）：第三方 GUI 工具，通过管理界面配置供应商
+> - **OpenAI Codex CLI**（命令行工具）：OpenAI 官方终端 AI 编程智能体，通过 `~/.codex/config.toml` 配置
 
-### 10.1 配置方式选择
+---
 
-**推荐方案：使用 `openai` provider + `openai_base_url`**
+### 10.1 Codex++ 配置（Agnes 官方推荐）
 
-对于 OpenAI-compatible 网关（Agnes 正是此类），建议保留 `openai` provider 身份，只覆盖 base_url。这样可以：
-- 请求走 Agnes 网关
-- `codex resume --all` 仍能看到原有历史会话
-- 恢复旧会话后可继续正常工作
+Codex++ 是一款支持多供应商的 GUI 管理工具，Agnes 官方文档提供完整接入指南。
 
-**不推荐：** 使用 `model_provider = "custom"`，会导致历史会话分桶，旧会话不显示。
+**Step 1 — 下载 Codex++**
 
-### 10.2 配置步骤
+- 仓库：https://github.com/BigPizzaV3/CodexPlusPlus
+- 最新版：https://github.com/BigPizzaV3/CodexPlusPlus/releases/latest
+- 根据系统选择安装包：
+  - Windows：`windows-x64-setup.exe`
+  - Intel Mac：`macos-x64.dmg`
+  - Apple Silicon Mac：`macos-arm64.dmg`
+
+**Step 2 — 安装**
+
+正常安装即可。Mac 用户若提示"已损坏，无法打开"，在终端执行：
+```bash
+sudo xattr -rd com.apple.quarantine "/Applications/Codex++.app"
+sudo xattr -rd com.apple.quarantine "/Applications/Codex++ 管理工具.app"
+```
+
+**Step 3 — 打开管理工具，添加 Agnes 供应商**
+
+打开"Codex++ 管理工具" → 左侧菜单"供应商配置" → "添加供应商"，填写：
+
+| 配置项 | 填写内容 |
+|--------|----------|
+| 名称 | Agnes |
+| 接入模式 | 纯 API |
+| 测试模型 | agnes-2.0-flash |
+| Base URL | `https://apihub.agnes-ai.com/v1` |
+| Key | 你的 Agnes API Key（sk- 开头） |
+| 上游协议 | Chat Completions |
+
+**⚠️ 关键注意事项：**
+- Key 只填写 `sk-` 开头的密钥，**不要**填写 `Bearer`
+- Base URL 只填写到 `/v1`，**不要**填写 `/chat/completions`
+- 上游协议必须选择 **Chat Completions**
+
+**Step 4 — 启用并启动**
+
+1. 保存配置后，回到供应商列表，选择 **Agnes**，点击"使用/切换到此供应商"
+2. 左侧菜单"概览" → "启动 Codex++"（或右上角"重启 Codex"）
+3. 启动完成后，新建会话测试：输入"你好，请介绍一下你自己"，正常回复即配置成功
+
+---
+
+### 10.2 OpenAI Codex CLI 配置（命令行用户）
+
+如果你使用的是 OpenAI 官方的 `codex` 命令行工具，可通过以下方式接入 Agnes：
 
 **Step 1 — 创建配置目录**
 ```bash
@@ -601,7 +643,6 @@ openai_base_url = "https://apihub.agnes-ai.com/v1"
 # 推荐日常配置
 sandbox_mode = "workspace-write"
 approval_policy = "on-request"
-web_search = "disabled"
 ```
 
 **Step 3 — 配置 API Key**
@@ -630,9 +671,7 @@ codex doctor
 
 `codex doctor` 会自动检测运行时、认证、网络连通性和 config.toml 格式，所有项目绿色即配置成功。
 
-### 10.3 多 Provider 配置（灵活切换）
-
-如果你需要同时使用 Agnes AI 和其他 Provider：
+**多 Provider 配置（灵活切换）：**
 
 ```toml
 # 默认使用 Agnes
@@ -660,29 +699,38 @@ model_provider = "openai"  # 使用 Agnes
 model_provider = "deepseek"  # 使用 DeepSeek
 ```
 
-### 10.4 使用 Agnes 的各模型
+---
 
-| 模型 | Codex 配置 |
-|------|-----------|
-| 通用对话 | `model = "agnes-1.5-flash"` |
-| 编程/Agent | `model = "agnes-2.0-flash"` |
+### 10.3 使用 Agnes 的各模型
 
-**注意：** Codex 主要使用 Chat Completions API，图像和视频生成需要通过 Agnes 的独立端点调用。如需在 Codex 中使用图像/视频生成，建议：
+| 模型 | 配置值 |
+|------|--------|
+| 通用对话 | `agnes-1.5-flash` |
+| 编程/Agent | `agnes-2.0-flash` |
+
+**注意：** Codex/Codex++ 主要使用 Chat Completions API，图像和视频生成需要通过 Agnes 的独立端点调用。如需在 Codex 中使用图像/视频生成，建议：
 1. 安装 kangarooking 的 `agnes-free-image` / `agnes-free-video` Skill
 2. 或直接使用 curl / Python 脚本调用
 
-### 10.5 常见问题
+---
 
-**Q: Codex 提示 "自定义配置不生效"？**
+### 10.4 常见问题
+
+**Q: Codex++ 配置后无法连接？**
+- 确认 Key 只填写 `sk-` 部分，不含 `Bearer`
+- 确认 Base URL 只到 `/v1`，不含 `/chat/completions`
+- 确认上游协议选择 **Chat Completions**
+- 确认网络可正常访问 `https://apihub.agnes-ai.com`
+
+**Q: OpenAI Codex CLI 提示 "自定义配置不生效"？**
 - 确认 `config.toml` 路径正确（`~/.codex/config.toml`）
 - 确认 `model_provider` 名称匹配
 - 确认 `base_url` 完整（包含 `/v1`）
 - 确认环境变量名与 `env_key` 一致
-- 确认 Agnes 服务兼容 `responses` 协议
 
 **Q: 如何同时使用 Agnes 和官方 OpenAI？**
-- 使用多 Provider 配置（见 10.3）
-- 通过修改 `model_provider` 切换
+- Codex++：在供应商列表中切换
+- Codex CLI：使用多 Provider 配置（见 10.2）
 
 **Q: Codex 的 Agent 模式能调用 Agnes 的工具调用吗？**
 - 可以。Agnes 2.0 Flash 支持 OpenAI 兼容的工具调用格式
