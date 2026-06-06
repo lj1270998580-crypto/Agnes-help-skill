@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agnes AI 接入助手 & 问题排查中心</title>
+<style>
+  :root {
+    --bg: #f5f3ef; --card: #ffffff; --text: #2d2a26; --muted: #6b6560;
+    --accent: #c45c26; --accent2: #8b5cf6; --border: #e5e1dc;
+    --ok: #16a34a; --warn: #d97706; --err: #dc2626; --info: #2563eb;
+    --code-bg: #1e1e2e; --code-text: #cdd6f4;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans SC", sans-serif;
+    background: var(--bg); color: var(--text); line-height: 1.6;
+  }
+  .layout { display: flex; min-height: 100vh; }
+  .sidebar {
+    width: 260px; background: var(--card); border-right: 1px solid var(--border);
+    padding: 24px 16px; position: fixed; height: 100vh; overflow-y: auto;
+  }
+  .sidebar h1 { font-size: 18px; margin-bottom: 4px; color: var(--accent); }
+  .sidebar .sub { font-size: 12px; color: var(--muted); margin-bottom: 24px; }
+  .nav-group { margin-bottom: 20px; }
+  .nav-group h3 { font-size: 11px; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; letter-spacing: 0.5px; }
+  .nav-item {
+    display: block; padding: 8px 12px; border-radius: 8px; cursor: pointer;
+    font-size: 14px; color: var(--text); text-decoration: none; margin-bottom: 2px;
+    transition: all .15s;
+  }
+  .nav-item:hover, .nav-item.active { background: #f0ebe5; color: var(--accent); }
+  .main { margin-left: 260px; flex: 1; padding: 32px 40px; max-width: 960px; }
+  .section { display: none; }
+  .section.active { display: block; animation: fadeIn .3s; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; } }
+  h2 { font-size: 24px; margin-bottom: 16px; font-weight: 600; }
+  h3 { font-size: 18px; margin: 24px 0 12px; font-weight: 600; }
+  h4 { font-size: 15px; margin: 16px 0 8px; color: var(--muted); font-weight: 500; }
+  .card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 20px; margin-bottom: 16px;
+  }
+  .card-title { font-weight: 600; font-size: 15px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+  .badge {
+    display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 500;
+  }
+  .badge-green { background: #dcfce7; color: var(--ok); }
+  .badge-amber { background: #fef3c7; color: var(--warn); }
+  .badge-red { background: #fee2e2; color: var(--err); }
+  .badge-blue { background: #dbeafe; color: var(--info); }
+  .badge-purple { background: #f3e8ff; color: var(--accent2); }
+  .stepper { display: flex; gap: 8px; margin-bottom: 20px; }
+  .step {
+    flex: 1; text-align: center; padding: 12px; border-radius: 8px; background: var(--card);
+    border: 2px solid var(--border); cursor: pointer; font-size: 13px; font-weight: 500;
+  }
+  .step.done { border-color: var(--ok); color: var(--ok); }
+  .step.active { border-color: var(--accent); color: var(--accent); background: #fff7ed; }
+  .step-content { display: none; }
+  .step-content.active { display: block; }
+  .btn {
+    display: inline-block; padding: 10px 20px; border-radius: 8px; border: none;
+    background: var(--accent); color: #fff; font-size: 14px; cursor: pointer; font-weight: 500;
+    transition: opacity .15s;
+  }
+  .btn:hover { opacity: .9; }
+  .btn-secondary { background: var(--muted); }
+  .btn-sm { padding: 6px 14px; font-size: 13px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 12px 0; }
+  th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border); }
+  th { background: #faf8f5; font-weight: 600; font-size: 12px; color: var(--muted); text-transform: uppercase; }
+  tr:hover td { background: #faf8f5; }
+  code, .code-inline {
+    font-family: "SF Mono", Monaco, "Cascadia Code", monospace; font-size: 13px;
+    background: #f0ebe5; padding: 2px 6px; border-radius: 4px; color: var(--accent);
+  }
+  pre {
+    background: var(--code-bg); color: var(--code-text); padding: 16px; border-radius: 10px;
+    overflow-x: auto; font-size: 13px; line-height: 1.5; margin: 12px 0;
+  }
+  pre code { background: none; padding: 0; color: inherit; }
+  .faq-item { border-bottom: 1px solid var(--border); padding: 14px 0; }
+  .faq-q { font-weight: 600; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+  .faq-a { display: none; padding-top: 10px; color: var(--muted); font-size: 14px; }
+  .faq-a.open { display: block; }
+  .faq-toggle { font-size: 18px; color: var(--muted); transition: transform .2s; }
+  .faq-toggle.open { transform: rotate(45deg); }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  @media (max-width: 768px) {
+    .sidebar { width: 100%; position: relative; height: auto; }
+    .main { margin-left: 0; padding: 20px; }
+    .layout { flex-direction: column; }
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  }
+  .selector { display: flex; gap: 8px; flex-wrap: wrap; margin: 12px 0; }
+  .chip {
+    padding: 6px 14px; border-radius: 20px; border: 1px solid var(--border);
+    background: var(--card); cursor: pointer; font-size: 13px; transition: all .15s;
+  }
+  .chip:hover { border-color: var(--accent); }
+  .chip.selected { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .copy-btn {
+    float: right; font-size: 12px; padding: 4px 10px; border-radius: 6px;
+    background: rgba(255,255,255,.1); color: var(--code-text); border: 1px solid rgba(255,255,255,.2);
+    cursor: pointer;
+  }
+  .copy-btn:hover { background: rgba(255,255,255,.2); }
+  .alert {
+    padding: 12px 16px; border-radius: 8px; margin: 12px 0; font-size: 14px;
+    border-left: 4px solid;
+  }
+  .alert-info { background: #eff6ff; border-color: var(--info); color: #1e40af; }
+  .alert-warn { background: #fffbeb; border-color: var(--warn); color: #92400e; }
+  .alert-err { background: #fef2f2; border-color: var(--err); color: #991b1b; }
+  .alert-ok { background: #f0fdf4; border-color: var(--ok); color: #166534; }
+  .param-row { display: flex; gap: 12px; align-items: center; margin: 8px 0; }
+  .param-row label { min-width: 120px; font-size: 13px; font-weight: 500; }
+  .param-row input, .param-row select {
+    flex: 1; padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 13px;
+  }
+  .tip-box {
+    background: #faf8f5; border: 1px dashed var(--border); border-radius: 8px;
+    padding: 12px 16px; font-size: 13px; color: var(--muted); margin: 12px 0;
+  }
+  .search-box {
+    width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px;
+    font-size: 14px; margin-bottom: 16px;
+  }
+  .highlight { background: #fef3c7; padding: 0 2px; border-radius: 2px; }
+  .status-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
+  .status-dot.ok { background: var(--ok); }
+  .status-dot.warn { background: var(--warn); }
+  .status-dot.err { background: var(--err); }
+</style>
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <h1>🧭 Agnes AI 接入助手</h1>
+    <div class="sub">接入向导 · 问题排查 · 代码生成</div>
+    <div class="nav-group">
+      <h3>开始</h3>
+      <a class="nav-item active" data-target="quickstart">⚡ 快速接入向导</a>
+      <a class="nav-item" data-target="models">🤖 模型速查与选择</a>
+    </div>
+    <div class="nav-group">
+      <h3>工具</h3>
+      <a class="nav-item" data-target="generator">🛠️ 代码生成器</a>
+      <a class="nav-item" data-target="thinking">💡 Thinking 模式</a>
+      <a class="nav-item" data-target="video">🎬 视频参数调节</a>
+    </div>
+    <div class="nav-group">
+      <h3>排查</h3>
+      <a class="nav-item" data-target="faq">❓ 常见问题 FAQ</a>
+      <a class="nav-item" data-target="errors">🚨 错误码速查</a>
+      <a class="nav-item" data-target="diagnose">🔍 智能诊断</a>
+    </div>
+    <div class="nav-group">
+      <h3>参考</h3>
+      <a class="nav-item" data-target="endpoints">📡 接口端点汇总</a>
+      <a class="nav-item" data-target="checklist">✅ 接入检查清单</a>
+    </div>
+  </aside>
+
+  <main class="main">
+    <!-- 快速接入向导 -->
+    <section id="quickstart" class="section active">
+      <h2>⚡ 快速接入向导</h2>
+      <div class="stepper">
+        <div class="step active" data-step="1">1️⃣ 创建 API Key</div>
+        <div class="step" data-step="2">2️⃣ 选择模型</div>
+        <div class="step" data-step="3">3️⃣ 配置请求</div>
+        <div class="step" data-step="4">4️⃣ 测试 & 上线</div>
+      </div>
+
+      <div class="step-content active" data-step="1">
+        <div class="card">
+          <div class="card-title">🔑 第一步：创建 API Key</div>
+          <ol style="margin-left: 20px; font-size: 14px;">
+            <li>访问 <a href="https://agnes-ai.com" target="_blank">Agnes AI 控制台</a> 并注册/登录账户</li>
+            <li>进入 <code>Settings → API Keys</code></li>
+            <li>点击 <code>Create new secret key</code></li>
+            <li>复制并妥善保存（<strong>只显示一次</strong>）</li>
+          </ol>
+          <div class="alert alert-warn">
+            <strong>⚠️ 安全提醒</strong>：API Key 是敏感信息，请勿暴露在代码仓库、前端代码、截图或公开文档中。如泄露请立即在控制台重置。
+          </div>
+        </div>
+        <button class="btn" onclick="nextStep(2)">下一步：选择模型 →</button>
+      </div>
+
+      <div class="step-content" data-step="2">
+        <div class="card">
+          <div class="card-title">🤖 第二步：选择适合你的模型</div>
+          <table>
+            <tr><th>场景</th><th>推荐模型</th><th>特点</th></tr>
+            <tr><td>通用对话 / 高并发</td><td><code>agnes-1.5-flash</code></td><td>轻量、低延迟、成本最低</td></tr>
+            <tr><td>编程 / Agent / 推理</td><td><code>agnes-2.0-flash</code></td><td>支持工具调用、Thinking、图片理解</td></tr>
+            <tr><td>图像生成 / 编辑</td><td><code>agnes-image-2.1-flash</code></td><td>高信息密度、结构保持</td></tr>
+            <tr><td>图像快速生成</td><td><code>agnes-image-2.0-flash</code></td><td>快速出图、兼容 OpenAI Images API</td></tr>
+            <tr><td>视频生成</td><td><code>agnes-video-v2.0</code></td><td>文生视频、图生视频、关键帧动画</td></tr>
+          </table>
+        </div>
+        <button class="btn btn-secondary btn-sm" onclick="nextStep(1)">← 上一步</button>
+        <button class="btn" onclick="nextStep(3)">下一步：配置请求 →</button>
+      </div>
+
+      <div class="step-content" data-step="3">
+        <div class="card">
+          <div class="card-title">📡 第三步：配置请求地址与认证</div>
+          <p style="font-size: 14px; margin-bottom: 12px;">所有请求统一使用以下 Base URL 和认证头：</p>
+          <pre><code>Base URL: https://apihub.agnes-ai.com/v1
+
+Headers:
+  Authorization: Bearer YOUR_API_KEY
+  Content-Type: application/json</code></pre>
+          <div class="alert alert-info">
+            <strong>💡 迁移提示</strong>：如果你之前使用 OpenAI API，只需改 3 处：Base URL → Agnes 的地址，API Key → Agnes 的 Key，model 名称 → Agnes 的模型名。
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">🧪 快速测试命令</div>
+          <pre id="quick-curl"><code>curl https://apihub.agnes-ai.com/v1/chat/completions \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "agnes-2.0-flash",
+    "messages": [{"role": "user", "content": "Hello Agnes!"}]
+  }'</code><button class="copy-btn" onclick="copyCode(this)">复制</button></pre>
+        </div>
+        <button class="btn btn-secondary btn-sm" onclick="nextStep(2)">← 上一步</button>
+        <button class="btn" onclick="nextStep(4)">下一步：测试 & 上线 →</button>
+      </div>
+
+      <div class="step-content" data-step="4">
+        <div class="card">
+          <div class="card-title">🚀 第四步：测试 & 上线</div>
+          <div class="grid-2">
+            <div>
+              <h4>✅ 测试清单</h4>
+              <ul style="font-size: 14px; line-height: 2;">
+                <li>API Key 已创建且未泄露</li>
+                <li>Base URL 配置正确</li>
+                <li>请求头包含 Authorization</li>
+                <li>模型名称拼写正确</li>
+                <li>首次请求返回 200</li>
+                <li>流式响应正常（如启用）</li>
+              </ul>
+            </div>
+            <div>
+              <h4>📈 上线前检查</h4>
+              <ul style="font-size: 14px; line-height: 2;">
+                <li>错误处理逻辑已实现</li>
+                <li>重试与退避策略已配置</li>
+                <li>超时时间合理（图像 60-360s）</li>
+                <li>速率限制已了解</li>
+                <li>监控与告警已接入</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="alert alert-ok">
+          <strong>🎉 恭喜！</strong> 你已完成基础接入。遇到问题请使用左侧「问题排查」工具，或查看「代码生成器」获取更复杂的请求示例。
+        </div>
+        <button class="btn btn-secondary btn-sm" onclick="nextStep(3)">← 上一步</button>
+      </div>
+    </section>
+
+    <!-- 模型速查 -->
+    <section id="models" class="section">
+      <h2>🤖 模型速查与选择</h2>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title"><span class="badge badge-green">文本</span> agnes-1.5-flash</div>
+          <table>
+            <tr><td>端点</td><td><code>/v1/chat/completions</code></td></tr>
+            <tr><td>Context</td><td>256K</td></tr>
+            <tr><td>Max Output</td><td>65.5K</td></tr>
+            <tr><td>多模态</td><td>文本 + 图片 URL</td></tr>
+            <tr><td>价格(Input)</td><td>$0.07 / 1M tokens <span class="badge badge-green">现价 $0</span></td></tr>
+            <tr><td>价格(Output)</td><td>$0.15 / 1M tokens <span class="badge badge-green">现价 $0</span></td></tr>
+          </table>
+          <div class="tip-box">适合：实时交互、高并发、成本敏感场景</div>
+        </div>
+        <div class="card">
+          <div class="card-title"><span class="badge badge-purple">文本+</span> agnes-2.0-flash</div>
+          <table>
+            <tr><td>端点</td><td><code>/v1/chat/completions</code></td></tr>
+            <tr><td>Context</td><td>256K</td></tr>
+            <tr><td>Max Output</td><td>65.5K</td></tr>
+            <tr><td>特殊能力</td><td>工具调用、Thinking、图片理解、流式</td></tr>
+            <tr><td>价格(Input)</td><td>$0.1 / 1M tokens <span class="badge badge-green">现价 $0</span></td></tr>
+            <tr><td>价格(Output)</td><td>$0.2 / 1M tokens <span class="badge badge-green">现价 $0</span></td></tr>
+          </table>
+          <div class="tip-box">适合：编程、Agent 工作流、推理任务</div>
+        </div>
+        <div class="card">
+          <div class="card-title"><span class="badge badge-blue">图像</span> agnes-image-2.0-flash</div>
+          <table>
+            <tr><td>端点</td><td><code>/v1/images/generations</code></td></tr>
+            <tr><td>能力</td><td>文生图、图生图、多图合成</td></tr>
+            <tr><td>尺寸</td><td>1024x768 / 1024x1024 / 768x1024</td></tr>
+            <tr><td>输入</td><td>公网 URL 或 Data URI Base64</td></tr>
+            <tr><td>输出</td><td>URL 或 Base64</td></tr>
+            <tr><td>价格</td><td>$0.003 / image <span class="badge badge-green">现价 $0</span></td></tr>
+          </table>
+        </div>
+        <div class="card">
+          <div class="card-title"><span class="badge badge-blue">图像</span> agnes-image-2.1-flash</div>
+          <table>
+            <tr><td>端点</td><td><code>/v1/images/generations</code></td></tr>
+            <tr><td>升级点</td><td>高信息密度、结构保持、复杂场景</td></tr>
+            <tr><td>尺寸</td><td>支持自定义，如 1024x768</td></tr>
+            <tr><td>价格</td><td>$0.003 / image <span class="badge badge-green">现价 $0</span></td></tr>
+          </table>
+          <div class="tip-box">2.1 是 2.0 的升级版，新用户建议直接用 2.1</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="badge badge-amber">视频</span> agnes-video-v2.0</div>
+        <table>
+          <tr><th>项目</th><th>说明</th></tr>
+          <tr><td>创建端点</td><td><code>POST /v1/videos</code></td></tr>
+          <tr><td>查询端点(推荐)</td><td><code>GET /agnesapi?video_id=&lt;ID&gt;</code></td></tr>
+          <tr><td>查询端点(兼容)</td><td><code>GET /v1/videos/{task_id}</code></td></tr>
+          <tr><td>能力</td><td>文生视频、图生视频、多图视频、关键帧动画</td></tr>
+          <tr><td>尺寸</td><td>默认 1152×768</td></tr>
+          <tr><td>帧数</td><td>≤ 441，且满足 8n+1（如 81, 121, 241, 441）</td></tr>
+          <tr><td>帧率</td><td>1–60 FPS，推荐 24</td></tr>
+          <tr><td>价格</td><td>$0.005 / second <span class="badge badge-green">现价 $0</span></td></tr>
+        </table>
+      </div>
+    </section>
+
+    <!-- 代码生成器 -->
+    <section id="generator" class="section">
+      <h2>🛠️ 交互式代码生成器</h2>
+      <div class="card">
+        <div class="card-title">1. 选择模型与场景</div>
+        <div class="selector" id="gen-model">
+          <div class="chip selected" data-val="chat">💬 Chat Completion</div>
+          <div class="chip" data-val="image">🖼️ 图像生成</div>
+          <div class="chip" data-val="video">🎬 视频生成</div>
+        </div>
+        <div class="selector" id="gen-scene">
+          <div class="chip selected" data-val="basic">基础请求</div>
+          <div class="chip" data-val="stream">流式输出</div>
+          <div class="chip" data-val="tools">工具调用</div>
+          <div class="chip" data-val="image_url">图片理解</div>
+          <div class="chip" data-val="thinking">Thinking 模式</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">2. 参数配置</div>
+        <div id="gen-params">
+          <div class="param-row"><label>模型</label><select id="p-model"><option>agnes-2.0-flash</option><option>agnes-1.5-flash</option></select></div>
+          <div class="param-row"><label>温度</label><input type="number" id="p-temp" value="0.7" min="0" max="2" step="0.1"></div>
+          <div class="param-row"><label>Max Tokens</label><input type="number" id="p-max" value="1024" min="1" max="65536"></div>
+          <div class="param-row"><label>Prompt</label><input type="text" id="p-prompt" value="Hello, how are you?"></div>
+        </div>
+      </div>
+      <button class="btn" onclick="generateCode()">🔄 生成代码</button>
+      <div class="card" style="margin-top: 16px;">
+        <div class="card-title">生成结果 <button class="copy-btn" style="float:right; position:relative; top:-4px;" onclick="copyCode(this)">复制</button></div>
+        <pre id="gen-output"><code>// 点击上方按钮生成代码</code></pre>
+      </div>
+    </section>
+
+    <!-- Thinking 模式 -->
+    <section id="thinking" class="section">
+      <h2>💡 Thinking 模式详解</h2>
+      <div class="alert alert-info">
+        Thinking 模式让模型在正式回答前先进行内部推理，显著提升<strong>编程、调试、推理和 Agent 任务</strong>的质量。
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">OpenAI 兼容格式</div>
+          <p style="font-size: 13px; color: var(--muted); margin-bottom: 8px;">在请求体中添加 <code>chat_template_kwargs.enable_thinking</code></p>
+          <pre><code>{
+  "model": "agnes-2.0-flash",
+  "messages": [...],
+  "chat_template_kwargs": {
+    "enable_thinking": true
+  }
+}</code><button class="copy-btn" onclick="copyCode(this)">复制</button></pre>
+        </div>
+        <div class="card">
+          <div class="card-title">Anthropic 兼容格式</div>
+          <p style="font-size: 13px; color: var(--muted); margin-bottom: 8px;">使用 <code>thinking</code> 字段控制预算</p>
+          <pre><code>{
+  "model": "agnes-2.0-flash",
+  "messages": [...],
+  "thinking": {
+    "type": "enabled",
+    "budget_tokens": 2048
+  }
+}</code><button class="copy-btn" onclick="copyCode(this)">复制</button></pre>
+          <div class="tip-box">💡 <code>budget_tokens</code> 建议从 2048 开始，复杂任务可适当提高</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">🎯 何时开启 Thinking？</div>
+        <table>
+          <tr><th>场景</th><th>建议</th><th>budget_tokens</th></tr>
+          <tr><td>简单问答 / 闲聊</td><td>不需要</td><td>-</td></tr>
+          <tr><td>代码生成 / 调试</td><td><span class="badge badge-green">强烈建议</span></td><td>2048</td></tr>
+          <tr><td>复杂推理 / 数学</td><td><span class="badge badge-green">强烈建议</span></td><td>4096+</td></tr>
+          <tr><td>多步骤 Agent 任务</td><td><span class="badge badge-green">强烈建议</span></td><td>4096+</td></tr>
+          <tr><td>代码重构 / 架构设计</td><td><span class="badge badge-green">强烈建议</span></td><td>2048-4096</td></tr>
+        </table>
+      </div>
+    </section>
+
+    <!-- 视频参数 -->
+    <section id="video" class="section">
+      <h2>🎬 视频参数调节指南</h2>
+      <div class="card">
+        <div class="card-title">⏱️ 视频时长控制公式</div>
+        <pre style="font-size: 16px; text-align: center;"><code>seconds = num_frames / frame_rate</code></pre>
+        <div class="alert alert-info">
+          <strong>关键约束：</strong>num_frames ≤ 441，且必须满足 <code>8n + 1</code>（如 81, 121, 161, 241, 441）
+        </div>
+      </div>
+      <div class="grid-3">
+        <div class="card">
+          <div class="card-title">🎞️ 约 3 秒</div>
+          <code>num_frames: 81<br>frame_rate: 24</code>
+        </div>
+        <div class="card">
+          <div class="card-title">🎞️ 约 5 秒（推荐）</div>
+          <code>num_frames: 121<br>frame_rate: 24</code>
+        </div>
+        <div class="card">
+          <div class="card-title">🎞️ 约 10 秒</div>
+          <code>num_frames: 241<br>frame_rate: 24</code>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">📋 参数推荐表</div>
+        <table>
+          <tr><th>使用场景</th><th>推荐设置</th></tr>
+          <tr><td>标准视频生成</td><td>width: 1152, height: 768, num_frames: 121, frame_rate: 24</td></tr>
+          <tr><td>短视频 / 社交内容</td><td>num_frames: 81 或 121, frame_rate: 24</td></tr>
+          <tr><td>更长视频</td><td>增加 num_frames 或减少 frame_rate</td></tr>
+          <tr><td>更平滑运动</td><td>frame_rate: 24 或 30</td></tr>
+          <tr><td>可复现结果</td><td>固定 seed 值</td></tr>
+          <tr><td>关键帧过渡</td><td>extra_body.mode: "keyframes"</td></tr>
+          <tr><td>避免不良内容</td><td>使用 negative_prompt</td></tr>
+        </table>
+      </div>
+      <div class="card">
+        <div class="card-title">📝 提示词最佳实践</div>
+        <div class="grid-2">
+          <div>
+            <h4>文生视频结构</h4>
+            <code style="display:block; padding:10px; background:#faf8f5; border-radius:6px; font-size:13px;">[主体] + [动作] + [场景] + [镜头运动] + [光照] + [风格]</code>
+            <p style="font-size: 13px; color: var(--muted); margin-top: 8px;">例：A young astronaut walking across a red desert planet, dust blowing in the wind, slow cinematic tracking shot, dramatic sunset lighting, realistic sci-fi style</p>
+          </div>
+          <div>
+            <h4>图生视频结构</h4>
+            <code style="display:block; padding:10px; background:#faf8f5; border-radius:6px; font-size:13px;">Animate [元素] with [动作], keep [需保持的元素] consistent</code>
+            <p style="font-size: 13px; color: var(--muted); margin-top: 8px;">例：Animate the character with subtle breathing motion, hair moving gently, while keeping the face and outfit consistent</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" class="section">
+      <h2>❓ 常见问题 FAQ</h2>
+      <input type="text" class="search-box" id="faq-search" placeholder="🔍 搜索问题关键词，如 401、thinking、视频长度、timeout..." oninput="searchFaq(this.value)">
+
+      <h3>🔐 认证与账户</h3>
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">401 Unauthorized 怎么办？<span class="faq-toggle">+</span></div><div class="faq-a">1. 检查 API Key 是否正确（Bearer 后有空格）<br>2. 确认 Key 未过期或被删除<br>3. 检查 Header 拼写：<code>Authorization: Bearer YOUR_KEY</code><br>4. 确认账户有余额（注册送 $0.1）</div></div>
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">API Key 泄露了怎么办？<span class="faq-toggle">+</span></div><div class="faq-a">立即进入控制台 <code>Settings → API Keys</code> 删除旧 Key 并创建新 Key。检查代码仓库历史记录，使用 git filter-repo 或 BFG 清理敏感信息。</div></div>
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">免费额度用完了还能用吗？<span class="faq-toggle">+</span></div><div class="faq-a">当前所有模型均为 <span class="badge badge-green">$0 现价</span>，免费账户调用免费模型不扣费，但有 RPM（每分钟请求数）限制。如需更高并发，请充值。</div></div>
+
+      <h3>💬 文本模型</h3>
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">如何开启 Thinking 模式？<span class="faq-toggle">+</span></div><div class="faq-a">OpenAI 格式加 <code>chat_template_kwargs.enable_thinking: true</code>；Anthropic 格式加 <code>thinking: {type:"enabled", budget_tokens:2048}</code>。详见左侧「Thinking 模式」页面。</div></div>
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">图片 URL 输入报错怎么办？<span class="faq-toggle">+</span></div><div class="faq-a">1. 确保图片 URL 公网可访问（无需登录/Cookie）<br>2. 使用标准格式：JPG、PNG、WebP<br>3. 在 messages[].content 中使用数组格式，包含 <code>{type:"image_url", image_url:{url:"..."}}</code><br>4. 防盗链图片可能无法读取</div></div>
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">流式输出如何接入？<span class="faq-toggle">+</span></div><div class="faq-a">在请求体中加 <code>"stream": true</code>。响应会逐块返回 SSE 格式数据，每块以 <code>data:</code> 开头，最后以 <code>data: [DONE]</code> 结束。</div></div>
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">工具调用返回格式不对？<span class="faq-toggle">+</span></div><div class="faq-a">确保 tools 数组格式正确，包含 type、function.name、function.description、function.parameters。模型可能返回 <code>finish_reason: "tool_calls"</code>，此时需要解析 tool_calls 数组并执行对应函数。</div></div>
+
+      <h3>🖼️ 图像模型</h3>
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">response_format 放错位置报 400？<span class="faq-toggle">+</span></div><div class="faq-a"><strong>不要</strong>把 <code>response_format</code> 放在请求体根级。正确做法：放在 <code>extra_body</code> 中：<code>{"extra_body":{"response_format":"url"}}</code>。文生图 Base64 可用 <code>return_base64: true</code>。</div></div>
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">图生图需要传 tags: ["img2img"] 吗？<span class="faq-toggle">+</span></div><div class="faq-a"><strong>不需要。</strong>当前接口已简化，图生图只需在 <code>image</code> 数组中提供输入图片 URL 即可。传 tags 反而可能报错。</div></div>
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">输入图片 URL 不可访问怎么办？<span class="faq-toggle">+</span></div><div class="faq-a">1. 换用公网 HTTPS 地址<br>2. 或使用 Data URI Base64 格式：<code>data:image/png;base64,BASE64_HERE</code><br>3. 检查图片是否需登录/有防盗链</div></div>
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">图像生成超时？<span class="faq-toggle">+</span></div><div class="faq-a">图像生成通常需要数秒到几十秒。建议客户端超时设置为 <strong>60s - 360s</strong>。复杂提示词、大尺寸图片或服务高负载时会延长。</div></div>
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">2.0 和 2.1 图像模型怎么选？<span class="faq-toggle">+</span></div><div class="faq-a">新用户直接用 <code>agnes-image-2.1-flash</code>。2.1 在高信息密度、复杂布局、细节丰富场景表现更好，且支持结构保持。</div></div>
+
+      <h3>🎬 视频模型</h3>
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">视频生成任务状态一直 queued？<span class="faq-toggle">+</span></div><div class="faq-a">视频生成是异步任务，创建后需要轮询查询结果。建议轮询间隔 <strong>5 秒</strong>。高峰期队列可能较长，请耐心等待。如超过 10 分钟仍 queued，请联系 support。</div></div>
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">num_frames 报参数错误？<span class="faq-toggle">+</span></div><div class="faq-a">必须同时满足两个条件：<br>1. <code>num_frames ≤ 441</code><br>2. <code>num_frames = 8n + 1</code>（即除以 8 余 1）<br>有效值：81, 121, 161, 241, 441</div></div>
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">视频查询用 video_id 还是 task_id？<span class="faq-toggle">+</span></div><div class="faq-a">新接入强烈推荐用 <code>video_id</code> 查询（<code>/agnesapi?video_id=...</code>）。<code>task_id</code> 接口仍兼容旧版本，但未来可能弃用。</div></div>
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">如何生成更长的视频？<span class="faq-toggle">+</span></div><div class="faq-a">两种方式：<br>1. 增加 <code>num_frames</code>（最大 441）<br>2. 降低 <code>frame_rate</code>（如从 24 降到 12）<br>公式：<code>seconds = num_frames / frame_rate</code>。最长约 36 秒（441 帧 @ 12 FPS）。</div></div>
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">关键帧动画怎么设置？<span class="faq-toggle">+</span></div><div class="faq-a">在 <code>extra_body</code> 中设置 <code>mode: "keyframes"</code>，并在 <code>extra_body.image</code> 中提供多张关键帧图片 URL。模型会在关键帧之间生成平滑过渡。</div></div>
+
+      <h3>🔧 通用问题</h3>
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">400 Bad Request 常见原因？<span class="faq-toggle">+</span></div><div class="faq-a">1. JSON 格式错误（缺少逗号、引号不匹配）<br>2. 必填参数缺失（如 model、prompt、size）<br>3. 参数类型错误（如 num_frames 传了字符串）<br>4. response_format 放错位置<br>5. 图片 URL 格式不正确</div></div>
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">503 Service Unavailable 怎么办？<span class="faq-toggle">+</span></div><div class="faq-a">服务暂时繁忙，建议：<br>1. 等待几秒后重试（指数退避）<br>2. 检查 Agnes AI 状态页或 Discord 公告<br>3. 如持续出现，联系 support@agnes-ai.com</div></div>
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">如何查看我的用量和余额？<span class="faq-toggle">+</span></div><div class="faq-a">登录 Agnes AI 控制台，进入 <code>Billing → Balance</code> 查看余额，<code>Usage</code> 页面查看详细用量统计。</div></div>
+    </section>
+
+    <!-- 错误码 -->
+    <section id="errors" class="section">
+      <h2>🚨 错误码速查表</h2>
+      <div class="card">
+        <table>
+          <tr><th>状态码</th><th>含义</th><th>常见原因</th><th>解决方案</th></tr>
+          <tr><td><span class="badge badge-red">400</span></td><td>请求无效</td><td>参数错误、JSON 格式问题、必填项缺失</td><td>检查请求体格式、参数类型、必填字段</td></tr>
+          <tr><td><span class="badge badge-red">401</span></td><td>未授权</td><td>API Key 错误、过期、格式不对</td><td>检查 Authorization 头，确认 Key 有效</td></tr>
+          <tr><td><span class="badge badge-red">404</span></td><td>不存在</td><td>视频/任务 ID 不存在、URL 路径错误</td><td>确认 ID 正确，检查端点路径</td></tr>
+          <tr><td><span class="badge badge-red">429</span></td><td>速率限制</td><td>请求过于频繁，超出 RPM 限制</td><td>降低请求频率，实现退避重试</td></tr>
+          <tr><td><span class="badge badge-red">500</span></td><td>服务器错误</td><td>服务端内部异常</td><td>稍后重试，如持续出现请联系支持</td></tr>
+          <tr><td><span class="badge badge-amber">503</span></td><td>服务繁忙</td><td>服务负载高或维护中</td><td>等待后重试，关注状态公告</td></tr>
+        </table>
+      </div>
+      <div class="card">
+        <div class="card-title">🔄 推荐重试策略</div>
+        <pre><code>// 指数退避示例
+const delay = (ms) => new Promise(r => setTimeout(r, ms));
+
+async function callWithRetry(fn, maxRetries = 3) {
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      return await fn();
+    } catch (e) {
+      if (e.status === 429 || e.status >= 500) {
+        await delay(Math.pow(2, i) * 1000); // 1s, 2s, 4s
+      } else {
+        throw e; // 4xx 客户端错误不重试
+      }
+    }
+  }
+}</code><button class="copy-btn" onclick="copyCode(this)">复制</button></pre>
+      </div>
+    </section>
+
+    <!-- 智能诊断 -->
+    <section id="diagnose" class="section">
+      <h2>🔍 智能诊断</h2>
+      <div class="card">
+        <div class="card-title">选择你遇到的问题</div>
+        <div class="selector">
+          <div class="chip" onclick="diagnose('auth')">🔐 认证失败</div>
+          <div class="chip" onclick="diagnose('400')">❌ 400 错误</div>
+          <div class="chip" onclick="diagnose('no_response')">📭 无响应/超时</div>
+          <div class="chip" onclick="diagnose('bad_output')">📉 输出质量差</div>
+          <div class="chip" onclick="diagnose('video_fail')">🎬 视频生成失败</div>
+          <div class="chip" onclick="diagnose('image_fail')">🖼️ 图像生成失败</div>
+          <div class="chip" onclick="diagnose('stream')">🌊 流式输出异常</div>
+          <div class="chip" onclick="diagnose('tools')">🔧 工具调用失败</div>
+        </div>
+        <div id="diagnose-result" style="margin-top: 16px;"></div>
+      </div>
+    </section>
+
+    <!-- 端点汇总 -->
+    <section id="endpoints" class="section">
+      <h2>📡 接口端点汇总</h2>
+      <div class="card">
+        <table>
+          <tr><th>功能</th><th>方法</th><th>端点</th><th>模型</th></tr>
+          <tr><td>Chat Completion</td><td>POST</td><td><code>/v1/chat/completions</code></td><td>agnes-1.5/2.0-flash</td></tr>
+          <tr><td>图像生成</td><td>POST</td><td><code>/v1/images/generations</code></td><td>agnes-image-2.0/2.1-flash</td></tr>
+          <tr><td>创建视频</td><td>POST</td><td><code>/v1/videos</code></td><td>agnes-video-v2.0</td></tr>
+          <tr><td>查询视频(推荐)</td><td>GET</td><td><code>/agnesapi?video_id=&lt;ID&gt;</code></td><td>-</td></tr>
+          <tr><td>查询视频(兼容)</td><td>GET</td><td><code>/v1/videos/{task_id}</code></td><td>-</td></tr>
+        </table>
+      </div>
+      <div class="alert alert-info">
+        <strong>Base URL：</strong><code>https://apihub.agnes-ai.com/v1</code>（注意视频查询推荐接口是 <code>/agnesapi</code>，不在 <code>/v1</code> 下）
+      </div>
+    </section>
+
+    <!-- 检查清单 -->
+    <section id="checklist" class="section">
+      <h2>✅ 接入检查清单</h2>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">📋 通用检查</div>
+          <label style="display:block; font-size: 14px; margin: 8px 0; cursor: pointer;"><input type="checkbox"> 已注册 Agnes AI 账户</label>
+          <label style="display:block; font-size: 14px; margin: 8px 0; cursor: pointer;"><input type="checkbox"> 已创建并保存 API Key</label>
+          <label style="display:block; font-size: 14px; margin: 8px 0; cursor: pointer;"><input type="checkbox"> Base URL 配置为 <code>https://apihub.agnes-ai.com/v1</code></label>
+          <label style="display:block; font-size: 14px; margin: 8px 0; cursor: pointer;"><input type="checkbox"> 请求头包含 <code>Authorization: Bearer &lt;KEY&gt;</code></label>
+          <label style="display:block; font-size: 14px; margin: 8px 0; cursor: pointer;"><input type="checkbox"> 请求头包含 <code>Content-Type: application/json</code></label>
+          <label style="display:block; font-size: 14px; margin: 8px 0; cursor: pointer;"><input type="checkbox"> API Key 未暴露在公开代码中</label>
+        </div>
+        <div class="card">
+          <div class="card-title">🖼️ 图像检查</div>
+          <label style="display:block; font-size: 14px; margin: 8px 0; cursor: pointer;"><input type="checkbox"> 模型名称正确：<code>agnes-image-2.1-flash</code></label>
+          <label style="display:block; font-size: 14px; margin: 8px 0; cursor: pointer;"><input type="checkbox"> 文生图传了 model + prompt + size</label>
+          <label style="display:block; font-size: 14px; margin: 8px 0; cursor: pointer;"><input type="checkbox"> 图生图传了 image 数组</label>
+          <label style="display:block; font-size: 14px; margin: 8px 0; cursor: pointer;"><input type="checkbox"> response_format 放在 extra_body 中</label>
+          <label style="display:block; font-size: 14px; margin: 8px 0; cursor: pointer;"><input type="checkbox"> 未传 <code>tags: ["img2img"]</code></label>
+          <label style="display:block; font-size: 14px; margin: 8px 0; cursor: pointer;"><input type="checkbox"> 输入图片 URL 公网可访问</label>
+          <label style="display:block; font-size: 14px; margin: 8px 0; cursor: pointer;"><input type="checkbox"> 客户端超时 ≥ 60s</label>
+        </div>
+        <div class="card">
+          <div class="card-title">🎬 视频检查</div>
+          <label style="display:block; font-size: 14px; margin: 8px 0; cursor: pointer;"><input type="checkbox"> 模型名称：<code>agnes-video-v2.0</code></label>
+          <label style="display:block; font-size: 14px; margin: 8px 0; cursor: pointer;"><input type="checkbox"> num_frames ≤ 441 且满足 8n+1</label>
+          <label style="display:block; font-size: 14px; margin: 8px 0; cursor: pointer;"><input type="checkbox"> frame_rate 在 1-60 范围内</label>
+          <label style="display:block; font-size: 14px; margin: 8px 0; cursor: pointer;"><input type="checkbox"> 图生视频图片 URL 公网可访问</label>
+          <label style="display:block; font-size: 14px; margin: 8px 0; cursor: pointer;"><input type="checkbox"> 已实现轮询查询逻辑（间隔 5s）</label>
+          <label style="display:block; font-size: 14px; margin: 8px 0; cursor: pointer;"><input type="checkbox"> 使用 video_id 查询结果</label>
+        </div>
+        <div class="card">
+          <div class="card-title">💬 Chat 检查</div>
+          <label style="display:block; font-size: 14px; margin: 8px 0; cursor: pointer;"><input type="checkbox"> 模型名称拼写正确</label>
+          <label style="display:block; font-size: 14px; margin: 8px 0; cursor: pointer;"><input type="checkbox"> messages 数组格式正确</label>
+          <label style="display:block; font-size: 14px; margin: 8px 0; cursor: pointer;"><input type="checkbox"> 图片 URL 使用数组 content 格式</label>
+          <label style="display:block; font-size: 14px; margin: 8px 0; cursor: pointer;"><input type="checkbox"> temperature 在 0-2 范围内</label>
+          <label style="display:block; font-size: 14px; margin: 8px 0; cursor: pointer;"><input type="checkbox"> 流式输出能正确解析 SSE</label>
+          <label style="display:block; font-size: 14px; margin: 8px 0; cursor: pointer;"><input type="checkbox"> 工具调用能处理 finish_reason: tool_calls</label>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script>
+  // Navigation
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.addEventListener('click', () => {
+      document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+      item.classList.add('active');
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      document.getElementById(item.dataset.target).classList.add('active');
+    });
+  });
+
+  // Stepper
+  function nextStep(n) {
+    document.querySelectorAll('.step').forEach((s, i) => {
+      s.classList.remove('active');
+      if (i + 1 < n) s.classList.add('done');
+      else s.classList.remove('done');
+      if (i + 1 === n) s.classList.add('active');
+    });
+    document.querySelectorAll('.step-content').forEach(c => c.classList.remove('active'));
+    document.querySelector(`.step-content[data-step="${n}"]`).classList.add('active');
+  }
+
+  // FAQ
+  function toggleFaq(el) {
+    const a = el.nextElementSibling;
+    const t = el.querySelector('.faq-toggle');
+    a.classList.toggle('open');
+    t.classList.toggle('open');
+  }
+  function searchFaq(q) {
+    const items = document.querySelectorAll('.faq-item');
+    items.forEach(item => {
+      const text = item.textContent.toLowerCase();
+      item.style.display = text.includes(q.toLowerCase()) ? 'block' : 'none';
+    });
+  }
+
+  // Copy
+  function copyCode(btn) {
+    const pre = btn.closest('pre');
+    const code = pre.querySelector('code') || pre;
+    navigator.clipboard.writeText(code.textContent.replace('复制', '').trim());
+    btn.textContent = '已复制!';
+    setTimeout(() => btn.textContent = '复制', 1500);
+  }
+
+  // Generator chips
+  document.querySelectorAll('#gen-model .chip, #gen-scene .chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      chip.parentElement.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+      chip.classList.add('selected');
+    });
+  });
+
+  function generateCode() {
+    const model = document.getElementById('p-model').value;
+    const temp = document.getElementById('p-temp').value;
+    const max = document.getElementById('p-max').value;
+    const prompt = document.getElementById('p-prompt').value;
+    const type = document.querySelector('#gen-model .chip.selected').dataset.val;
+    const scene = document.querySelector('#gen-scene .chip.selected').dataset.val;
+    let code = '';
+
+    if (type === 'chat') {
+      let body = { model, messages: [{ role: 'user', content: prompt }] };
+      if (scene === 'stream') body.stream = true;
+      if (scene === 'thinking') body.chat_template_kwargs = { enable_thinking: true };
+      if (scene === 'tools') {
+        body.tools = [{ type: 'function', function: { name: 'get_weather', description: 'Get weather', parameters: { type: 'object', properties: { location: { type: 'string' } }, required: ['location'] } } }];
+      }
+      if (scene === 'image_url') {
+        body.messages[0].content = [{ type: 'text', text: prompt }, { type: 'image_url', image_url: { url: 'https://example.com/image.jpg' } }];
+      }
+      if (temp !== '0.7') body.temperature = parseFloat(temp);
+      if (max !== '1024') body.max_tokens = parseInt(max);
+      code = `curl https://apihub.agnes-ai.com/v1/chat/completions \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '${JSON.stringify(body, null, 2)}'`;
+    } else if (type === 'image') {
+      code = `curl https://apihub.agnes-ai.com/v1/images/generations \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "agnes-image-2.1-flash",
+    "prompt": "${prompt}",
+    "size": "1024x768",
+    "extra_body": {
+      "response_format": "url"
+    }
+  }'`;
+    } else if (type === 'video') {
+      code = `curl -X POST https://apihub.agnes-ai.com/v1/videos \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "agnes-video-v2.0",
+    "prompt": "${prompt}",
+    "height": 768,
+    "width": 1152,
+    "num_frames": 121,
+    "frame_rate": 24
+  }'`;
+    }
+    document.getElementById('gen-output').innerHTML = '<code>' + code.replace(/</g, '&lt;') + '</code><button class="copy-btn" onclick="copyCode(this)">复制</button>';
+  }
+
+  // Diagnose
+  const diagnoseData = {
+    auth: `<div class="alert alert-err"><strong>🔐 认证问题排查</strong></div>
+      <ol style="font-size:14px; line-height:2; margin-left:20px;">
+        <li>检查 Header 格式：<code>Authorization: Bearer YOUR_KEY</code>（注意 Bearer 后有空格）</li>
+        <li>确认 API Key 未过期，在控制台 <code>Settings → API Keys</code> 查看状态</li>
+        <li>确认账户有余额（注册送 $0.1，当前所有模型免费）</li>
+        <li>检查是否有额外空格或换行符污染了 Key</li>
+        <li>尝试用 curl 直接测试，排除 SDK/框架问题</li>
+      </ol>`,
+    400: `<div class="alert alert-err"><strong>❌ 400 错误排查</strong></div>
+      <ol style="font-size:14px; line-height:2; margin-left:20px;">
+        <li>用 JSON 校验工具检查请求体格式</li>
+        <li>确认必填参数：Chat 需 model + messages；图像需 model + prompt + size；视频需 model + prompt</li>
+        <li>检查参数类型：num_frames 必须是整数，temperature 是数字</li>
+        <li>图像请求：response_format 必须放在 extra_body 中，不能放根级</li>
+        <li>视频请求：num_frames 必须 ≤ 441 且满足 8n+1</li>
+        <li>检查图片 URL 是否为有效字符串</li>
+      </ol>`,
+    no_response: `<div class="alert alert-warn"><strong>📭 无响应/超时排查</strong></div>
+      <ol style="font-size:14px; line-height:2; margin-left:20px;">
+        <li>检查网络是否能访问 <code>apihub.agnes-ai.com</code>（ping 或 curl -v）</li>
+        <li>增加客户端超时：Chat 30s，图像 60-360s，视频轮询间隔 5s</li>
+        <li>检查是否被防火墙/代理拦截</li>
+        <li>查看 DNS 解析是否正常</li>
+        <li>如为 503，等待后重试（指数退避）</li>
+      </ol>`,
+    bad_output: `<div class="alert alert-warn"><strong>📉 输出质量差排查</strong></div>
+      <ol style="font-size:14px; line-height:2; margin-left:20px;">
+        <li>优化 Prompt：使用 [Role] + [Task] + [Context] + [Requirements] + [Output Format] 结构</li>
+        <li>编程/推理任务开启 Thinking 模式</li>
+        <li>调整 temperature：确定性任务用 0.1-0.3，创意任务用 0.7-1.0</li>
+        <li>增加 max_tokens 避免输出被截断</li>
+        <li>图像任务：提供更详细的场景、风格、光照描述</li>
+      </ol>`,
+    video_fail: `<div class="alert alert-err"><strong>🎬 视频生成失败排查</strong></div>
+      <ol style="font-size:14px; line-height:2; margin-left:20px;">
+        <li>确认 num_frames ≤ 441 且满足 8n+1（81, 121, 241, 441）</li>
+        <li>确认 frame_rate 在 1-60 范围内</li>
+        <li>图生视频：确认图片 URL 公网可访问</li>
+        <li>关键帧动画：确认 extra_body.mode 为 "keyframes"</li>
+        <li>查询时使用 video_id，轮询间隔 5s</li>
+        <li>如 status 为 failed，查看 error 字段的具体错误信息</li>
+      </ol>`,
+    image_fail: `<div class="alert alert-err"><strong>🖼️ 图像生成失败排查</strong></div>
+      <ol style="font-size:14px; line-height:2; margin-left:20px;">
+        <li>确认 response_format 放在 extra_body 中，不在根级</li>
+        <li>图生图不需要传 tags: ["img2img"]</li>
+        <li>确认 image 数组中的 URL 公网可访问</li>
+        <li>Data URI Base64 格式：data:image/png;base64,BASE64_HERE</li>
+        <li>增加客户端超时到 60-360s</li>
+        <li>检查 size 格式：1024x768 / 1024x1024 / 768x1024</li>
+      </ol>`,
+    stream: `<div class="alert alert-warn"><strong>🌊 流式输出异常排查</strong></div>
+      <ol style="font-size:14px; line-height:2; margin-left:20px;">
+        <li>确认请求体包含 <code>"stream": true</code></li>
+        <li>解析 SSE 格式：每行以 <code>data:</code> 开头，最后为 <code>data: [DONE]</code></li>
+        <li>检查是否正确处理了 delta 字段拼接</li>
+        <li>网络中断时实现断线重连</li>
+        <li>部分框架需设置 <code>Accept: text/event-stream</code></li>
+      </ol>`,
+    tools: `<div class="alert alert-warn"><strong>🔧 工具调用失败排查</strong></div>
+      <ol style="font-size:14px; line-height:2; margin-left:20px;">
+        <li>确认 tools 数组格式正确，包含 type、function.name、function.description、function.parameters</li>
+        <li>检查 finish_reason 是否为 "tool_calls"</li>
+        <li>解析 choices[0].message.tool_calls 数组</li>
+        <li>执行函数后将结果以 role: tool 的消息回传</li>
+        <li>确保 tool_choice 设置正确（auto / required / none）</li>
+      </ol>`
+  };
+  function diagnose(key) {
+    document.getElementById('diagnose-result').innerHTML = diagnoseData[key] || '<div class="alert alert-info">请选择上方问题类型</div>';
+  }
+</script>
+</body>
+</html>
