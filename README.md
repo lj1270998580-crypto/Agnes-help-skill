@@ -100,7 +100,7 @@
 | [kangarooking 免费模型 Skills](https://github.com/kangarooking/agnes-free-model-skills) | Codex 用户，需要独立文本/图片/视频 Skill | 复制到 `~/.codex/skills/` |
 | [16nic ComfyUI 节点](https://github.com/16nic/comfyui-agnes-ai) | ComfyUI 用户，需要可视化节点工作流 | `git clone` 到 `ComfyUI/custom_nodes` |
 
-详见 `SKILL.md` 第 9-17 章的完整接入指南。
+详见 `SKILL.md` 第 9-18 章的完整接入指南。
 
 ---
 
@@ -155,6 +155,7 @@ Headers:
 |------|----------|
 | 2026-06-06 | 初始版本：整合官方文档、创建交互式 HTML 助手、编写通用 Skill |
 | 2026-06-06 | 补充 Codex++ 官方接入指南（区分 GUI 工具与 CLI 工具） |
+| 2026-06-06 | 精简触发词列表，新增 Prompt 模板库章节（文生图/图生图/视频/文本模板） |
 | 2026-06-06 | 修复图生图 `image` 参数位置：必须放在 `extra_body` 中，不能放请求体顶层（官方文档错误修正） |
 
 ---
