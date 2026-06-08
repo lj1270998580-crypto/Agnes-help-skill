@@ -1,6 +1,6 @@
 ---
 name: agnes-ai-support
-version: "1.2.2"
+version: "1.2.4"
 description: |
   Agnes AI API 接入支持与问题排查 Skill。帮助新用户完成 Agnes AI API 的接入配置，
   诊断和解决接入过程中遇到的认证、参数、响应、图像生成、视频生成等各类问题。
@@ -14,7 +14,7 @@ description: |
 
 # Agnes AI API 接入支持与问题排查
 
-> **Skill 版本：** v1.2.3
+> **Skill 版本：** v1.2.4
 > **适用工具：** OpenClaw / Claude Code / Claude Desktop / Hermes / Codex / WorkBuddy / Cherry Studio / Opencode / Kimi Work
 > **更新日期：** 2026-06-06
 > **GitHub 仓库：** https://github.com/lj1270998580-crypto/Agnes-help-skill
@@ -72,13 +72,17 @@ description: |
 - 视频文档：https://agnes-ai.com/doc/agnes-video-v20
 - 社区 Skill 中的视频接口可能未更新，请以官方文档为准
 
-### 🚀 Agnes-2.0-Flash 支持 1M Token 超长上下文（2026-06-07 更新）
+### ⚠️ Agnes-2.0-Flash 上下文窗口回退说明（2026-06-08 更新）
 
-- **Context 窗口：256K → 1M（1,024K）**
-- **Max Output：65.5K → 1M（1,024K）**
-- **使用方式：无需修改代码**，API 请求中控制 `messages` 数组长度在 1M Token 范围内即可正常使用
-- 适用于：长文档分析、大规模代码库理解、多轮深度对话、知识库问答等场景
-- 1.5 Flash 保持 256K/65.5K 不变
+> **官方已回退：** Agnes-2.0-Flash 的上下文窗口从 1M 回退至 **256K**，Max Output 回退至 **65.5K**。
+>
+> 此前官方短暂开放了 1M Token 超长上下文支持，但发现稳定性问题后已回退至原有规格。
+>
+> **当前规格：**
+> - Context：256K
+> - Max Output：65.5K
+>
+> 1.5 Flash 保持 256K/65.5K 不变。
 
 ---
 
@@ -306,8 +310,8 @@ curl https://apihub.agnes-ai.com/v1/chat/completions \
 
 ### agnes-2.0-flash
 - 端点：`POST /v1/chat/completions`
-- **Context：1M（1,024K）⚡ 新增超长上下文**
-- **Max Output：1M（1,024K）⚡ 新增超长输出**
+- Context：256K
+- Max Output：65.5K
 - 额外参数：stream, tools, tool_choice, chat_template_kwargs, thinking
 - 支持图片 URL 输入（messages[].content 数组格式）
 - 支持工具调用、Thinking 模式、流式输出

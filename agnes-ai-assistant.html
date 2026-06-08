@@ -317,8 +317,8 @@ Headers:
           <div class="card-title"><span class="badge badge-purple">文本+</span> agnes-2.0-flash</div>
           <table>
             <tr><td>端点</td><td><code>/v1/chat/completions</code></td></tr>
-            <tr><td>Context</td><td><strong>1M（1,024K）⚡</strong></td></tr>
-            <tr><td>Max Output</td><td><strong>1M（1,024K）⚡</strong></td></tr>
+            <tr><td>Context</td><td>256K</td></tr>
+            <tr><td>Max Output</td><td>65.5K</td></tr>
             <tr><td>特殊能力</td><td>工具调用、Thinking、图片理解、流式</td></tr>
             <tr><td>价格(Input)</td><td>$0.1 / 1M tokens <span class="badge badge-green">现价 $0</span></td></tr>
             <tr><td>价格(Output)</td><td>$0.2 / 1M tokens <span class="badge badge-green">现价 $0</span></td></tr>
@@ -760,7 +760,7 @@ async function callWithRetry(fn, maxRetries = 3) {
 
   // Diagnose
   // ===== 版本检查与更新提醒 =====
-  const LOCAL_VERSION = '1.2.3';
+  const LOCAL_VERSION = '1.2.4';
   const GITHUB_REPO = 'lj1270998580-crypto/Agnes-help-skill';
   const GITHUB_API = `https://api.github.com/repos/${GITHUB_REPO}/commits?path=agnes-ai-assistant.html&per_page=1`;
   const STORAGE_KEY = 'agnes_assistant_last_commit';
