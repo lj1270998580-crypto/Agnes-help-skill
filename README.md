@@ -127,6 +127,14 @@ Headers:
 
 ---
 
+## 📖 Agnes Help Skill 教程图
+
+> 一图看懂：如何安装 Skill、如何用 Skill 生图/生视频、如何用 Skill 接入工具、如何用 Skill 排查问题
+
+![Agnes Help Skill 教程信息图](https://raw.githubusercontent.com/lj1270998580-crypto/Agnes-help-skill/main/assets/agnes-help-skill-tutorial.png)
+
+---
+
 ## 📚 官方与社区资源
 
 | 资源 | 链接 |
@@ -157,7 +165,9 @@ Headers:
 |------|----------|
 | 2026-06-06 | 初始版本：整合官方文档、创建交互式 HTML 助手、编写通用 Skill |
 | 2026-06-06 | 补充 Codex++ 官方接入指南（区分 GUI 工具与 CLI 工具） |
+| 2026-06-09 | Skill 改为**方式一（⭐ 推荐）**，新增 Agnes Help Skill **教程信息图**和完整**使用说明**（生图/生视频、接入工具、排查问题三大场景） |
 | 2026-06-08 | Agnes-2.0-Flash 上下文窗口回退：官方从 1M 回退至 **256K**（Context 1M → 256K，Max Output 1M → 65.5K），此前 1M 支持因稳定性问题已回退 |
+| 2026-06-07 | 精简触发词列表，新增 **Prompt 模板库**章节（文生图/图生图/视频/文本模板） |
 | 2026-06-06 | 修复图生图 `image` 参数位置：必须放在 `extra_body` 中，不能放请求体顶层（官方文档错误修正） |
 
 ---
