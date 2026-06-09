@@ -69,6 +69,7 @@ description: |
 
 - **必须使用 video_id 查询视频结果**，不要用 task_id 查询
 - 使用 task_id 查询会导致视频排队过长（超过 5 分钟大概率是接口搞错了）
+- **查询端点：`https://apihub.agnes-ai.com/agnesapi?video_id=xxx`（注意：不需要 `/v1` 前缀！文档写的是 `/v1/agnesapi` 但实际会 404）**
 - 视频文档：https://agnes-ai.com/doc/agnes-video-v20
 - 社区 Skill 中的视频接口可能未更新，请以官方文档为准
 
@@ -188,8 +189,8 @@ curl https://apihub.agnes-ai.com/v1/chat/completions \
 ### 2.4 视频排队过长（> 5 分钟）
 
 **这是最重要的排查点：**
-- **大概率是使用了 task_id 查询接口**
-- **必须使用 video_id 查询**：`GET /agnesapi?video_id=<ID>`
+- **大概率是使用了 task_id 查询接口，或用了错误的 URL 前缀**
+- **必须使用 video_id 查询**：`GET https://apihub.agnes-ai.com/agnesapi?video_id=<ID>`（注意：无 `/v1` 前缀）
 - task_id 查询接口会导致排队异常延长
 - 正确做法：创建任务后获取 `video_id`，用 video_id 轮询查询
 - 轮询间隔建议 5 秒
@@ -327,11 +328,11 @@ curl https://apihub.agnes-ai.com/v1/chat/completions \
 
 ### agnes-video-v2.0
 - 创建：`POST /v1/videos`
-- **查询（强烈推荐）：`GET /agnesapi?video_id=<ID>`**
-- 查询（兼容，不推荐）：`GET /v1/videos/{task_id}`
+- **查询（强烈推荐）：`GET https://apihub.agnes-ai.com/agnesapi?video_id=<ID>`**（无 `/v1` 前缀）
+- 查询（兼容，不推荐）：`GET /v1/videos/{task_id}`（会导致排队过长）
 - 参数：model, prompt, image, mode, height(768), width(1152), num_frames, frame_rate(24), num_inference_steps, seed, negative_prompt, extra_body.image, extra_body.mode
 - 价格：$0.005/second（**现价 $0，RPM ≤ 20**）
-- **重要：必须用 video_id 查询，task_id 会导致排队过长**
+- **重要：必须用 video_id 查询，不要用 task_id**
 
 ---
 
