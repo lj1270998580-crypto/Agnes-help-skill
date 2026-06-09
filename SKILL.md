@@ -1,6 +1,6 @@
 ---
 name: agnes-ai-support
-version: "1.2.4"
+version: "1.2.5"
 description: |
   Agnes AI API 接入支持与问题排查 Skill。帮助新用户完成 Agnes AI API 的接入配置，
   诊断和解决接入过程中遇到的认证、参数、响应、图像生成、视频生成等各类问题。
@@ -14,7 +14,7 @@ description: |
 
 # Agnes AI API 接入支持与问题排查
 
-> **Skill 版本：** v1.2.4
+> **Skill 版本：** v1.2.5
 > **适用工具：** OpenClaw / Claude Code / Claude Desktop / Hermes / Codex / WorkBuddy / Cherry Studio / Opencode / Kimi Work
 > **更新日期：** 2026-06-06
 > **GitHub 仓库：** https://github.com/lj1270998580-crypto/Agnes-help-skill
@@ -50,6 +50,102 @@ description: |
    > ```
 
 4. 如果用户正在使用 HTML 助手或 API 文档，同样提醒检查对应文件是否有更新。
+
+---
+
+## 如何使用本 Skill
+
+> 本 Skill 是你的 Agnes AI 接入助手。安装后，Agent 会自动理解 Agnes API 的完整信息，帮你完成接入、生成内容、排查问题。
+
+![Agnes Help Skill 教程信息图](https://raw.githubusercontent.com/lj1270998580-crypto/Agnes-help-skill/main/assets/agnes-help-skill-tutorial.png)
+
+### 一、用 Skill 让 Agent 帮你生图 / 生视频
+
+**步骤：**
+1. **安装 Skill** → 把本 Skill 加载到 Agent（OpenClaw / Claude Code / Kimi Work 等）
+2. **配置 API Key** → 告诉 Agent 你的 Agnes API Key
+3. **告诉 Agent 需求** → "帮我生成一张赛博朋克城市夜景图" / "帮我生成一段 5 秒产品展示视频"
+4. **Agent 自动执行** → Agent 会根据 Skill 中的参数说明自动选择模型、填写参数、调用 API
+
+**示例对话：**
+```
+用户：帮我安装这个 skill，并帮我配置 Agnes API Key，然后帮我生成一张图片
+Agent：（读取 Skill → 指导配置 → 调用 API → 返回图片）
+
+用户：我已经装好 skill，帮我生成一个 5 秒视频
+Agent：（读取 Skill → 选择视频模型 → 提交任务 → 轮询 → 返回视频）
+```
+
+> 💡 **你无需选择模型**，Agent 会根据你的需求自动判断并选择合适的模型执行。
+
+> ⚠️ **视频查询一定要用 video_id，不要用 task_id**
+
+---
+
+### 二、用 Skill 让 Agent 接入你开发的工具
+
+**场景：** 你有自己的工具、API 或服务，需要让 Agent 帮你接入和使用。
+
+**步骤：**
+1. **安装 Agnes Skill** → 让 Agent 以本 Skill 为参考来理解 Agnes 接口
+2. **描述你的工具** → 告诉 Agent 你的工具是什么、需要什么能力
+3. **Agent 生成接入方案** → Agent 会参考 Skill 中的接口信息，帮你生成接入代码、示例、调用方法
+4. **联调修复** → 根据 Agent 提供的步骤调试，直至成功接入
+
+**示例对话：**
+```
+用户：我想在我的 Next.js 项目中接入 Agnes AI 的图像生成功能
+Agent：（参考 Skill → 生成 Next.js API Route 代码 → 提供前端调用示例）
+
+用户：我的工具需要同时支持文本对话和图像生成
+Agent：（参考 Skill → 生成多模态接入方案 → 提供统一封装代码）
+```
+
+> ⭐ **Skill 的价值：让 Agent 更懂你的工具，更快帮你完成接入。**
+
+---
+
+### 三、用 Skill 来排查问题，快速拿到方案
+
+**步骤：**
+1. **描述问题** → 把错误码、日志、截图发给 Agent，清晰描述你遇到了什么问题
+2. **Agent 分析** → Agent 会参考 Skill 中的错误码表、常见问题、排查指南进行诊断
+3. **给出方案** → Agent 输出：原因分析 + 修复步骤 + 示例代码
+
+**高效提问模板：**
+```
+现在【正在做】：我在做什么
+目标【期望结果/需求】：我需要什么
+问题：遇到了什么问题
+已尝试：【做过什么】
+请给出：【原因 + 修复步骤 + 示例】
+```
+
+**常见错误码速查（Agent 会自动匹配）：**
+
+| 错误码 | 含义 | 常见原因 |
+|--------|------|----------|
+| 401 | 认证错误 | API Key 错误、过期、格式不对 |
+| 400 | 参数错误 | 必填参数缺失、类型错误、response_format 放错位置 |
+| 429 | 频率限制 | RPM 超过 20、请求过于频繁 |
+| 503 | 服务繁忙 | 服务端负载高，稍后重试 |
+
+**示例对话：**
+```
+用户：我调用图像生成接口返回 400，提示参数错误
+Agent：（参考 Skill 错误码表 → 分析可能原因 → 给出修复方案）
+
+用户：视频任务提交了但一直查不到结果
+Agent：（参考 Skill 视频排查指南 → 检查 video_id vs task_id → 给出正确查询方式）
+```
+
+---
+
+### 补充建议
+
+- **新手可先安装 Skill 再使用** → 快速上手，降低使用门槛
+- **API 文档可交给 Agent 参考** → 提升理解准确度与效率
+- **有更新时查看 GitHub 仓库最新版** → 获取最新功能与修复
 
 ---
 

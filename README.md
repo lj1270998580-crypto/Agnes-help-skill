@@ -31,7 +31,27 @@
 
 ## 🚀 快速开始
 
-### 方式一：交互式 HTML 助手（推荐新手）
+### 方式一：Skill（⭐ 推荐，AI 工具链集成）
+
+将 `SKILL.md` 放入你的 AI 工具 Skill 目录，即可让 Agent 自动：
+
+- 指导新用户完成 Agnes AI 接入
+- 诊断 401/400/429/500/503 等错误
+- 排查视频排队过长、图像生成失败等问题
+- 指导 Thinking 模式、流式输出、工具调用等高级功能
+- 指导 Codex、OpenClaw、Hermes、Claude CLI/Desktop、WorkBuddy、Cherry Studio、Opencode 等工具集成
+- 指导社区 Skill 安装与使用
+
+**兼容工具：** OpenClaw、Claude Code、Claude Desktop、Hermes、Codex、WorkBuddy、Cherry Studio、Opencode、Kimi Work
+
+**📋 一键安装（复制发给 Agent）：**
+```
+请读取并安装 Agnes AI 支持 Skill：https://github.com/lj1270998580-crypto/Agnes-help-skill
+```
+
+安装完成后，只需配置 Agnes API Key 即可使用。告诉 Agent"我要生图""我要生视频"，Agent 会自动判断并执行。
+
+### 方式二：交互式 HTML 助手（推荐新手）
 
 1. 下载 `agnes-ai-assistant.html`
 2. 用浏览器直接打开（无需服务器）
@@ -50,7 +70,7 @@
 - 📡 接口端点汇总
 - ✅ 接入检查清单
 
-### 方式二：API 文档（推荐 Agent / 开发者）
+### 方式三：API 文档（推荐 Agent / 开发者）
 
 `agnes-ai-api-documentation.md` 整合了 Agnes AI 官方文档的全部内容：
 
@@ -60,23 +80,17 @@
 - Agnes Video V2.0 完整参数与示例（含异步轮询）
 - 隐私政策与服务条款
 
-### 方式三：Skill（推荐 AI 工具链集成）
+### 方式四：社区 Skill（推荐进阶用户）
 
-将 `SKILL.md` 放入你的 AI 工具 Skill 目录，即可让 Agent 自动：
+| 社区资源 | 适用场景 | 安装方式 |
+|----------|----------|----------|
+| [Yacey 生成 Skill](https://github.com/Yacey/agnes-ai-generation-skill) | Agent 用户，需要中文提示词自动翻译 | `npx skills add Yacey/agnes-ai-generation-skill` |
+| [kangarooking 免费模型 Skills](https://github.com/kangarooking/agnes-free-model-skills) | Codex 用户，需要独立文本/图片/视频 Skill | 复制到 `~/.codex/skills/` |
+| [16nic ComfyUI 节点](https://github.com/16nic/comfyui-agnes-ai) | ComfyUI 用户，需要可视化节点工作流 | `git clone` 到 `ComfyUI/custom_nodes` |
 
-- 指导新用户完成 Agnes AI 接入
-- 诊断 401/400/429/500/503 等错误
-- 排查视频排队过长、图像生成失败等问题
-- 指导 Thinking 模式、流式输出、工具调用等高级功能
-- 指导 Codex、OpenClaw、Hermes、Claude CLI/Desktop、WorkBuddy、Cherry Studio、Opencode 等工具集成
-- 指导社区 Skill 安装与使用
+详见 `SKILL.md` 第 9-18 章的完整接入指南。
 
-**兼容工具：** OpenClaw、Claude Code、Claude Desktop、Hermes、Codex、WorkBuddy、Cherry Studio、Opencode、Kimi Work
-
-**📋 一键安装（复制发给 Agent）：**
-```
-请读取并安装 Agnes AI 支持 Skill：https://raw.githubusercontent.com/lj1270998580-crypto/Agnes-help-skill/main/SKILL.md
-```
+---
 
 ### 自动更新提醒
 
@@ -89,18 +103,6 @@
 **手动检查更新方式：**
 1. 访问 GitHub 仓库查看最新 commit：https://github.com/lj1270998580-crypto/Agnes-help-skill
 2. 或直接让 Agent 执行：`请检查 Agnes AI 支持 Skill 是否有更新`
-
----
-
-### 方式四：社区 Skill（推荐进阶用户）
-
-| 社区资源 | 适用场景 | 安装方式 |
-|----------|----------|----------|
-| [Yacey 生成 Skill](https://github.com/Yacey/agnes-ai-generation-skill) | Agent 用户，需要中文提示词自动翻译 | `npx skills add Yacey/agnes-ai-generation-skill` |
-| [kangarooking 免费模型 Skills](https://github.com/kangarooking/agnes-free-model-skills) | Codex 用户，需要独立文本/图片/视频 Skill | 复制到 `~/.codex/skills/` |
-| [16nic ComfyUI 节点](https://github.com/16nic/comfyui-agnes-ai) | ComfyUI 用户，需要可视化节点工作流 | `git clone` 到 `ComfyUI/custom_nodes` |
-
-详见 `SKILL.md` 第 9-18 章的完整接入指南。
 
 ---
 
