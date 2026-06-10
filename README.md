@@ -40,7 +40,6 @@
 - 排查视频排队过长、图像生成失败等问题
 - 指导 Thinking 模式、流式输出、工具调用等高级功能
 - 指导 Codex、OpenClaw、Hermes、Claude CLI/Desktop、WorkBuddy、Cherry Studio、Opencode 等工具集成
-- 指导社区 Skill 安装与使用
 
 **兼容工具：** OpenClaw、Claude Code、Claude Desktop、Hermes、Codex、WorkBuddy、Cherry Studio、Opencode、Kimi Work
 
@@ -79,16 +78,6 @@
 - Agnes Image 2.0 / 2.1 Flash 完整参数与示例
 - Agnes Video V2.0 完整参数与示例（含异步轮询）
 - 隐私政策与服务条款
-
-### 方式四：社区 Skill（推荐进阶用户）
-
-| 社区资源 | 适用场景 | 安装方式 |
-|----------|----------|----------|
-| [Yacey 生成 Skill](https://github.com/Yacey/agnes-ai-generation-skill) | Agent 用户，需要中文提示词自动翻译 | `npx skills add Yacey/agnes-ai-generation-skill` |
-| [kangarooking 免费模型 Skills](https://github.com/kangarooking/agnes-free-model-skills) | Codex 用户，需要独立文本/图片/视频 Skill | 复制到 `~/.codex/skills/` |
-| [16nic ComfyUI 节点](https://github.com/16nic/comfyui-agnes-ai) | ComfyUI 用户，需要可视化节点工作流 | `git clone` 到 `ComfyUI/custom_nodes` |
-
-详见 `SKILL.md` 第 9-18 章的完整接入指南。
 
 ---
 
@@ -152,9 +141,6 @@ Headers:
 | Opencode 接入 | https://agnes-ai.com/doc/cid7 |
 | Codex++ 接入 | https://agnes-ai.com/doc/cid8 |
 | 常见问题 QA | https://icn1d2hdv39m.feishu.cn/wiki/R7TEwjadJibD62kWeS9cubtpnPi |
-| 社区教程 | https://github.com/Yacey/agnes-ai-generation-skill |
-| 社区 Skill | https://github.com/kangarooking/agnes-free-model-skills |
-| ComfyUI 节点 | https://github.com/16nic/comfyui-agnes-ai |
 | 支持邮箱 | support@agnes-ai.com |
 
 ---
