@@ -1,6 +1,6 @@
 # Agnes AI API 完整文档
 
-> **文档版本：** v1.2.7
+> **文档版本：** v1.2.8
 > **来源：** https://agnes-ai.com/doc/overview 及其子页面
 > **整理时间：** 2026-06-06
 > **GitHub 仓库：** https://github.com/lj1270998580-crypto/Agnes-help-skill
@@ -275,7 +275,7 @@ finish_reason 生成结束原因，例如 stop、length 等
 usage token消耗统计
 项目 数值
 Context 256K
-Max Output 65.5K
+Max Output 64K
 类型 ### ### 价格 现价
 Input Tokens $0.07 / 1M tokens $0 / 1M 
 tokens
@@ -606,7 +606,7 @@ You are an image analysis assistant. Analyze the provided image URL, summarize t
 
 项目 数值
 Context 256K
-Max Output 65.5K
+Max Output 64K
 类型 ### ### 价格 现价
 Input Tokens $0.1 / 1M 
 tokens
