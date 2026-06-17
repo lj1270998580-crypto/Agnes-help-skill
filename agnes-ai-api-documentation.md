@@ -1,6 +1,6 @@
 # Agnes AI API 完整文档
 
-> **文档版本：** v1.2.6
+> **文档版本：** v1.2.7
 > **来源：** https://agnes-ai.com/doc/overview 及其子页面
 > **整理时间：** 2026-06-06
 > **GitHub 仓库：** https://github.com/lj1270998580-crypto/Agnes-help-skill

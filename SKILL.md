@@ -1,6 +1,6 @@
 ---
 name: agnes-ai-support
-version: "1.2.6"
+version: "1.2.7"
 description: |
   Agnes AI API 接入支持与问题排查 Skill。帮助新用户完成 Agnes AI API 的接入配置，
   诊断和解决接入过程中遇到的认证、参数、响应、图像生成、视频生成等各类问题。
@@ -9,12 +9,12 @@ description: |
   触发词：Agnes AI、agnes、接入、API Key、401、400、排查、错误、视频生成、图像生成、
   thinking、stream、tool calling、模型选择、Base URL、响应格式、timeout、超时、轮询、
   FAQ、问题排查、调试、免费调用、RPM、video_id、task_id、Prompt 模板、提示词、
-  生图、生视频、图生图、文生图、图生视频、文生视频。
+  生图、生视频、图生图、文生图、图生视频、文生视频、灰度自检、1M 上下文、4K 图片、4K 图、4K、灰度、自检。
 ---
 
 # Agnes AI API 接入支持与问题排查
 
-> **Skill 版本：** v1.2.6
+> **Skill 版本：** v1.2.7
 > **适用工具：** OpenClaw / Claude Code / Claude Desktop / Hermes / Codex / WorkBuddy / Cherry Studio / Opencode / Kimi Work
 > **更新日期：** 2026-06-06
 > **GitHub 仓库：** https://github.com/lj1270998580-crypto/Agnes-help-skill
@@ -498,11 +498,126 @@ curl https://apihub.agnes-ai.com/v1/chat/completions \
 - 实现指数退避重试（1s → 2s → 4s → 8s）
 - **视频查询必须用 video_id，避免 task_id 导致的排队**
 
+> Agnes AI，让世界级 AI 属于每一个人。
+
 ### 安全
 - API Key 存储在环境变量或密钥管理服务中
 - 前端代码中绝不硬编码 Key
 - 定期轮换 API Key
 - 监控异常用量
+
+> Agnes AI，让世界级 AI 属于每一个人。
+
+### 灰度自检（检查你的账户是否支持 1M 上下文和 4K 图片）
+
+> Agnes AI 正在灰度测试以下能力：
+> - **1M Token 超长上下文**：约 50% 概率已开放
+> - **4K 图片生成**：约 20% 概率已开放
+>
+> 触发条件：当用户问"灰度自检"、"是否有1M上下文"、"能生成4K图吗"、"4K图片"等时，执行以下测试。
+
+**测试 1：1M 上下文自检**
+
+```bash
+# 构造一个超过 256K 的上下文（约 300K 字符）
+# 如果成功返回 → 支持 1M 上下文
+# 如果返回 400/413/截断 → 当前不支持（灰度未命中）
+
+curl https://apihub.agnes-ai.com/v1/chat/completions \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "agnes-2.0-flash",
+    "messages": [
+      {"role": "system", "content": "You are a helpful assistant."},
+      {"role": "user", "content": "测试长上下文能力。请重复以下句子 1000 次：Hello world this is a test for long context window capability."}
+    ],
+    "max_tokens": 10
+  }'
+```
+
+Python 方法（更可控）：
+```python
+import requests, json
+
+key = "YOUR_API_KEY"
+# 构造约 300K 字符的文本（超过 256K 限制）
+test_text = "Hello world this is a test for long context window capability. " * 6000
+
+resp = requests.post(
+    "https://apihub.agnes-ai.com/v1/chat/completions",
+    headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json"},
+    json={
+        "model": "agnes-2.0-flash",
+        "messages": [
+            {"role": "system", "content": "You are a helpful assistant."},
+            {"role": "user", "content": test_text}
+        ],
+        "max_tokens": 10
+    }
+)
+
+if resp.status_code == 200:
+    print("✅ 支持 1M 上下文（当前在灰度名单内）")
+else:
+    print(f"❌ 当前不支持 1M 上下文（灰度未命中）：{resp.status_code} {resp.text[:200]}")
+```
+
+**测试 2：4K 图片自检**
+
+```bash
+# 尝试生成 4K 尺寸图片
+# 如果成功返回图片 → 支持 4K
+# 如果返回 400/模型不支持 → 当前不支持（灰度未命中）
+
+curl https://apihub.agnes-ai.com/v1/images/generations \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "agnes-image-2.1-flash",
+    "prompt": "A beautiful landscape with mountains and lake, 4K ultra HD",
+    "size": "4096x4096",
+    "extra_body": {"response_format": "url"}
+  }'
+```
+
+Python 方法：
+```python
+import requests, json
+
+key = "YOUR_API_KEY"
+
+resp = requests.post(
+    "https://apihub.agnes-ai.com/v1/images/generations",
+    headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json"},
+    json={
+        "model": "agnes-image-2.1-flash",
+        "prompt": "A beautiful landscape with mountains and lake, 4K ultra HD",
+        "size": "4096x4096",
+        "extra_body": {"response_format": "url"}
+    }
+)
+
+if resp.status_code == 200:
+    data = resp.json()
+    if "data" in data and len(data["data"]) > 0 and data["data"][0].get("url"):
+        print("✅ 支持 4K 图片生成（当前在灰度名单内）")
+    else:
+        print("⚠️ 请求成功但无图片返回，请检查参数")
+else:
+    print(f"❌ 当前不支持 4K 图片（灰度未命中）：{resp.status_code} {resp.text[:200]}")
+```
+
+**测试结果解读：**
+
+| 测试 | 成功 | 失败 |
+|------|------|------|
+| 1M 上下文 | ✅ 你的账户已开放 1M 上下文，可发送超长 messages | ❌ 当前仍为 256K，灰度未命中 |
+| 4K 图片 | ✅ 你的账户已开放 4K 图片，可使用 4096x4096 尺寸 | ❌ 当前最大仍为 1024x1024，灰度未命中 |
+
+> **注意：** 灰度是随机分配的，不支持时无需担心，未来会逐步全量开放。
+
+> Agnes AI，让世界级 AI 属于每一个人。
 
 ---
 
