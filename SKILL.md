@@ -1,6 +1,6 @@
 ---
 name: agnes-ai-support
-version: "1.2.8"
+version: "1.2.9"
 description: |
   Agnes AI API 接入支持与问题排查 Skill。帮助新用户完成 Agnes AI API 的接入配置，
   诊断和解决接入过程中遇到的认证、参数、响应、图像生成、视频生成等各类问题。
@@ -14,7 +14,7 @@ description: |
 
 # Agnes AI API 接入支持与问题排查
 
-> **Skill 版本：** v1.2.8
+> **Skill 版本：** v1.2.9
 > **适用工具：** OpenClaw / Claude Code / Claude Desktop / Hermes / Codex / WorkBuddy / Cherry Studio / Opencode / Kimi Work
 > **更新日期：** 2026-06-06
 > **GitHub 仓库：** https://github.com/lj1270998580-crypto/Agnes-help-skill
@@ -531,13 +531,21 @@ curl https://apihub.agnes-ai.com/v1/chat/completions \
 > - **4K 图片生成**：约 20% 概率已开放
 >
 > 触发条件：当用户问"灰度自检"、"是否有1M上下文"、"能生成4K图吗"、"4K图片"等时，执行以下测试。
+>
+> **⚠️ 重要：这些测试是"尽力而为"的方法，结果仅供参考。灰度分配是动态的，可能随时变化。**
+
+---
 
 **测试 1：1M 上下文自检**
 
+> **原理**：需要发送超过 256K tokens 的文本。如果 API 成功返回 → 支持 1M；如果返回 413/400（上下文过长）→ 当前不支持。
+>
+> **注意**：英文文本约 1 token ≈ 4 字符，因此要超过 256K tokens，需要发送 **约 1M+ 字符** 的 payload。这是一个较大的请求体，可能受客户端/服务端请求大小限制。
+
+**curl 方法**（示例文本较短，实际测试需要更大payload，推荐用 Python 方法）：
 ```bash
-# 构造一个超过 256K 的上下文（约 300K 字符）
-# 如果成功返回 → 支持 1M 上下文
-# 如果返回 400/413/截断 → 当前不支持（灰度未命中）
+# 此示例payload较小，仅展示调用方式
+# 实际测试需要约 1M+ 字符的文本才能超过 256K tokens
 
 curl https://apihub.agnes-ai.com/v1/chat/completions \
   -H "Authorization: Bearer YOUR_API_KEY" \
@@ -546,46 +554,64 @@ curl https://apihub.agnes-ai.com/v1/chat/completions \
     "model": "agnes-2.0-flash",
     "messages": [
       {"role": "system", "content": "You are a helpful assistant."},
-      {"role": "user", "content": "测试长上下文能力。请重复以下句子 1000 次：Hello world this is a test for long context window capability."}
+      {"role": "user", "content": "（此处需要放入约 1M+ 字符的文本）"}
     ],
     "max_tokens": 10
   }'
 ```
 
-Python 方法（更可控）：
+**Python 方法（推荐）**：
 ```python
-import requests, json
+import requests
 
 key = "YOUR_API_KEY"
-# 构造约 300K 字符的文本（超过 256K 限制）
-test_text = "Hello world this is a test for long context window capability. " * 6000
 
-resp = requests.post(
-    "https://apihub.agnes-ai.com/v1/chat/completions",
-    headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json"},
-    json={
-        "model": "agnes-2.0-flash",
-        "messages": [
-            {"role": "system", "content": "You are a helpful assistant."},
-            {"role": "user", "content": test_text}
-        ],
-        "max_tokens": 10
-    }
-)
+# 生成约 1.2M 字符（约 300K tokens，超过 256K 边界）
+# 注意：实际 token 数取决于 tokenizer，但 1.2M 字符应足够超过 256K tokens
+sentence = "Hello world this is a test for long context window capability. "
+test_text = sentence * 20000  # 约 1.2M 字符
 
-if resp.status_code == 200:
-    print("✅ 支持 1M 上下文（当前在灰度名单内）")
-else:
-    print(f"❌ 当前不支持 1M 上下文（灰度未命中）：{resp.status_code} {resp.text[:200]}")
+print(f"测试文本长度: {len(test_text)} 字符")
+
+try:
+    resp = requests.post(
+        "https://apihub.agnes-ai.com/v1/chat/completions",
+        headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json"},
+        json={
+            "model": "agnes-2.0-flash",
+            "messages": [
+                {"role": "system", "content": "You are a helpful assistant."},
+                {"role": "user", "content": test_text}
+            ],
+            "max_tokens": 10
+        },
+        timeout=60
+    )
+
+    if resp.status_code == 200:
+        print("✅ 支持 1M 上下文（当前在灰度名单内）")
+    elif resp.status_code == 413 or resp.status_code == 400:
+        error_msg = resp.json().get("error", {}).get("message", resp.text[:200])
+        if "context" in error_msg.lower() or "length" in error_msg.lower() or "too long" in error_msg.lower():
+            print(f"❌ 当前不支持 1M 上下文（灰度未命中）：{error_msg}")
+        else:
+            print(f"⚠️ 请求失败（非上下文问题）：{resp.status_code} {error_msg}")
+    else:
+        print(f"⚠️ 请求失败：{resp.status_code} {resp.text[:200]}")
+except Exception as e:
+    print(f"⚠️ 请求异常（可能是payload过大导致客户端限制）：{e}")
 ```
+
+---
 
 **测试 2：4K 图片自检**
 
+> **原理**：直接尝试生成 4096x4096 尺寸的图片。如果 API 成功返回图片 URL → 支持 4K；如果返回 400（尺寸不支持）→ 当前不支持。
+>
+> **注意**：如果返回 400，需检查错误消息确认是"尺寸不支持"还是其他参数错误。也可能因模型暂不支持该尺寸而返回失败。
+
 ```bash
 # 尝试生成 4K 尺寸图片
-# 如果成功返回图片 → 支持 4K
-# 如果返回 400/模型不支持 → 当前不支持（灰度未命中）
-
 curl https://apihub.agnes-ai.com/v1/images/generations \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
@@ -599,7 +625,7 @@ curl https://apihub.agnes-ai.com/v1/images/generations \
 
 Python 方法：
 ```python
-import requests, json
+import requests
 
 key = "YOUR_API_KEY"
 
@@ -620,18 +646,26 @@ if resp.status_code == 200:
         print("✅ 支持 4K 图片生成（当前在灰度名单内）")
     else:
         print("⚠️ 请求成功但无图片返回，请检查参数")
+elif resp.status_code == 400:
+    error_msg = resp.json().get("error", {}).get("message", resp.text[:200])
+    if "size" in error_msg.lower() or "dimension" in error_msg.lower() or "4096" in error_msg.lower():
+        print(f"❌ 当前不支持 4K 图片（灰度未命中）：{error_msg}")
+    else:
+        print(f"⚠️ 请求失败（非尺寸问题）：400 {error_msg}")
 else:
-    print(f"❌ 当前不支持 4K 图片（灰度未命中）：{resp.status_code} {resp.text[:200]}")
+    print(f"⚠️ 请求失败：{resp.status_code} {resp.text[:200]}")
 ```
+
+---
 
 **测试结果解读：**
 
-| 测试 | 成功 | 失败 |
-|------|------|------|
-| 1M 上下文 | ✅ 你的账户已开放 1M 上下文，可发送超长 messages | ❌ 当前仍为 256K，灰度未命中 |
-| 4K 图片 | ✅ 你的账户已开放 4K 图片，可使用 4096x4096 尺寸 | ❌ 当前最大仍为 1024x1024，灰度未命中 |
+| 测试 | 成功 | 失败 | 不确定 |
+|------|------|------|--------|
+| 1M 上下文 | ✅ 你的账户已开放 1M 上下文 | ❌ 当前仍为 256K | ⚠️ 请求异常（payload过大或网络问题） |
+| 4K 图片 | ✅ 你的账户已开放 4K 图片 | ❌ 当前最大仍为 1024x1024 | ⚠️ 请求失败（非尺寸问题） |
 
-> **注意：** 灰度是随机分配的，不支持时无需担心，未来会逐步全量开放。
+> **注意：** 灰度是动态分配的，不支持时无需担心，未来会逐步全量开放。以上测试仅供参考，实际以官方公告为准。
 
 > Agnes AI，让世界级 AI 属于每一个人。
 
