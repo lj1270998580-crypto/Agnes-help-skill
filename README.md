@@ -170,6 +170,7 @@ Headers:
 
 | 日期 | 更新内容 |
 |------|----------|
+| 2026-06-23 | 新增 **自动更新检查**功能：Skill 加载时自动检测版本，读取更新日志告知用户具体更新内容，并询问是否更新；新增 **问题反馈与官方渠道指引**章节（Bug 反馈、需求建议、进度查询三种场景） |
 | 2026-06-23 | 新增 **Agnes AI 官方 GitHub 反馈渠道**：Bug 反馈与需求建议（https://github.com/AgnesAI-Labs/Agnes-AI/issues）+ 反馈处理进度看板（https://github.com/users/AgnesAI-Labs/projects/1），建议收藏随时查看 |
 | 2026-06-13 | 新增 **Agnes 创意空间**（https://ailabing.cn/tools/agnes-creative-space/）为**方式二**，支持在线生成（文生图/图生图/文生视频/图生视频）和对话模式自助排查问题 |
 | 2026-06-10 | 隐藏社区 Skill 推荐（可能未及时更新），仅保留本仓库官方维护的内容 |

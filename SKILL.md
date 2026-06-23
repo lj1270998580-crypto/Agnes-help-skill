@@ -1,6 +1,6 @@
 ---
 name: agnes-ai-support
-version: "1.2.11"
+version: "1.2.12"
 description: |
   Agnes AI API 接入支持与问题排查 Skill。帮助新用户完成 Agnes AI API 的接入配置，
   诊断和解决接入过程中遇到的认证、参数、响应、图像生成、视频生成等各类问题。
@@ -14,9 +14,13 @@ description: |
 
 # Agnes AI API 接入支持与问题排查
 
-> **Skill 版本：** v1.2.11
+> **Skill 版本：** v1.2.12
 > **适用工具：** OpenClaw / Claude Code / Claude Desktop / Hermes / Codex / WorkBuddy / Cherry Studio / Opencode / Kimi Work
-> **更新日期：** 2026-06-06
+> **更新日期：** 2026-06-23
+> **官方 Bug 反馈：** https://github.com/AgnesAI-Labs/Agnes-AI/issues
+> **官方进度看板：** https://github.com/users/AgnesAI-Labs/projects/1
+> **官方 Bug 反馈：** https://github.com/AgnesAI-Labs/Agnes-AI/issues
+> **官方进度看板：** https://github.com/users/AgnesAI-Labs/projects/1
 > **GitHub 仓库：** https://github.com/lj1270998580-crypto/Agnes-help-skill
 > **官方平台：** https://platform.agnes-ai.com
 > **官方文档：** https://agnes-ai.com/doc/overview
@@ -32,24 +36,129 @@ description: |
 
 **每次加载本 Skill 时，请执行以下检查：**
 
-1. 读取 GitHub 仓库最新版本信息：
+### 步骤 1：检测版本
+
+1. 读取 GitHub 仓库最新 commit 信息：
    ```
    https://api.github.com/repos/lj1270998580-crypto/Agnes-help-skill/commits?per_page=1
    ```
 
-2. 比较远程最新 commit 的 `sha` 与本地记录的版本。
+2. 比较远程最新 commit 的 `sha` 与本地记录的版本（`v1.2.11` 对应 `sha: `）。
 
-3. 如果检测到更新，**在回复开头提醒用户**：
-   > 📢 **本 Skill 有新版本可用！** 建议从 GitHub 获取最新版以获得完整功能和最新接入指南。
-   > 
-   > 仓库地址：https://github.com/lj1270998580-crypto/Agnes-help-skill
-   > 
-   > 一键更新指令：
-   > ```
-   > 请读取并安装 Agnes AI 支持 Skill 最新版：https://raw.githubusercontent.com/lj1270998580-crypto/Agnes-help-skill/main/SKILL.md
-   > ```
+3. 如果 `sha` 不匹配 → 说明有新版本，继续步骤 2。
 
-4. 如果用户正在使用 HTML 助手或 API 文档，同样提醒检查对应文件是否有更新。
+### 步骤 2：读取更新内容（重要）
+
+如果检测到更新，**必须读取 README.md 的更新记录**来获取本次更新内容：
+
+```
+https://raw.githubusercontent.com/lj1270998580-crypto/Agnes-help-skill/main/README.md
+```
+
+从 README 中提取「更新记录」表格的第一行（最新的那条），获取：
+- 更新日期
+- 更新内容
+
+### 步骤 3：向用户报告（在回复开头）
+
+> 📢 **本 Skill 有新版本可用！**
+> 
+> **当前版本：** v1.2.11（您的版本）
+> **最新版本：** [远程版本号]
+> 
+> **本次更新内容：**
+> [从 README 更新记录读取的具体内容，例如：]
+> - Agnes-2.0-Flash 上下文升级至 512K
+> - 4K 图片已全面支持
+> - 新增灰度自检功能
+> - 新增官方 GitHub 反馈渠道
+> 
+> **是否需要更新？**
+> 如果您想获取最新功能，请回复「更新 Skill」，我会帮您安装最新版。
+> 
+> **一键更新指令：**
+> ```
+> 请读取并安装 Agnes AI 支持 Skill 最新版：https://raw.githubusercontent.com/lj1270998580-crypto/Agnes-help-skill/main/SKILL.md
+> ```
+> 
+> 如果您暂时不想更新，也可以继续使用当前版本。
+
+### 步骤 4：用户选择更新
+
+如果用户回复「更新 Skill」或「安装最新版」：
+1. 读取最新版 SKILL.md 的 URL
+2. 指导用户完成安装（或直接帮用户安装，取决于工具能力）
+3. 安装完成后确认：「已更新至最新版本 vX.X.X」
+
+如果用户不更新：
+- 继续正常帮助用户，不强制更新
+- 但建议用户在方便时更新以获得最新功能和修复
+
+### 步骤 5：HTML 助手和 API 文档检查
+
+如果用户正在使用 HTML 助手或 API 文档，同样提醒：
+> 检测到 HTML 助手 / API 文档也有更新，建议从仓库下载最新版。
+
+---
+
+## 问题反馈与官方渠道指引
+
+当用户遇到以下情况时，**主动提供官方反馈渠道**：
+
+### 情况 1：用户遇到 Bug 或异常
+
+如果用户报告了 API 异常、返回错误、功能不正常等：
+
+> 🐛 **遇到 Bug 了？** 您可以通过以下官方渠道反馈：
+> 
+> **1. GitHub Issues（推荐）**
+> - 地址：https://github.com/AgnesAI-Labs/Agnes-AI/issues
+> - 用途：提交 Bug 反馈、API 使用咨询、需求与建议
+> - 团队会按优先级标记处理
+> 
+> **2. 反馈处理进度看板**
+> - 地址：https://github.com/users/AgnesAI-Labs/projects/1
+> - 用途：查看问题修复进度、新模型上线、文档更新等
+> - 建议收藏，可随时查看
+> 
+> **3. 支持邮箱**
+> - 邮箱：support@agnes-ai.com
+> - 适用于：需要详细描述的问题
+> 
+> **反馈前准备：**
+> - 错误码（如 400、500）
+> - 请求参数（脱敏 API Key）
+> - 复现步骤
+> - 期望行为 vs 实际行为
+
+### 情况 2：用户有需求或建议
+
+如果用户提出了功能需求、改进建议：
+
+> 💡 **有建议？** 欢迎通过以下渠道提交：
+> 
+> **GitHub Issues：** https://github.com/AgnesAI-Labs/Agnes-AI/issues
+> - 标题格式：`[Feature Request] 您的建议标题`
+> - 内容描述：使用场景 + 期望功能 + 优先级
+> - 团队会评估并纳入开发排期
+> 
+> 也可以在反馈进度看板查看需求处理状态：
+> https://github.com/users/AgnesAI-Labs/projects/1
+
+### 情况 3：用户想查询问题处理进度
+
+> 📋 **查询反馈进度：**
+> 
+> https://github.com/users/AgnesAI-Labs/projects/1
+> 
+> 看板包含：
+> - 所有已提交的 Issues 状态
+> - 问题修复进度
+> - 新模型上线计划
+> - 文档更新进度
+> - 开发排期
+> 
+> 建议收藏此链接，可随时查看官方最新动态。
 
 ---
 
