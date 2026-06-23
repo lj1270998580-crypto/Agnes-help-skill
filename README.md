@@ -160,6 +160,8 @@ Headers:
 | Opencode 接入 | https://agnes-ai.com/doc/cid7 |
 | Codex++ 接入 | https://agnes-ai.com/doc/cid8 |
 | 常见问题 QA | https://icn1d2hdv39m.feishu.cn/wiki/R7TEwjadJibD62kWeS9cubtpnPi |
+| **Bug 反馈与需求建议** | **https://github.com/AgnesAI-Labs/Agnes-AI/issues** |
+| **反馈进度看板** | **https://github.com/users/AgnesAI-Labs/projects/1** |
 | 支持邮箱 | support@agnes-ai.com |
 
 ---
@@ -168,7 +170,7 @@ Headers:
 
 | 日期 | 更新内容 |
 |------|----------|
-| 2026-06-22 | Agnes-2.0-Flash 和 1.5-Flash **Context 升级至 512K**（此前 256K）；**4K 图片已全面支持**（所有用户可用，无需灰度）；灰度自检更新：1M 上下文仍为灰度测试，4K 图片和 512K 上下文已移除灰度测试 |
+| 2026-06-23 | 新增 **Agnes AI 官方 GitHub 反馈渠道**：Bug 反馈与需求建议（https://github.com/AgnesAI-Labs/Agnes-AI/issues）+ 反馈处理进度看板（https://github.com/users/AgnesAI-Labs/projects/1），建议收藏随时查看 |
 | 2026-06-13 | 新增 **Agnes 创意空间**（https://ailabing.cn/tools/agnes-creative-space/）为**方式二**，支持在线生成（文生图/图生图/文生视频/图生视频）和对话模式自助排查问题 |
 | 2026-06-10 | 隐藏社区 Skill 推荐（可能未及时更新），仅保留本仓库官方维护的内容 |
 | 2026-06-09 | Skill 改为**方式一（⭐ 推荐）**，新增 Agnes Help Skill **教程信息图**和完整**使用说明**（生图/生视频、接入工具、排查问题三大场景） |
