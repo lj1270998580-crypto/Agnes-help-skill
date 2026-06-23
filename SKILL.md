@@ -6,10 +6,10 @@ description: |
   诊断和解决接入过程中遇到的认证、参数、响应、图像生成、视频生成等各类问题。
   涵盖 Thinking 模式开启、视频长度调节、流式输出、工具调用等高级功能指导。
   兼容 OpenClaw、Claude Code、Hermes、Codex 等工具链。
-  触发词：Agnes AI、agnes、接入、API Key、401、400、排查、错误、视频生成、图像生成、
+>  触发词：Agnes AI、agnes、接入、API Key、401、400、排查、错误、视频生成、图像生成、
   thinking、stream、tool calling、模型选择、Base URL、响应格式、timeout、超时、轮询、
   FAQ、问题排查、调试、免费调用、RPM、video_id、task_id、Prompt 模板、提示词、
-  生图、生视频、图生图、文生图、图生视频、文生视频、灰度自检、1M 上下文、4K 图片、4K 图、4K、灰度、自检。
+  生图、生视频、图生图、文生图、图生视频、文生视频、灰度自检、1M 上下文、4K 图片、4K 图、4K、灰度、自检、反馈、Bug、issue、问题反馈、功能建议。
 ---
 
 # Agnes AI API 接入支持与问题排查
