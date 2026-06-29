@@ -504,7 +504,7 @@ Headers:
       <h3>🔐 认证与账户</h3>
       <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">401 Unauthorized 怎么办？<span class="faq-toggle">+</span></div><div class="faq-a">1. 检查 API Key 是否正确（Bearer 后有空格）<br>2. 确认 Key 未过期或被删除<br>3. 检查 Header 拼写：<code>Authorization: Bearer YOUR_KEY</code><br>4. 确认账户有余额（注册送 $0.1）</div></div>
       <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">API Key 泄露了怎么办？<span class="faq-toggle">+</span></div><div class="faq-a">立即进入控制台 <code>Settings → API Keys</code> 删除旧 Key 并创建新 Key。检查代码仓库历史记录，使用 git filter-repo 或 BFG 清理敏感信息。</div></div>
-      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">免费额度用完了还能用吗？<span class="faq-toggle">+</span></div><div class="faq-a">当前所有模型均为 <span class="badge badge-green">$0 现价</span>，免费账户调用免费模型不扣费，但有 RPM（每分钟请求数）限制。如需更高并发，请充值。</div></div>
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">免费额度用完了还能用吗？<span class="faq-toggle">+</span></div><div class="faq-a">当前所有模型均为 <span class="badge badge-green">$0 现价</span>，免费账户调用免费模型不扣费，但有 RPM（每分钟请求数）限制。文本/图像模型 RPM 20，视频模型 RPM 1（每分钟内只能生成 1 个视频）。如需更高并发，请充值。</div></div>
 
       <h3>💬 文本模型</h3>
       <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">如何开启 Thinking 模式？<span class="faq-toggle">+</span></div><div class="faq-a">OpenAI 格式加 <code>chat_template_kwargs.enable_thinking: true</code>；Anthropic 格式加 <code>thinking: {type:"enabled", budget_tokens:2048}</code>。详见左侧「Thinking 模式」页面。</div></div>
@@ -541,7 +541,7 @@ Headers:
           <tr><td><span class="badge badge-red">400</span></td><td>请求无效</td><td>参数错误、JSON 格式问题、必填项缺失</td><td>检查请求体格式、参数类型、必填字段</td></tr>
           <tr><td><span class="badge badge-red">401</span></td><td>未授权</td><td>API Key 错误、过期、格式不对</td><td>检查 Authorization 头，确认 Key 有效</td></tr>
           <tr><td><span class="badge badge-red">404</span></td><td>不存在</td><td>视频/任务 ID 不存在、URL 路径错误</td><td>确认 ID 正确，检查端点路径</td></tr>
-          <tr><td><span class="badge badge-red">429</span></td><td>速率限制</td><td>请求过于频繁，超出 RPM 限制</td><td>降低请求频率，实现退避重试</td></tr>
+          <tr><td><span class="badge badge-red">429</span></td><td>速率限制</td><td>文本/图像 RPM 超过 20，或视频 RPM 超过 1（每分钟只能生成 1 个视频）</td><td>降低请求频率，视频需排队等待，实现退避重试</td></tr>
           <tr><td><span class="badge badge-red">500</span></td><td>服务器错误</td><td>服务端内部异常</td><td>稍后重试，如持续出现请联系支持</td></tr>
           <tr><td><span class="badge badge-amber">503</span></td><td>服务繁忙</td><td>服务负载高或维护中</td><td>等待后重试，关注状态公告</td></tr>
         </table>
@@ -760,7 +760,7 @@ async function callWithRetry(fn, maxRetries = 3) {
 
   // Diagnose
   // ===== 版本检查与更新提醒 =====
-  const LOCAL_VERSION = '1.2.12';
+  const LOCAL_VERSION = '1.2.13';
   const GITHUB_REPO = 'lj1270998580-crypto/Agnes-help-skill';
   const GITHUB_API = `https://api.github.com/repos/${GITHUB_REPO}/commits?path=agnes-ai-assistant.html&per_page=1`;
   const STORAGE_KEY = 'agnes_assistant_last_commit';
