@@ -330,7 +330,7 @@ Headers:
           <table>
             <tr><td>端点</td><td><code>/v1/images/generations</code></td></tr>
             <tr><td>能力</td><td>文生图、图生图、多图合成</td></tr>
-            <tr><td>尺寸</td><td>1024x768 / 1024x1024 / 768x1024 / 4096x4096（4K）</td></tr>
+            <tr><td>尺寸</td><td>1K/2K/3K/4K 四档（16的倍数）</td></tr>
             <tr><td>输入</td><td>公网 URL 或 Data URI Base64</td></tr>
             <tr><td>输出</td><td>URL 或 Base64</td></tr>
             <tr><td>价格</td><td>$0.003 / image <span class="badge badge-green">现价 $0</span></td></tr>
@@ -760,7 +760,7 @@ async function callWithRetry(fn, maxRetries = 3) {
 
   // Diagnose
   // ===== 版本检查与更新提醒 =====
-  const LOCAL_VERSION = '1.2.14';
+  const LOCAL_VERSION = '1.2.15';
   const GITHUB_REPO = 'lj1270998580-crypto/Agnes-help-skill';
   const GITHUB_API = `https://api.github.com/repos/${GITHUB_REPO}/commits?path=agnes-ai-assistant.html&per_page=1`;
   const STORAGE_KEY = 'agnes_assistant_last_commit';
