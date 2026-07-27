@@ -1,6 +1,6 @@
 ---
 name: agnes-ai-support
-version: "1.2.16"
+version: "1.2.17"
 description: |
   Agnes AI API 接入支持与问题排查 Skill。帮助新用户完成 Agnes AI API 的接入配置，
   诊断和解决接入过程中遇到的认证、参数、响应、图像生成、视频生成等各类问题。
@@ -14,7 +14,7 @@ description: |
 
 # Agnes AI API 接入支持与问题排查
 
-> **Skill 版本：** v1.2.16
+> **Skill 版本：** v1.2.17
 > **适用工具：** OpenClaw / Claude Code / Claude Desktop / Hermes / Codex / WorkBuddy / Cherry Studio / Opencode / Kimi Work
 > **更新日期：** 2026-07-27
 > **官方 Bug 反馈：** https://github.com/AgnesAI-Labs/Agnes-AI/issues
@@ -320,8 +320,10 @@ Agent：（参考 Skill 视频排查指南 → 检查 video_id vs task_id → �
 
 | 场景 | 推荐模型 | 端点 |
 |------|----------|------|
-| 通用对话 / 高并发 / 低成本 | `agnes-1.5-flash` | `/v1/chat/completions` |
-| 编程 / Agent / 推理 / 图片理解 | `agnes-2.0-flash` | `/v1/chat/completions` |
+| 通用对话 / 高并发 / 低成本 | `agnes-2.5-flash` | `/v1/chat/completions` |
+| 编程 / Agent / 推理 / 图片理解 | `agnes-2.5-flash` | `/v1/chat/completions` |
+| 高级推理 / 复杂编码 / 付费场景 | `agnes-2.5-pro-alpha` | `/v1/chat/completions` |
+| 兼容旧版 / 通用对话 | `agnes-2.0-flash` | `/v1/chat/completions` |
 | 图像生成 / 编辑（推荐） | `agnes-image-2.1-flash` | `/v1/images/generations` |
 | 图像快速生成 | `agnes-image-2.0-flash` | `/v1/images/generations` |
 | 视频生成 | `agnes-video-v2.0` | `/v1/videos` |
@@ -540,12 +542,25 @@ curl https://apihub.agnes-ai.com/v1/chat/completions \
 
 ## 4. 各模型参数速查
 
-### agnes-1.5-flash
+### agnes-2.5-flash
 - 端点：`POST /v1/chat/completions`
 - Context：512K
-- Max Output：64K
-- 参数：model, messages, temperature, top_p, max_tokens, frequency_penalty, presence_penalty, repetition_penalty, stop, seed
-- 价格：Input $0.07/1M, Output $0.15/1M（**现价 $0，RPM ≤ 20**）
+- Max Output：65.5K
+- 参数：model, messages, temperature, top_p, max_tokens, frequency_penalty, presence_penalty, repetition_penalty, stop, seed, stream, tools, tool_choice, chat_template_kwargs, thinking
+- 支持图片 URL 输入（messages[].content 数组格式）
+- 支持工具调用、Thinking 模式、流式输出
+- **升级自 2.0 Flash**：API 完全兼容，只需改模型名即可迁移
+- 价格：Input $0.03/1M, Output $0.15/1M（**现价 $0，RPM ≤ 20**）
+
+### agnes-2.5-pro-alpha
+- 端点：`POST /v1/chat/completions`
+- Context：262K
+- 输出模态：文本
+- 输入模态：文本、图像 URL
+- 支持图片 URL 输入、工具调用、Thinking 模式、流式输出
+- **付费模型**，需确认账户权限
+- 价格：Input $0.45/1M, Output $0.90/1M, Cache hit $0.004/1M
+- **注意**：非免费模型，使用时需跟踪 Token 消耗
 
 ### agnes-2.0-flash
 - 端点：`POST /v1/chat/completions`
@@ -555,6 +570,7 @@ curl https://apihub.agnes-ai.com/v1/chat/completions \
 - 支持图片 URL 输入（messages[].content 数组格式）
 - 支持工具调用、Thinking 模式、流式输出
 - 价格：Input $0.1/1M, Output $0.2/1M（**现价 $0，RPM ≤ 20**）
+- **已升级至 2.5-flash，建议迁移**
 
 ### agnes-image-2.0/2.1-flash
 - 端点：`POST /v1/images/generations`
@@ -650,7 +666,7 @@ curl https://apihub.agnes-ai.com/v1/chat/completions \
 - 视频任务：主体 + 动作 + 场景 + 镜头运动 + 光照 + 风格
 
 ### 性能优化
-- 高并发场景使用 agnes-1.5-flash
+- 高并发场景使用 agnes-2.5-flash
 - 需要推理/编程使用 agnes-2.0-flash + Thinking
 - 图像生成设置合理超时（60-360s）
 - 视频生成使用异步 + 轮询模式
@@ -1318,7 +1334,7 @@ model_provider = "deepseek"  # 使用 DeepSeek
 
 | 模型 | 配置值 |
 |------|--------|
-| 通用对话 | `agnes-1.5-flash` |
+| 通用对话 | `agnes-2.5-flash` |
 | 编程/Agent | `agnes-2.0-flash` |
 
 **注意：** Codex/Codex++ 主要使用 Chat Completions API，图像和视频生成需要通过 Agnes 的独立端点调用。如需在 Codex 中使用图像/视频生成，建议：
