@@ -1,6 +1,6 @@
 ---
 name: agnes-ai-support
-version: "1.2.15"
+version: "1.2.16"
 description: |
   Agnes AI API 接入支持与问题排查 Skill。帮助新用户完成 Agnes AI API 的接入配置，
   诊断和解决接入过程中遇到的认证、参数、响应、图像生成、视频生成等各类问题。
@@ -14,9 +14,9 @@ description: |
 
 # Agnes AI API 接入支持与问题排查
 
-> **Skill 版本：** v1.2.15
+> **Skill 版本：** v1.2.16
 > **适用工具：** OpenClaw / Claude Code / Claude Desktop / Hermes / Codex / WorkBuddy / Cherry Studio / Opencode / Kimi Work
-> **更新日期：** 2026-06-23
+> **更新日期：** 2026-07-27
 > **官方 Bug 反馈：** https://github.com/AgnesAI-Labs/Agnes-AI/issues
 > **官方进度看板：** https://github.com/users/AgnesAI-Labs/projects/1
 > **官方 Bug 反馈：** https://github.com/AgnesAI-Labs/Agnes-AI/issues
@@ -505,6 +505,7 @@ curl https://apihub.agnes-ai.com/v1/chat/completions \
 | ~5s | 121 | 24 |
 | ~10s | 241 | 24 |
 | ~15s | 361 | 24 |
+| ~18s | 441 | 24 |
 
 **更长视频：** 增加 num_frames 或降低 frame_rate，但建议不超过 15s
 
@@ -572,10 +573,11 @@ curl https://apihub.agnes-ai.com/v1/chat/completions \
 - **查询（强烈推荐）：`GET /agnesapi?video_id=<ID>`**
 - 查询（兼容，不推荐）：`GET /v1/videos/{task_id}`
 - 参数：model, prompt, image, mode, height(768), width(1152), num_frames, frame_rate(24), num_inference_steps, seed, negative_prompt, extra_body.image, extra_body.mode
+- 支持分辨率档位：480p、720p、1080p
+- 支持宽高比：16:9、9:16、1:1、4:3、3:4
+- 支持关键帧动画模式：`extra_body.mode: "keyframes"`
 - 价格：$0.005/second（**现价 $0**）
 - **重要：必须用 video_id 查询，task_id 会导致排队过长**
-
----
 
 ## 5. 常见错误速查表
 
