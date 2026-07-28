@@ -1,6 +1,6 @@
 ---
 name: agnes-ai-support
-version: "1.2.18"
+version: "1.2.19"
 description: |
   Agnes AI API 接入支持与问题排查 Skill。帮助新用户完成 Agnes AI API 的接入配置，
   诊断和解决接入过程中遇到的认证、参数、响应、图像生成、视频生成等各类问题。
@@ -14,7 +14,7 @@ description: |
 
 # Agnes AI API 接入支持与问题排查
 
-> **Skill 版本：** v1.2.18
+> **Skill 版本：** v1.2.19
 > **适用工具：** OpenClaw / Claude Code / Claude Desktop / Hermes / Codex / WorkBuddy / Cherry Studio / Opencode / Kimi Work
 > **更新日期：** 2026-07-28
 > **官方 Bug 反馈：** https://github.com/AgnesAI-Labs/Agnes-AI/issues
@@ -334,7 +334,7 @@ Agent：（参考 Skill 视频排查指南 → 检查 video_id vs task_id → �
 |------|----------|------|
 | 通用对话 / 高并发 / 低成本 | `agnes-2.5-flash` | `/v1/chat/completions` |
 | 编程 / Agent / 推理 / 图片理解 | `agnes-2.5-flash` | `/v1/chat/completions` |
-| 高级推理 / 复杂编码 / 付费场景 | `agnes-2.5-pro-alpha` | `/v1/chat/completions` |
+| 高级推理 / 复杂编码（测试中，暂无付费通道） | `agnes-2.5-pro-alpha` | `/v1/chat/completions` |
 | 兼容旧版 / 通用对话 | `agnes-2.0-flash` | `/v1/chat/completions` |
 | 图像生成 / 编辑（推荐） | `agnes-image-2.1-flash` | `/v1/images/generations` |
 | 图像快速生成 | `agnes-image-2.0-flash` | `/v1/images/generations` |
@@ -572,9 +572,9 @@ curl https://apihub.agnes-ai.com/v1/chat/completions \
 - 输出模态：文本
 - 输入模态：文本、图像 URL
 - 支持图片 URL 输入、工具调用、Thinking 模式、流式输出
-- **付费模型**，需确认账户权限
-- 价格：Input $0.45/1M, Output $0.90/1M, Cache hit $0.004/1M
-- **注意**：非免费模型，使用时需跟踪 Token 消耗
+- **⚠️ 测试中**：暂无付费通道，价格仅供参考，正式付费功能上线前可能变动
+- 参考价格：Input $0.45/1M, Output $0.90/1M, Cache hit $0.004/1M
+- **注意**：当前为测试预览阶段，所有用户均可调用（受 RPM 限制），但未来可能转为付费模型
 
 ### agnes-2.0-flash
 - 端点：`POST /v1/chat/completions`

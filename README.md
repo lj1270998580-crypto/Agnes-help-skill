@@ -2,7 +2,7 @@
 
 > Agnes AI，让世界级 AI 属于每一个人。
 
-本仓库是 Agnes AI API 的**非官方帮助资源集合**，包含交互式接入助手、完整 API 文档、以及通用支持 Skill，帮助开发者快速接入 Agnes AI 全模态 API（文本、图像、视频）。
+本仓库是 Agnes AI API 的**非官方帮助资源集合**，包含完整 API 文档与通用支持 Skill，帮助开发者快速接入 Agnes AI 全模态 API（文本、图像、视频）。
 
 ---
 
@@ -23,7 +23,6 @@
 
 | 文件 | 说明 | 用途 |
 |------|------|------|
-| `agnes-ai-assistant.html` | 交互式接入助手 | 浏览器打开，自助完成接入、排查问题（**自动检查 GitHub 更新**） |
 | `agnes-ai-api-documentation.md` | 完整 API 文档 | 整合官方全部接口信息，供 Agent 读取（**带版本号**） |
 | `SKILL.md` | 通用支持 Skill | 兼容 OpenClaw / Claude Code / Claude Desktop / Hermes / Codex / WorkBuddy / Cherry Studio / Opencode / Kimi Work（**加载时检查更新**） |
 
@@ -67,33 +66,12 @@
 - 通过对话模式自助排查问题、获取接入建议
 - 无需搭建环境，浏览器直接创作
 
----
-
-### 方式三：交互式 HTML 助手（推荐新手）
-
-1. 下载 `agnes-ai-assistant.html`
-2. 用浏览器直接打开（无需服务器）
-3. 跟随 4 步向导完成接入
-4. 遇到问题用左侧「问题排查」工具自助诊断
-
-**HTML 助手包含：**
-- ⚡ 快速接入向导（4 步）
-- 🤖 模型速查与选择
-- 🛠️ 交互式代码生成器
-- 💡 Thinking 模式详解
-- 🎬 视频参数调节指南
-- ❓ 可搜索 FAQ（20+ 常见问题）
-- 🚨 错误码速查表
-- 🔍 8 类问题智能诊断
-- 📡 接口端点汇总
-- ✅ 接入检查清单
-
-### 方式四：API 文档（推荐 Agent / 开发者）
+### 方式三：API 文档（推荐 Agent / 开发者）
 
 `agnes-ai-api-documentation.md` 整合了 Agnes AI 官方文档的全部内容：
 
 - 概述与核心能力
-- Agnes 1.5 Flash / 2.0 Flash 完整参数与示例
+- Agnes 2.0 Flash / 2.5 Flash 完整参数与示例
 - Agnes Image 2.0 / 2.1 Flash 完整参数与示例
 - Agnes Video V2.0 完整参数与示例（含异步轮询）
 - 隐私政策与服务条款
@@ -104,7 +82,6 @@
 
 本仓库的所有文件都支持**版本检查与更新提醒**：
 
-- **HTML 助手**：每次打开页面时自动检查 GitHub 是否有新版本，有更新则显示顶部横幅提醒
 - **SKILL.md**：每次被 Agent 加载时，Agent 会检查 GitHub 最新 commit，有更新则在回复开头提醒用户
 - **API 文档**：文件头部标注版本号，建议定期同步最新版
 
@@ -127,7 +104,7 @@ Headers:
 **模型名称：**
 - 通用对话：`agnes-2.5-flash`
 - 编程/Agent/推理：`agnes-2.5-flash`
-- 高级推理（付费）：`agnes-2.5-pro-alpha`
+- 高级推理（测试中，暂无付费通道）：`agnes-2.5-pro-alpha`
 - 兼容旧版：`agnes-2.0-flash`
 - 图像生成（推荐）：`agnes-image-2.1-flash`
 - 视频生成：`agnes-video-v2.0`
@@ -173,6 +150,7 @@ Headers:
 
 | 日期 | 更新内容 |
 |------|----------|
+| 2026-07-28 | 移除 HTML 交互式助手板块（对用户帮助有限）；`agnes-2.5-pro-alpha` 更新为**测试中**状态（暂无付费通道）；仓库描述与文档同步为最新版 |
 | 2026-07-28 | 新增国内 **.cn 域名支持**：Base URL（国内）`https://apihub.agnes-ai.cn/v1`，方便国内用户直接访问；同步更新 Skill 版本至 **v1.2.18** |
 | 2026-07-27 | 新增 Agnes 2.5 系列模型支持：`agnes-2.5-flash`（2.0 升级版，API 兼容，512K/65.5K，免费）和 `agnes-2.5-pro-alpha`（付费推理模型，262K，$0.45/$0.90/1M）；`agnes-1.5-flash` 已从模型列表移除 |
 | 2026-07-27 | 同步官方视频文档更新：补充 ~18s 视频时长配置（441帧@24fps）、支持 480p/720p/1080p 三档分辨率、5 种宽高比、关键帧动画模式；经全面检查，官方暂未发布新模型 |
