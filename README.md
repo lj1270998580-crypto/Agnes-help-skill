@@ -117,7 +117,8 @@
 ## 🔑 接入要点速记
 
 ```
-Base URL: https://apihub.agnes-ai.com/v1
+Base URL（国际）: https://apihub.agnes-ai.com/v1
+Base URL（国内）: https://apihub.agnes-ai.cn/v1
 Headers:
   Authorization: Bearer YOUR_API_KEY
   Content-Type: application/json
@@ -172,6 +173,7 @@ Headers:
 
 | 日期 | 更新内容 |
 |------|----------|
+| 2026-07-28 | 新增国内 **.cn 域名支持**：Base URL（国内）`https://apihub.agnes-ai.cn/v1`，方便国内用户直接访问；同步更新 Skill 版本至 **v1.2.18** |
 | 2026-07-27 | 新增 Agnes 2.5 系列模型支持：`agnes-2.5-flash`（2.0 升级版，API 兼容，512K/65.5K，免费）和 `agnes-2.5-pro-alpha`（付费推理模型，262K，$0.45/$0.90/1M）；`agnes-1.5-flash` 已从模型列表移除 |
 | 2026-07-27 | 同步官方视频文档更新：补充 ~18s 视频时长配置（441帧@24fps）、支持 480p/720p/1080p 三档分辨率、5 种宽高比、关键帧动画模式；经全面检查，官方暂未发布新模型 |
 | 2026-06-30 | 同步官方 Token Plan 文档更新：图片模型支持 **1K/2K/3K/4K 四档分辨率**，RPM 按分辨率分档（1K:20, 2K:10, 3K/4K:1）；文本模型 RPM 20，视频模型 RPM 1；尺寸必须是 **16 的倍数**，否则返回 500 错误；新增 Token Plan 订阅损耗说明 |

@@ -1,6 +1,6 @@
 ---
 name: agnes-ai-support
-version: "1.2.17"
+version: "1.2.18"
 description: |
   Agnes AI API 接入支持与问题排查 Skill。帮助新用户完成 Agnes AI API 的接入配置，
   诊断和解决接入过程中遇到的认证、参数、响应、图像生成、视频生成等各类问题。
@@ -14,9 +14,9 @@ description: |
 
 # Agnes AI API 接入支持与问题排查
 
-> **Skill 版本：** v1.2.17
+> **Skill 版本：** v1.2.18
 > **适用工具：** OpenClaw / Claude Code / Claude Desktop / Hermes / Codex / WorkBuddy / Cherry Studio / Opencode / Kimi Work
-> **更新日期：** 2026-07-27
+> **更新日期：** 2026-07-28
 > **官方 Bug 反馈：** https://github.com/AgnesAI-Labs/Agnes-AI/issues
 > **官方进度看板：** https://github.com/users/AgnesAI-Labs/projects/1
 > **官方 Bug 反馈：** https://github.com/AgnesAI-Labs/Agnes-AI/issues
@@ -306,6 +306,18 @@ Agent：（参考 Skill 视频排查指南 → 检查 video_id vs task_id → �
 >
 > 1.5 Flash 保持 512K/64K 不变。
 
+### 🌐 国内网络域名切换通知（2026-07-28 更新）
+
+> **针对部分国内网络无法正常访问 Agnes API 的情况，请将 API Endpoint 切换为：**
+>
+> - **原地址（国际）：** `https://apihub.agnes-ai.com/v1`
+> - **新地址（国内）：** `https://apihub.agnes-ai.cn/v1`（将域名中的 `.com` 替换为 `.cn`）
+>
+> **调整说明：**
+> - 请将应用配置、环境变量或项目代码中的 `apihub.agnes-ai.com` 统一替换为 `apihub.agnes-ai.cn`
+> - 本次调整仅涉及接口域名，API Key、模型名称、请求参数及调用方式均无需修改
+> - 修改完成后，请重启应用或服务，再重新发起请求
+
 ---
 
 ## 1. 快速接入流程（4 步）
@@ -331,7 +343,8 @@ Agent：（参考 Skill 视频排查指南 → 检查 video_id vs task_id → �
 ### Step 3 — 配置请求
 
 ```
-Base URL: https://apihub.agnes-ai.com/v1
+Base URL（国际）: https://apihub.agnes-ai.com/v1
+Base URL（国内）: https://apihub.agnes-ai.cn/v1
 Headers:
   Authorization: Bearer YOUR_API_KEY
   Content-Type: application/json
@@ -401,7 +414,8 @@ curl https://apihub.agnes-ai.com/v1/chat/completions \
 - Chat：超时建议 30s
 - 图像：超时建议 60-360s（数秒到几十秒）
 - 视频：异步任务，创建后需轮询查询，间隔 5s
-- 检查网络能否访问 `apihub.agnes-ai.com`
+- 检查网络能否访问 `apihub.agnes-ai.com`（国际）或 `apihub.agnes-ai.cn`（国内）
+- 如在国内网络无法访问 .com 域名，请切换至 .cn 域名
 - 检查防火墙/代理是否拦截
 
 **503 Service Unavailable**
@@ -623,7 +637,7 @@ curl https://apihub.agnes-ai.com/v1/chat/completions \
 
 ### 通用
 - [ ] 已注册账户并创建 API Key（https://platform.agnes-ai.com）
-- [ ] Base URL 正确：`https://apihub.agnes-ai.com/v1`
+- [ ] Base URL 正确（国际：`https://apihub.agnes-ai.com/v1`，国内：`https://apihub.agnes-ai.cn/v1`）
 - [ ] 请求头包含 Authorization 和 Content-Type
 - [ ] API Key 未暴露在公开代码中
 - [ ] 已实现错误处理和重试逻辑
