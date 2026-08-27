@@ -72,8 +72,9 @@
 
 - 概述与核心能力
 - Agnes 2.0 Flash / 2.5 Flash 完整参数与示例
+- Agnes 2.5 Pro / Pro Beta / Pro Alpha（付费推理）参数与价格
 - Agnes Image 2.0 / 2.1 Flash 完整参数与示例
-- Agnes Video 2.5 Flash / V2.0 完整参数与示例（含异步轮询）
+- Agnes Video 2.5 / 2.5 Flash / V2.0 完整参数与示例（含异步轮询）
 - 隐私政策与服务条款
 
 ---
@@ -104,14 +105,18 @@ Headers:
 **模型名称：**
 - 通用对话：`agnes-2.5-flash`
 - 编程/Agent/推理：`agnes-2.5-flash`
-- 高级推理（测试中，暂无付费通道）：`agnes-2.5-pro-alpha`
+- 高级推理（付费，GA）：`agnes-2.5-pro`
+- 高级推理（付费，Beta）：`agnes-2.5-pro-beta`
+- 高级推理（付费，Alpha）：`agnes-2.5-pro-alpha`
 - 兼容旧版：`agnes-2.0-flash`
 - 图像生成（推荐）：`agnes-image-2.1-flash`
 - 视频生成（推荐 / 限时免费）：`agnes-video-2.5-flash`
+- 视频生成（付费，高清）：`agnes-video-2.5`
 - 视频生成（旧版）：`agnes-video-v2.0`
 
 **⚠️ 视频接口重要提醒：**
 - 🎬 **Agnes Video 2.5 Flash 已正式上线，限时免费（$0/秒）**：支持 text / keyframe / reference 三种模式，详见[国际站文档](https://www.agnes-ai.com/zh-Hans/docs/agnes-video-25-flash) / [国内站文档](https://www.agnes-ai.cn/zh-Hans/docs/agnes-video-25-flash)
+- **Agnes Video 2.5（付费高清版）**也已上线：720P/960P/2K 三档，`reference` 模式支持视频输入，详见[国际站文档](https://www.agnes-ai.com/zh-Hans/docs/agnes-video-25) / [国内站文档](https://www.agnes-ai.cn/zh-Hans/docs/agnes-video-25)
 - **必须用 `video_id` 查询视频结果**：`GET /agnesapi?video_id=<ID>`
 - **不要用 `task_id` 查询**，会导致排队异常延长（超过 5 分钟大概率是接口搞错了）
 
@@ -130,8 +135,11 @@ Headers:
 | 资源 | 链接 |
 |------|------|
 | 官方平台 | https://platform.agnes-ai.com |
-| 官方文档 | https://agnes-ai.com/doc/overview |
+| 官方文档（国际站） | https://www.agnes-ai.com/zh-Hans/docs/overview |
+| 官方文档（国内站） | https://www.agnes-ai.cn/zh-Hans/docs/overview |
 | 操作手册 | https://agnes-ai.com/doc/常用接入文档 |
+| 视频文档（2.5 · 国际站） | https://www.agnes-ai.com/zh-Hans/docs/agnes-video-25 |
+| 视频文档（2.5 · 国内站） | https://www.agnes-ai.cn/zh-Hans/docs/agnes-video-25 |
 | 视频文档（2.5 Flash · 国际站） | https://www.agnes-ai.com/zh-Hans/docs/agnes-video-25-flash |
 | 视频文档（2.5 Flash · 国内站） | https://www.agnes-ai.cn/zh-Hans/docs/agnes-video-25-flash |
 | 视频文档（v2.0） | https://agnes-ai.com/doc/agnes-video-v20 |
@@ -154,6 +162,7 @@ Headers:
 
 | 日期 | 更新内容 |
 |------|----------|
+| 2026-08-27 | 同步官方文档大版本更新：`agnes-2.5-pro-alpha` 已转**付费模型**（Context 1M，Cache hit $0.045，权重 Apache 2.0 开源）；新增付费推理模型 `agnes-2.5-pro`（GA）与 `agnes-2.5-pro-beta`（Beta，$0.10/$0.30/1M）；新增视频模型 `agnes-video-2.5`（付费高清，720P/960P/2K，reference 支持视频输入）；`agnes-2.5-flash` 与 Pro 系列补充 Responses / Messages 端点；修正 `agnes-2.0-flash` 价格（$0.03/$0.15）与图像模型按张计费明细（1K $0.010–4K $0.024，前 3 张参考图免费）；官方文档链接统一至新站 /zh-Hans/docs；Skill 版本更新至 **v1.2.21** |
 | 2026-08-27 | **Agnes Video 2.5 Flash 正式上线，限时免费（$0/秒，原价 $0.025/秒）**：新增模型 `agnes-video-2.5-flash`（`POST /v1/videos`），支持 text / keyframe / reference 三种模式，`size` 固定 `"720P"`，`seconds` 支持 `"4"`–`"12"`，`reference` 模式最多 5 张图片；官方文档同步更新（[国际站](https://www.agnes-ai.com/zh-Hans/docs/agnes-video-25-flash) / [国内站](https://www.agnes-ai.cn/zh-Hans/docs/agnes-video-25-flash)）；同步更新 Skill 版本至 **v1.2.20** |
 | 2026-07-28 | 移除 HTML 交互式助手板块（对用户帮助有限）；`agnes-2.5-pro-alpha` 更新为**测试中**状态（暂无付费通道）；仓库描述与文档同步为最新版 |
 | 2026-07-28 | 新增国内 **.cn 域名支持**：Base URL（国内）`https://apihub.agnes-ai.cn/v1`，方便国内用户直接访问；同步更新 Skill 版本至 **v1.2.18** |

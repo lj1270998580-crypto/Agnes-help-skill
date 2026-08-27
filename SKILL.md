@@ -1,6 +1,6 @@
 ---
 name: agnes-ai-support
-version: "1.2.20"
+version: "1.2.21"
 description: |
   Agnes AI API 接入支持与问题排查 Skill。帮助新用户完成 Agnes AI API 的接入配置，
   诊断和解决接入过程中遇到的认证、参数、响应、图像生成、视频生成等各类问题。
@@ -14,7 +14,7 @@ description: |
 
 # Agnes AI API 接入支持与问题排查
 
-> **Skill 版本：** v1.2.20
+> **Skill 版本：** v1.2.21
 > **适用工具：** OpenClaw / Claude Code / Claude Desktop / Hermes / Codex / WorkBuddy / Cherry Studio / Opencode / Kimi Work
 > **更新日期：** 2026-08-27
 > **官方 Bug 反馈：** https://github.com/AgnesAI-Labs/Agnes-AI/issues
@@ -346,11 +346,14 @@ Agent：（参考 Skill 视频排查指南 → 检查 video_id vs task_id → �
 |------|----------|------|
 | 通用对话 / 高并发 / 低成本 | `agnes-2.5-flash` | `/v1/chat/completions` |
 | 编程 / Agent / 推理 / 图片理解 | `agnes-2.5-flash` | `/v1/chat/completions` |
-| 高级推理 / 复杂编码（测试中，暂无付费通道） | `agnes-2.5-pro-alpha` | `/v1/chat/completions` |
+| 高级推理 / 复杂编码（付费，GA） | `agnes-2.5-pro` | `/v1/chat/completions` |
+| 高级推理 / 复杂编码（付费，Beta） | `agnes-2.5-pro-beta` | `/v1/chat/completions` |
+| 高级推理 / 复杂编码（付费，Alpha） | `agnes-2.5-pro-alpha` | `/v1/chat/completions` |
 | 兼容旧版 / 通用对话 | `agnes-2.0-flash` | `/v1/chat/completions` |
 | 图像生成 / 编辑（推荐） | `agnes-image-2.1-flash` | `/v1/images/generations` |
 | 图像快速生成 | `agnes-image-2.0-flash` | `/v1/images/generations` |
 | 视频生成（推荐 / 免费） | `agnes-video-2.5-flash` | `/v1/videos` |
+| 视频生成（付费，高清） | `agnes-video-2.5` | `/v1/videos` |
 | 视频生成（旧版） | `agnes-video-v2.0` | `/v1/videos` |
 
 ### Step 3 — 配置请求
@@ -381,7 +384,7 @@ curl https://apihub.agnes-ai.com/v1/chat/completions \
 **401 Unauthorized**
 1. 检查 Header 格式：`Authorization: Bearer YOUR_KEY`（Bearer 后有空格）
 2. 确认 Key 未过期/被删除（控制台 Settings → API Keys 查看）
-3. 确认账户有余额（注册送 $0.1，当前所有模型免费但有 RPM 限制：文本 20/min，图片按分辨率 1K:20, 2K:10, 3K/4K:1，视频 1/min）
+3. 确认账户有余额（注册送 $0.1；文本/图像/视频 Flash 模型当前免费但有 RPM 限制：文本 20/min，图片按分辨率 1K:20, 2K:10, 3K/4K:1，视频 1/min；Pro 系列为付费模型）
 4. 检查 Key 是否有多余空格或换行符
 5. 用 curl 直接测试，排除 SDK/框架问题
 
@@ -570,7 +573,7 @@ curl https://apihub.agnes-ai.com/v1/chat/completions \
 ## 4. 各模型参数速查
 
 ### agnes-2.5-flash
-- 端点：`POST /v1/chat/completions`
+- 端点：`POST /v1/chat/completions`（另支持 Responses `POST /v1/responses`、Anthropic 兼容 Messages `POST /v1/messages`）
 - Context：512K
 - Max Output：65.5K
 - 参数：model, messages, temperature, top_p, max_tokens, frequency_penalty, presence_penalty, repetition_penalty, stop, seed, stream, tools, tool_choice, chat_template_kwargs, thinking
@@ -579,15 +582,34 @@ curl https://apihub.agnes-ai.com/v1/chat/completions \
 - **升级自 2.0 Flash**：API 完全兼容，只需改模型名即可迁移
 - 价格：Input $0.03/1M, Output $0.15/1M（**现价 $0，RPM ≤ 20**）
 
+### agnes-2.5-pro（正式版 · 付费）
+- 端点：`POST /v1/chat/completions`（另支持 Responses `POST /v1/responses`、Messages `POST /v1/messages`）
+- Context：**1M**
+- Max Output：65536
+- 输入模态：文本、图像 URL；输出：文本（Reasoning）
+- **Agnes 2.5 Pro Alpha 打榜模型的商业化稳定版**（2026-08-01 发布），付费模型，需账户开通访问权限
+- 权重：Proprietary（非开源）；Alpha 权重已 Apache 2.0 开源
+- 支持工具调用、Thinking 模式、流式输出
+- 价格：Input $0.45/1M, Output $0.90/1M, Cache hit $0.045/1M
+
+### agnes-2.5-pro-beta（Beta · 付费）
+- 端点：`POST /v1/chat/completions`（另支持 Responses `POST /v1/responses`、Messages `POST /v1/messages`）
+- Context：**1M**
+- Max Output：65536
+- 输入模态：文本、图像 URL；输出：文本（Reasoning）
+- **已正式上线**，付费模型，需账户开通访问权限
+- 权重：Proprietary（非开源）
+- 支持工具调用、Thinking 模式、流式输出
+- 价格：Input $0.10/1M, Output $0.30/1M, Cache hit $0.01/1M
+
 ### agnes-2.5-pro-alpha
-- 端点：`POST /v1/chat/completions`
-- Context：262K
-- 输出模态：文本
-- 输入模态：文本、图像 URL
+- 端点：`POST /v1/chat/completions`（另支持 Responses `POST /v1/responses`、Messages `POST /v1/messages`）
+- Context：**1M**（此前误标 262K）
+- Max Output：65536
+- 输入模态：文本、图像 URL；输出：文本（Reasoning）
+- **✅ 已转为付费模型，付费通道已开通**（2026-07-24 发布，权重已 Apache 2.0 开源）
 - 支持图片 URL 输入、工具调用、Thinking 模式、流式输出
-- **⚠️ 测试中**：暂无付费通道，价格仅供参考，正式付费功能上线前可能变动
-- 参考价格：Input $0.45/1M, Output $0.90/1M, Cache hit $0.004/1M
-- **注意**：当前为测试预览阶段，所有用户均可调用（受 RPM 限制），但未来可能转为付费模型
+- 价格：Input $0.45/1M, Output $0.90/1M, Cache hit $0.045/1M
 
 ### agnes-2.0-flash
 - 端点：`POST /v1/chat/completions`
@@ -596,20 +618,21 @@ curl https://apihub.agnes-ai.com/v1/chat/completions \
 - 额外参数：stream, tools, tool_choice, chat_template_kwargs, thinking
 - 支持图片 URL 输入（messages[].content 数组格式）
 - 支持工具调用、Thinking 模式、流式输出
-- 价格：Input $0.1/1M, Output $0.2/1M（**现价 $0，RPM ≤ 20**）
+- 价格：Input $0.03/1M, Output $0.15/1M（**现价 $0，RPM ≤ 20**）
 - **已升级至 2.5-flash，建议迁移**
 
 ### agnes-image-2.0/2.1-flash
 - 端点：`POST /v1/images/generations`
 - 必填：model, prompt, size
 - 图生图必填：`extra_body.image`（URL 数组或 Data URI Base64，**必须放在 extra_body 中！**）
-- size：1024x768 / 1024x1024 / 768x1024（1K）/ 2048x2048 / 2048x1536 / 1536x2048（2K）/ 3072x3072 / 3072x2304 / 2304x3072（3K）/ 4096x4096 / 4096x3072 / 3072x4096（4K）
+- size：官方推荐档位 `1K` / `2K` / `3K` / `4K`（配合 `ratio` 使用），也兼容 `1024x768` 这类历史精确尺寸写法，但不支持的尺寸可能被标准化
+- `ratio` 支持：1:1、3:4、4:3、16:9、9:16、2:3、3:2、21:9（默认 1:1）
   - 1K：免费/默认 RPM 20，企业 RPM 40，Token Plan RPM 100
   - 2K：免费/默认 RPM 10，企业 RPM 20，Token Plan RPM 80
   - 3K/4K：所有用户类型 RPM 均为 1
-- **尺寸要求：** 图像生成尺寸必须是 16 的倍数，否则可能返回 500 错误
-- 输出：URL 或 Base64
-- 价格：$0.003/image（**现价 $0**）
+- **尺寸要求：** 历史精确尺寸需为 16 的倍数，否则可能返回 500 错误；推荐使用档位 + ratio
+- 输出：URL 或 Base64（`return_base64: true` 或 `extra_body.response_format`）
+- 价格（按张）：1K $0.010/张、2K $0.018/张、3K $0.021/张、4K $0.024/张（**现价均 $0**）；前 3 张输入参考图免费，第 4 张起 $0.003/张（**现价 $0**）
 
 ### agnes-video-v2.0
 - 创建：`POST /v1/videos`
@@ -620,6 +643,18 @@ curl https://apihub.agnes-ai.com/v1/chat/completions \
 - 支持宽高比：16:9、9:16、1:1、4:3、3:4
 - 支持关键帧动画模式：`extra_body.mode: "keyframes"`
 - 价格：$0.005/second（**现价 $0**）
+- **重要：必须用 video_id 查询，task_id 会导致排队过长**
+
+### agnes-video-2.5（付费 · 高清）
+- 模型 ID：`agnes-video-2.5`
+- 创建：`POST /v1/videos`
+- **查询（强烈推荐）：`GET /agnesapi?video_id=<ID>&model_name=agnes-video-2.5`**
+- 查询（兼容，仅 text 模式）：`GET /agnesapi?video_id=<ID>`
+- 模式：`text`（文生视频）、`keyframe`（首尾帧控制）、`reference`（图片/音频/**视频**参考）
+- `size`：`"720P"` / `"960P"` / `"2K"`；`aspect_ratio` 支持 21:9 / 16:9 / 4:3 / 1:1 / 3:4 / 9:16
+- `seconds`：字符串 `"4"`–`"12"`（默认 `"5"`）；`n` 固定 `1`
+- `reference` 模式：`images`/`audios`/`videos` 至少一类非空，输入图片前 5 张免费（第 6 张起 $0.005/张）
+- 价格：720P $0.025/秒、960P $0.040/秒、2K $0.055/秒（**付费模型**）
 - **重要：必须用 video_id 查询，task_id 会导致排队过长**
 
 ### agnes-video-2.5-flash（新增 · 限时免费）

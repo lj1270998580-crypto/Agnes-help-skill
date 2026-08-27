@@ -19,9 +19,11 @@
 4. [Agnes Image 2.0 Flash](#四agnes-image-20-flash)
 5. [Agnes Image 2.1 Flash](#五agnes-image-21-flash)
 6. [Agnes Video V2.0](#六agnes-video-v20)
-7. [Agnes Video 2.5 Flash](#七agnes-video-25-flash)
-8. [隐私政策](#八隐私政策)
-9. [服务条款](#九服务条款)
+7. [Agnes Video 2.5](#七agnes-video-25)
+8. [Agnes Video 2.5 Flash](#八agnes-video-25-flash)
+9. [Agnes 2.5 Pro 系列](#九agnes-25-pro-系列)
+10. [隐私政策](#十隐私政策)
+11. [服务条款](#十一服务条款)
 
 ---
 
@@ -1678,7 +1680,72 @@ num_frames  必须满足 8n + 1 ，例如 81 、121 、161 、241  或 441 ；
 
 ---
 
-## 七、Agnes Video 2.5 Flash
+## 七、Agnes Video 2.5
+
+> 使用 OpenAI Videos 兼容 API 接入 Agnes Video 2.5，支持文生视频、首尾帧控制和图片/音频/视频参考生成。
+> 官方文档：国际站 https://www.agnes-ai.com/zh-Hans/docs/agnes-video-25
+> 国内站 https://www.agnes-ai.cn/zh-Hans/docs/agnes-video-25
+
+### 模型 ID
+
+`agnes-video-2.5`
+
+### 创建任务
+
+`POST /v1/videos`
+
+### 查询任务
+
+- 推荐方式（适用于 text、keyframe 和 reference 全部模式）：`GET /agnesapi?video_id=<VIDEO_ID>&model_name=agnes-video-2.5`
+- 仅 video_id（仅适用于 `mode: "text"` 的任务）：`GET /agnesapi?video_id=<VIDEO_ID>`
+- 建议每隔 1–2 秒查询一次，直至 `status` 变为 `completed` 或 `failed`
+
+### 当前价格（付费模型）
+
+| 输出分辨率 | 单价 |
+|-----------|------|
+| 720P | $0.025 / 秒 |
+| 960P | $0.040 / 秒 |
+| 2K | $0.055 / 秒 |
+
+- 输入图片：前 5 张免费，第 6 张起按 `$0.005 / 张` 计费
+- 输入视频：时长计入总计费时长，与输出时长相加后按输出分辨率单价计费
+- 计费公式：`视频总金额 = 输出秒数 × 输出分辨率单价 + 输入视频秒数 × 输出分辨率单价 + max(0, 图片数 - 5) × $0.005`
+
+### 生成模式（mode）
+
+| 模式 | 用途 | 必需媒体 | 不允许的字段 |
+|------|------|----------|-------------|
+| `text` | 纯文本生成视频 | 无 | `first_frame`、`last_frame`、`images`、`audios`、`videos` |
+| `keyframe` | 首帧、尾帧或首尾帧控制 | `first_frame` 与 `last_frame` 至少一个 | `images`、`audios`、`videos` |
+| `reference` | 图片、音频或视频参考生成 | `images`、`audios`、`videos` 至少一类非空 | `first_frame`、`last_frame` |
+
+提示词中可用 `<Picture N>`、`<Audio N>`、`<Video N>` 指代素材，从 `1` 开始编号。
+
+### 关键参数
+
+| 参数 | 取值 | 默认值 |
+|------|------|--------|
+| `seconds` | 字符串 `"4"`–`"12"` | `"5"` |
+| `size` | `"720P"`、`"960P"`、`"2K"` | — |
+| `aspect_ratio` | 21:9 / 16:9 / 4:3 / 1:1 / 3:4 / 9:16 | `16:9` |
+| `n` | 仅支持 `1` | `1` |
+| `seed` | integer | — |
+
+### 720P 画幅对应像素
+
+| aspect_ratio | 输出像素 |
+|--------------|----------|
+| 21:9 | 1680x720 |
+| 16:9 | 1280x720 |
+| 4:3 | 960x720 |
+| 1:1 | 720x720 |
+| 3:4 | 720x960 |
+| 9:16 | 720x1280 |
+
+---
+
+## 八、Agnes Video 2.5 Flash
 
 > 上线通知（2026-08-27）：Agnes Video 2.5 Flash 已正式上线 API 平台，限时免费开放使用。
 > 官方文档：国际站 https://www.agnes-ai.com/zh-Hans/docs/agnes-video-25-flash
@@ -1788,6 +1855,25 @@ curl -sS -X POST "https://apihub.agnes-ai.com/v1/videos" \
 - `seconds` 使用字符串 `"4"`–`"12"`，`n` 固定为 `1`
 - 所有模式推荐使用 `video_id` 和 `model_name=agnes-video-2.5-flash` 查询
 - 不要在前端代码、日志或公开仓库中暴露 API Key
+
+---
+
+## 九、Agnes 2.5 Pro 系列
+
+> Pro 系列为**付费推理模型**，支持文本与图像 URL 输入、工具调用、Thinking 模式、流式输出。
+> 三个模型均支持三种端点：Chat Completions `POST /v1/chat/completions`、Responses `POST /v1/responses`、Anthropic 兼容 Messages `POST /v1/messages`。
+> 上下文窗口均 **1M tokens**，最大输出 **65536 tokens**。
+
+| 模型 | 状态 | 输入 Token（未命中缓存） | 输出 Token | Cache hit | 权重 |
+|------|------|------------------------|-----------|-----------|------|
+| `agnes-2.5-pro` | 正式版（GA，2026-08-01） | $0.45 / M | $0.90 / M | $0.045 / M | Proprietary |
+| `agnes-2.5-pro-beta` | Beta，已上线 | $0.10 / M | $0.30 / M | $0.01 / M | Proprietary |
+| `agnes-2.5-pro-alpha` | Alpha（2026-07-24） | $0.45 / M | $0.90 / M | $0.045 / M | Apache 2.0 开源 |
+
+- `agnes-2.5-pro` 是 Alpha 打榜模型的商业化稳定版本，官方权重为闭源；Alpha 权重已在 Hugging Face 以 Apache 2.0 开源
+- 三个模型均为付费模型，调用需确认账户已开通对应模型访问权限
+- 输入缓存命中单价为普通输入 Token 单价的 10%
+- 图像 URL 输入格式与 2.5 Flash 一致（`messages[].content[].image_url`）
 
 ---
 
