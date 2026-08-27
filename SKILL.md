@@ -1,6 +1,6 @@
 ---
 name: agnes-ai-support
-version: "1.2.19"
+version: "1.2.20"
 description: |
   Agnes AI API 接入支持与问题排查 Skill。帮助新用户完成 Agnes AI API 的接入配置，
   诊断和解决接入过程中遇到的认证、参数、响应、图像生成、视频生成等各类问题。
@@ -14,9 +14,9 @@ description: |
 
 # Agnes AI API 接入支持与问题排查
 
-> **Skill 版本：** v1.2.19
+> **Skill 版本：** v1.2.20
 > **适用工具：** OpenClaw / Claude Code / Claude Desktop / Hermes / Codex / WorkBuddy / Cherry Studio / Opencode / Kimi Work
-> **更新日期：** 2026-07-28
+> **更新日期：** 2026-08-27
 > **官方 Bug 反馈：** https://github.com/AgnesAI-Labs/Agnes-AI/issues
 > **官方进度看板：** https://github.com/users/AgnesAI-Labs/projects/1
 > **官方 Bug 反馈：** https://github.com/AgnesAI-Labs/Agnes-AI/issues
@@ -289,11 +289,23 @@ Agent：（参考 Skill 视频排查指南 → 检查 video_id vs task_id → �
 
 **平台直达：** https://platform.agnes-ai.com
 
+### 🎬 Agnes Video 2.5 Flash 上线通知（2026-08-27 更新）
+
+- **Agnes Video 2.5 Flash 已正式上线 API 平台，限时免费开放使用（$0/秒，原价 $0.025/秒）**
+- 模型 ID：`agnes-video-2.5-flash`，端点 `POST /v1/videos`（与 v2.0 相同）
+- 支持 **文生视频（text）/ 首尾帧控制（keyframe）/ 图片参考（reference）** 三种模式
+- **Flash 专属限制**：`size` 固定为字符串 `"720P"`；`reference` 模式 `images` 最多 5 张；不支持 `videos` 输入；`seconds` 为字符串 `"4"`–`"12"`；`n` 固定为 `1`
+- 查询仍推荐 `GET /agnesapi?video_id=<ID>&model_name=agnes-video-2.5-flash`；纯 `video_id` 查询仅适用于 `text` 模式
+- 官方文档（国际站）：https://www.agnes-ai.com/zh-Hans/docs/agnes-video-25-flash
+- 官方文档（国内站）：https://www.agnes-ai.cn/zh-Hans/docs/agnes-video-25-flash
+- 使用中遇到问题或有建议，欢迎在社群内反馈
+
 ### 视频接口重要更新
 
 - **必须使用 video_id 查询视频结果**，不要用 task_id 查询
 - 使用 task_id 查询会导致视频排队过长（超过 5 分钟大概率是接口搞错了）
-- 视频文档：https://agnes-ai.com/doc/agnes-video-v20
+- 视频文档（2.5 Flash）：https://www.agnes-ai.com/zh-Hans/docs/agnes-video-25-flash
+- 视频文档（v2.0）：https://agnes-ai.com/doc/agnes-video-v20
 - 社区 Skill 中的视频接口可能未更新，请以官方文档为准
 
 ### ⚠️ Agnes-2.0-Flash 上下文窗口回退说明（2026-06-08 更新）
@@ -338,7 +350,8 @@ Agent：（参考 Skill 视频排查指南 → 检查 video_id vs task_id → �
 | 兼容旧版 / 通用对话 | `agnes-2.0-flash` | `/v1/chat/completions` |
 | 图像生成 / 编辑（推荐） | `agnes-image-2.1-flash` | `/v1/images/generations` |
 | 图像快速生成 | `agnes-image-2.0-flash` | `/v1/images/generations` |
-| 视频生成 | `agnes-video-v2.0` | `/v1/videos` |
+| 视频生成（推荐 / 免费） | `agnes-video-2.5-flash` | `/v1/videos` |
+| 视频生成（旧版） | `agnes-video-v2.0` | `/v1/videos` |
 
 ### Step 3 — 配置请求
 
@@ -607,6 +620,18 @@ curl https://apihub.agnes-ai.com/v1/chat/completions \
 - 支持宽高比：16:9、9:16、1:1、4:3、3:4
 - 支持关键帧动画模式：`extra_body.mode: "keyframes"`
 - 价格：$0.005/second（**现价 $0**）
+- **重要：必须用 video_id 查询，task_id 会导致排队过长**
+
+### agnes-video-2.5-flash（新增 · 限时免费）
+- 模型 ID：`agnes-video-2.5-flash`
+- 创建：`POST /v1/videos`
+- **查询（强烈推荐）：`GET /agnesapi?video_id=<ID>&model_name=agnes-video-2.5-flash`**
+- 查询（兼容，仅 text 模式）：`GET /agnesapi?video_id=<ID>`
+- 模式：`text`（文生视频）、`keyframe`（首尾帧控制）、`reference`（图片/音频参考）
+- `size` 固定字符串 `"720P"`；`aspect_ratio` 支持 21:9 / 16:9 / 4:3 / 1:1 / 3:4 / 9:16
+- `seconds`：字符串 `"4"`–`"12"`（默认 `"5"`）；`n` 固定 `1`
+- `reference` 模式：`images` 最多 5 张，不支持 `videos` 输入
+- 价格：原价 $0.025/second，**现价 $0/second（限时免费）**
 - **重要：必须用 video_id 查询，task_id 会导致排队过长**
 
 ## 5. 常见错误速查表

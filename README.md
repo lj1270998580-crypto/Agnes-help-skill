@@ -73,7 +73,7 @@
 - 概述与核心能力
 - Agnes 2.0 Flash / 2.5 Flash 完整参数与示例
 - Agnes Image 2.0 / 2.1 Flash 完整参数与示例
-- Agnes Video V2.0 完整参数与示例（含异步轮询）
+- Agnes Video 2.5 Flash / V2.0 完整参数与示例（含异步轮询）
 - 隐私政策与服务条款
 
 ---
@@ -107,9 +107,11 @@ Headers:
 - 高级推理（测试中，暂无付费通道）：`agnes-2.5-pro-alpha`
 - 兼容旧版：`agnes-2.0-flash`
 - 图像生成（推荐）：`agnes-image-2.1-flash`
-- 视频生成：`agnes-video-v2.0`
+- 视频生成（推荐 / 限时免费）：`agnes-video-2.5-flash`
+- 视频生成（旧版）：`agnes-video-v2.0`
 
 **⚠️ 视频接口重要提醒：**
+- 🎬 **Agnes Video 2.5 Flash 已正式上线，限时免费（$0/秒）**：支持 text / keyframe / reference 三种模式，详见[国际站文档](https://www.agnes-ai.com/zh-Hans/docs/agnes-video-25-flash) / [国内站文档](https://www.agnes-ai.cn/zh-Hans/docs/agnes-video-25-flash)
 - **必须用 `video_id` 查询视频结果**：`GET /agnesapi?video_id=<ID>`
 - **不要用 `task_id` 查询**，会导致排队异常延长（超过 5 分钟大概率是接口搞错了）
 
@@ -130,7 +132,9 @@ Headers:
 | 官方平台 | https://platform.agnes-ai.com |
 | 官方文档 | https://agnes-ai.com/doc/overview |
 | 操作手册 | https://agnes-ai.com/doc/常用接入文档 |
-| 视频文档 | https://agnes-ai.com/doc/agnes-video-v20 |
+| 视频文档（2.5 Flash · 国际站） | https://www.agnes-ai.com/zh-Hans/docs/agnes-video-25-flash |
+| 视频文档（2.5 Flash · 国内站） | https://www.agnes-ai.cn/zh-Hans/docs/agnes-video-25-flash |
+| 视频文档（v2.0） | https://agnes-ai.com/doc/agnes-video-v20 |
 | OpenClaw 接入 | https://agnes-ai.com/doc/cid1 |
 | Hermes 接入 | https://agnes-ai.com/doc/cid2 |
 | Claude CLI 接入 | https://agnes-ai.com/doc/cid3 |
@@ -150,6 +154,7 @@ Headers:
 
 | 日期 | 更新内容 |
 |------|----------|
+| 2026-08-27 | **Agnes Video 2.5 Flash 正式上线，限时免费（$0/秒，原价 $0.025/秒）**：新增模型 `agnes-video-2.5-flash`（`POST /v1/videos`），支持 text / keyframe / reference 三种模式，`size` 固定 `"720P"`，`seconds` 支持 `"4"`–`"12"`，`reference` 模式最多 5 张图片；官方文档同步更新（[国际站](https://www.agnes-ai.com/zh-Hans/docs/agnes-video-25-flash) / [国内站](https://www.agnes-ai.cn/zh-Hans/docs/agnes-video-25-flash)）；同步更新 Skill 版本至 **v1.2.20** |
 | 2026-07-28 | 移除 HTML 交互式助手板块（对用户帮助有限）；`agnes-2.5-pro-alpha` 更新为**测试中**状态（暂无付费通道）；仓库描述与文档同步为最新版 |
 | 2026-07-28 | 新增国内 **.cn 域名支持**：Base URL（国内）`https://apihub.agnes-ai.cn/v1`，方便国内用户直接访问；同步更新 Skill 版本至 **v1.2.18** |
 | 2026-07-27 | 新增 Agnes 2.5 系列模型支持：`agnes-2.5-flash`（2.0 升级版，API 兼容，512K/65.5K，免费）和 `agnes-2.5-pro-alpha`（付费推理模型，262K，$0.45/$0.90/1M）；`agnes-1.5-flash` 已从模型列表移除 |

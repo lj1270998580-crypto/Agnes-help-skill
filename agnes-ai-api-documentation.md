@@ -19,8 +19,9 @@
 4. [Agnes Image 2.0 Flash](#四agnes-image-20-flash)
 5. [Agnes Image 2.1 Flash](#五agnes-image-21-flash)
 6. [Agnes Video V2.0](#六agnes-video-v20)
-7. [隐私政策](#七隐私政策)
-8. [服务条款](#八服务条款)
+7. [Agnes Video 2.5 Flash](#七agnes-video-25-flash)
+8. [隐私政策](#八隐私政策)
+9. [服务条款](#九服务条款)
 
 ---
 
@@ -1674,6 +1675,119 @@ num_frames  必须满足 8n + 1 ，例如 81 、121 、161 、241  或 441 ；
 图生视频任务需要通过 image  提供图片URL；
 多图视频任务中需要 extra_body.image  提供多个图片URL；
 关键帧动画需要设置 extra_body.mode  为 keyframes 。
+
+---
+
+## 七、Agnes Video 2.5 Flash
+
+> 上线通知（2026-08-27）：Agnes Video 2.5 Flash 已正式上线 API 平台，限时免费开放使用。
+> 官方文档：国际站 https://www.agnes-ai.com/zh-Hans/docs/agnes-video-25-flash
+> 国内站 https://www.agnes-ai.cn/zh-Hans/docs/agnes-video-25-flash
+
+使用 OpenAI Videos 兼容 API 接入 Agnes Video 2.5 Flash，支持文生视频、首尾帧控制和图片参考生成。
+
+Agnes Video 2.5 Flash 复用 Agnes Video 2.5 的模型能力和异步任务接口。除本节列出的 Flash 专属限制外，其他请求参数、响应字段和查询方式均与 Agnes Video 2.5 一致。
+
+### 模型 ID
+
+`agnes-video-2.5-flash`
+
+### 创建任务
+
+`POST /v1/videos`
+
+### 查询任务
+
+- 推荐方式（适用于 text、keyframe 和 reference 全部模式）：`GET /agnesapi?video_id=<VIDEO_ID>&model_name=agnes-video-2.5-flash`
+- 仅 video_id（仅适用于 `mode: "text"` 的任务）：`GET /agnesapi?video_id=<VIDEO_ID>`
+- 建议每隔 1–2 秒查询一次，直至 `status` 变为 `completed` 或 `failed`
+
+### 当前价格
+
+原价 `$0.025 / 秒`，现价 `$0 / 秒`（限时免费）。免费期间，输出视频秒数、输入视频秒数和参考图片均按 `$0` 计费。
+
+### 与 Agnes Video 2.5 的差异
+
+| 校验项 | Flash 规则 | 校验失败响应 |
+|--------|-----------|-------------|
+| `size` | 仅支持字符串 `"720P"` | HTTP 400：`size must be 720P` |
+| `reference` 图片数量 | `images` 最多 5 张 | HTTP 400：`images length must not exceed 5` |
+| `reference` 视频输入 | 不支持有效的 `videos` 内容 | HTTP 400：`videos is not supported` |
+
+Flash 专属校验在任务创建、排队、计费和推理前执行。校验失败的请求不会创建视频任务，也不会产生费用。
+
+### 请求示例（文生视频）
+
+```
+curl -sS -X POST "https://apihub.agnes-ai.com/v1/videos" \
+  -H "Authorization: Bearer $AGNES_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "agnes-video-2.5-flash",
+    "prompt": "雨后的未来城市街道，霓虹灯倒映在地面，一辆银色跑车缓慢驶过，电影级运镜",
+    "seconds": "5",
+    "mode": "text",
+    "size": "720P",
+    "aspect_ratio": "16:9"
+  }'
+```
+
+创建成功后，保存响应中的 `video_id`。`id` 和 `task_id` 是任务 ID，`video_id` 用于查询任务。
+
+### 请求参数（公共）
+
+| 参数 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| `model` | string | 是 | 使用 `agnes-video-2.5-flash` |
+| `prompt` | string | 是 | 视频内容描述；reference 模式可使用 `<Picture N>` 和 `<Audio N>` 指代素材 |
+| `mode` | string | 是 | `text`、`keyframe` 或 `reference` |
+| `seconds` | string | 否 | 视频时长，字符串 `"4"`–`"12"`，默认 `"5"` |
+| `size` | string | 否 | Flash 固定为 `"720P"`；其他值返回 HTTP 400 |
+| `aspect_ratio` | string | 否 | 默认 `16:9`，支持 21:9 / 16:9 / 4:3 / 1:1 / 3:4 / 9:16 |
+| `seed` | integer | 否 | 随机种子 |
+| `n` | integer | 否 | 当前仅支持 `1`，默认 `1` |
+
+### 模式专用参数
+
+| 参数 | 类型 | 适用模式 | 说明 |
+|------|------|----------|------|
+| `first_frame` | string | `keyframe` | 首帧图片 URL；与 `last_frame` 至少提供一个 |
+| `last_frame` | string | `keyframe` | 尾帧图片 URL；与 `first_frame` 至少提供一个 |
+| `images` | string[] | `reference` | 参考图片 URL 列表，Flash 最多支持 5 张 |
+| `audios` | string[] | `reference` | 参考音频 URL 列表，沿用 Agnes Video 2.5 公共规则 |
+| `videos` | object[] | `reference` | Flash 不支持；传入有效内容返回 HTTP 400 |
+
+### 生成模式规则
+
+| 模式 | 用途 | 必需媒体 | 不允许的媒体字段 |
+|------|------|----------|-----------------|
+| `text` | 纯文本生成视频 | 无 | `first_frame`、`last_frame`、`images`、`audios`、`videos` |
+| `keyframe` | 首帧、尾帧或首尾帧控制 | `first_frame` 与 `last_frame` 至少一个 | `images`、`audios`、`videos` |
+| `reference` | 图片或音频参考生成 | `images` 或 `audios` 至少一类非空 | `first_frame`、`last_frame`、`videos` |
+
+所有媒体 URL 都应可由 Agnes AI 服务公开访问，并在任务完成前保持有效。
+
+### 视频尺寸与画幅
+
+`size` 必须使用 `"720P"`，具体输出尺寸通过 `aspect_ratio` 选择：
+
+| `aspect_ratio` | 输出像素 |
+|----------------|----------|
+| 21:9 | 1680x720 |
+| 16:9 | 1280x720 |
+| 4:3 | 960x720 |
+| 1:1 | 720x720 |
+| 3:4 | 720x960 |
+| 9:16 | 720x1280 |
+
+### 接入检查清单
+
+- 模型 ID 使用 `agnes-video-2.5-flash`
+- `size` 固定为字符串 `"720P"`
+- `mode=reference` 时，`images` 不超过 5 张，且不要传入有效的 `videos` 内容
+- `seconds` 使用字符串 `"4"`–`"12"`，`n` 固定为 `1`
+- 所有模式推荐使用 `video_id` 和 `model_name=agnes-video-2.5-flash` 查询
+- 不要在前端代码、日志或公开仓库中暴露 API Key
 
 ---
 
