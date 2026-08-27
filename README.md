@@ -11,6 +11,7 @@
 **Agnes 2.0 全模态模型 API 正式开放全球免费调用！**
 
 - ✅ 不限期、全模态、API 调用完全免费（RPM 20 以内）
+- ✅ 目前**所有 Flash 系列模型（文本/图像/视频）全部免费**，仅 Pro 推理系列与 `agnes-video-2.5` 为付费模型
 - ✅ 注册官网 → 生成 KEY → 直接调用
 - ✅ 文本、图像、视频全能适配
 - ✅ 模型持续升级并保持免费
@@ -103,16 +104,16 @@ Headers:
 ```
 
 **模型名称：**
-- 通用对话：`agnes-2.5-flash`
-- 编程/Agent/推理：`agnes-2.5-flash`
+- 通用对话：`agnes-2.5-flash`（免费）
+- 编程/Agent/推理：`agnes-2.5-flash`（免费）
 - 高级推理（付费，GA）：`agnes-2.5-pro`
 - 高级推理（付费，Beta）：`agnes-2.5-pro-beta`
 - 高级推理（付费，Alpha）：`agnes-2.5-pro-alpha`
-- 兼容旧版：`agnes-2.0-flash`
-- 图像生成（推荐）：`agnes-image-2.1-flash`
-- 视频生成（推荐 / 限时免费）：`agnes-video-2.5-flash`
+- 兼容旧版：`agnes-2.0-flash`（免费）
+- 图像生成（推荐）：`agnes-image-2.1-flash`（免费）
+- 视频生成（推荐 / 免费）：`agnes-video-2.5-flash`
 - 视频生成（付费，高清）：`agnes-video-2.5`
-- 视频生成（旧版）：`agnes-video-v2.0`
+- 视频生成（旧版 / 免费）：`agnes-video-v2.0`
 
 **⚠️ 视频接口重要提醒：**
 - 🎬 **Agnes Video 2.5 Flash 已正式上线，限时免费（$0/秒）**：支持 text / keyframe / reference 三种模式，详见[国际站文档](https://www.agnes-ai.com/zh-Hans/docs/agnes-video-25-flash) / [国内站文档](https://www.agnes-ai.cn/zh-Hans/docs/agnes-video-25-flash)
@@ -162,6 +163,7 @@ Headers:
 
 | 日期 | 更新内容 |
 |------|----------|
+| 2026-08-27 | 核验官方 Token Plan FAQ 与定价页：**RPM 数值全部确认无误**（文本 20/40/1000，图片 1K:20/2K:10/3K-4K:1，视频 1/2/5）；新增 **Token Plan 订阅配额说明**（文本 `agnes-2.5-flash` 每 5 小时 1,500~30,000 次、图片每天 4,000 张、视频每天 500 秒）；明确 **所有 Flash 系列模型当前全部免费**（文本/图像/视频均 $0，仅 Pro 系列与 `agnes-video-2.5` 付费）；补全 `agnes-video-2.5` 输入视频时长计入总时长的计费规则；模型选择表统一标注免费/付费；Skill 版本更新至 **v1.2.22** |
 | 2026-08-27 | 同步官方文档大版本更新：`agnes-2.5-pro-alpha` 已转**付费模型**（Context 1M，Cache hit $0.045，权重 Apache 2.0 开源）；新增付费推理模型 `agnes-2.5-pro`（GA）与 `agnes-2.5-pro-beta`（Beta，$0.10/$0.30/1M）；新增视频模型 `agnes-video-2.5`（付费高清，720P/960P/2K，reference 支持视频输入）；`agnes-2.5-flash` 与 Pro 系列补充 Responses / Messages 端点；修正 `agnes-2.0-flash` 价格（$0.03/$0.15）与图像模型按张计费明细（1K $0.010–4K $0.024，前 3 张参考图免费）；官方文档链接统一至新站 /zh-Hans/docs；Skill 版本更新至 **v1.2.21** |
 | 2026-08-27 | **Agnes Video 2.5 Flash 正式上线，限时免费（$0/秒，原价 $0.025/秒）**：新增模型 `agnes-video-2.5-flash`（`POST /v1/videos`），支持 text / keyframe / reference 三种模式，`size` 固定 `"720P"`，`seconds` 支持 `"4"`–`"12"`，`reference` 模式最多 5 张图片；官方文档同步更新（[国际站](https://www.agnes-ai.com/zh-Hans/docs/agnes-video-25-flash) / [国内站](https://www.agnes-ai.cn/zh-Hans/docs/agnes-video-25-flash)）；同步更新 Skill 版本至 **v1.2.20** |
 | 2026-07-28 | 移除 HTML 交互式助手板块（对用户帮助有限）；`agnes-2.5-pro-alpha` 更新为**测试中**状态（暂无付费通道）；仓库描述与文档同步为最新版 |

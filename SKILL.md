@@ -1,6 +1,6 @@
 ---
 name: agnes-ai-support
-version: "1.2.21"
+version: "1.2.22"
 description: |
   Agnes AI API 接入支持与问题排查 Skill。帮助新用户完成 Agnes AI API 的接入配置，
   诊断和解决接入过程中遇到的认证、参数、响应、图像生成、视频生成等各类问题。
@@ -14,7 +14,7 @@ description: |
 
 # Agnes AI API 接入支持与问题排查
 
-> **Skill 版本：** v1.2.21
+> **Skill 版本：** v1.2.22
 > **适用工具：** OpenClaw / Claude Code / Claude Desktop / Hermes / Codex / WorkBuddy / Cherry Studio / Opencode / Kimi Work
 > **更新日期：** 2026-08-27
 > **官方 Bug 反馈：** https://github.com/AgnesAI-Labs/Agnes-AI/issues
@@ -300,6 +300,24 @@ Agent：（参考 Skill 视频排查指南 → 检查 video_id vs task_id → �
 - 官方文档（国内站）：https://www.agnes-ai.cn/zh-Hans/docs/agnes-video-25-flash
 - 使用中遇到问题或有建议，欢迎在社群内反馈
 
+### 💰 免费模型一览（2026-08-27 核对官方定价页）
+
+> **目前所有 Flash 系列模型均免费开放**，仅 Pro 推理系列（`agnes-2.5-pro` / `-beta` / `-alpha`）与高清视频 `agnes-video-2.5` 为付费模型：
+
+| 模型 | 类型 | 免费状态 |
+|------|------|----------|
+| `agnes-2.0-flash` | 文本 | ✅ 免费（输入/输出 Token 均 $0） |
+| `agnes-2.5-flash` | 文本 | ✅ 免费（输入/输出 Token 均 $0） |
+| `agnes-image-2.0-flash` | 图像 | ✅ 免费（1K/2K/3K/4K 全档位 $0，参考图 $0） |
+| `agnes-image-2.1-flash` | 图像 | ✅ 免费（1K/2K/3K/4K 全档位 $0，参考图 $0） |
+| `agnes-video-v2.0` | 视频 | ✅ 免费（$0/秒） |
+| `agnes-video-2.5-flash` | 视频 | ✅ 免费（$0/秒，限时免费；原价 $0.025/秒） |
+| `agnes-video-2.5` | 视频 | 💰 付费（720P $0.025/秒、960P $0.040/秒、2K $0.055/秒） |
+| `agnes-2.5-pro` / `-beta` / `-alpha` | 文本推理 | 💰 付费（$0.10~$0.45 输入，$0.30~$0.90 输出） |
+
+> 官方定价来源：https://www.agnes-ai.com/zh-Hans/docs/pricing
+> 注意：免费/付费状态可能随官方活动调整，以官方定价页与账户账单为准。
+
 ### 视频接口重要更新
 
 - **必须使用 video_id 查询视频结果**，不要用 task_id 查询
@@ -344,17 +362,17 @@ Agent：（参考 Skill 视频排查指南 → 检查 video_id vs task_id → �
 
 | 场景 | 推荐模型 | 端点 |
 |------|----------|------|
-| 通用对话 / 高并发 / 低成本 | `agnes-2.5-flash` | `/v1/chat/completions` |
-| 编程 / Agent / 推理 / 图片理解 | `agnes-2.5-flash` | `/v1/chat/completions` |
+| 通用对话 / 高并发 / 低成本 | `agnes-2.5-flash`（免费） | `/v1/chat/completions` |
+| 编程 / Agent / 推理 / 图片理解 | `agnes-2.5-flash`（免费） | `/v1/chat/completions` |
 | 高级推理 / 复杂编码（付费，GA） | `agnes-2.5-pro` | `/v1/chat/completions` |
 | 高级推理 / 复杂编码（付费，Beta） | `agnes-2.5-pro-beta` | `/v1/chat/completions` |
 | 高级推理 / 复杂编码（付费，Alpha） | `agnes-2.5-pro-alpha` | `/v1/chat/completions` |
-| 兼容旧版 / 通用对话 | `agnes-2.0-flash` | `/v1/chat/completions` |
-| 图像生成 / 编辑（推荐） | `agnes-image-2.1-flash` | `/v1/images/generations` |
-| 图像快速生成 | `agnes-image-2.0-flash` | `/v1/images/generations` |
+| 兼容旧版 / 通用对话 | `agnes-2.0-flash`（免费） | `/v1/chat/completions` |
+| 图像生成 / 编辑（推荐） | `agnes-image-2.1-flash`（免费） | `/v1/images/generations` |
+| 图像快速生成 | `agnes-image-2.0-flash`（免费） | `/v1/images/generations` |
 | 视频生成（推荐 / 免费） | `agnes-video-2.5-flash` | `/v1/videos` |
 | 视频生成（付费，高清） | `agnes-video-2.5` | `/v1/videos` |
-| 视频生成（旧版） | `agnes-video-v2.0` | `/v1/videos` |
+| 视频生成（旧版 / 免费） | `agnes-video-v2.0` | `/v1/videos` |
 
 ### Step 3 — 配置请求
 
@@ -384,7 +402,7 @@ curl https://apihub.agnes-ai.com/v1/chat/completions \
 **401 Unauthorized**
 1. 检查 Header 格式：`Authorization: Bearer YOUR_KEY`（Bearer 后有空格）
 2. 确认 Key 未过期/被删除（控制台 Settings → API Keys 查看）
-3. 确认账户有余额（注册送 $0.1；文本/图像/视频 Flash 模型当前免费但有 RPM 限制：文本 20/min，图片按分辨率 1K:20, 2K:10, 3K/4K:1，视频 1/min；Pro 系列为付费模型）
+3. 确认账户有余额（注册送 $0.1；**目前所有 Flash 模型（文本/图像/视频）均免费**，但有 RPM 限制：文本 20/min，图片按分辨率 1K:20, 2K:10, 3K/4K:1，视频 1/min；仅 Pro 推理系列与 `agnes-video-2.5` 为付费模型）
 4. 检查 Key 是否有多余空格或换行符
 5. 用 curl 直接测试，排除 SDK/框架问题
 
@@ -452,6 +470,13 @@ curl https://apihub.agnes-ai.com/v1/chat/completions \
 - 图片模型：按分辨率分档 — 1K RPM 20，2K RPM 10，3K/4K RPM 1（均免费/默认）
 - 视频模型：免费/默认 RPM 1（每分钟内只能生成 1 个视频），需排队等待
 - 实现客户端队列和退避
+
+**Token Plan 订阅配额（与 RPM 同时生效，超出同样触发 429）：**
+- 文本（`agnes-2.5-flash`）：Starter 每 5 小时 1,500 次 / 每周 15,000 次；Plus 每 5 小时 7,500 次 / 每周 75,000 次；Pro 每 5 小时 30,000 次 / 每周 300,000 次（按请求次数计数）
+- 图片（`agnes-image-2.1-flash`）：三档均为每天 4,000 张（按生成张数计数）
+- 视频（`agnes-video-v2.0` / `agnes-video-2.5-flash`）：三档均为每天 500 秒（按生成时长计数）
+- 同一类型的多个 Key 共享同一个限制池，不会叠加额度
+- 官方参考：https://www.agnes-ai.com/zh-Hans/docs/tokenplan
 
 ### 2.4 视频排队过长（> 5 分钟）
 
@@ -655,6 +680,7 @@ curl https://apihub.agnes-ai.com/v1/chat/completions \
 - `seconds`：字符串 `"4"`–`"12"`（默认 `"5"`）；`n` 固定 `1`
 - `reference` 模式：`images`/`audios`/`videos` 至少一类非空，输入图片前 5 张免费（第 6 张起 $0.005/张）
 - 价格：720P $0.025/秒、960P $0.040/秒、2K $0.055/秒（**付费模型**）
+- 计费：`总金额 = 输出秒数 × 输出分辨率单价 + 输入视频秒数 × 输出分辨率单价 + max(0, 图片数 - 5) × $0.005`（**输入视频时长也会计入总时长，按输出分辨率单价计费**）
 - **重要：必须用 video_id 查询，task_id 会导致排队过长**
 
 ### agnes-video-2.5-flash（新增 · 限时免费）
@@ -666,7 +692,7 @@ curl https://apihub.agnes-ai.com/v1/chat/completions \
 - `size` 固定字符串 `"720P"`；`aspect_ratio` 支持 21:9 / 16:9 / 4:3 / 1:1 / 3:4 / 9:16
 - `seconds`：字符串 `"4"`–`"12"`（默认 `"5"`）；`n` 固定 `1`
 - `reference` 模式：`images` 最多 5 张，不支持 `videos` 输入
-- 价格：原价 $0.025/second，**现价 $0/second（限时免费）**
+- 价格：原价 $0.025/second，**现价 $0/second（限时免费）**；限时免费期间输出视频秒数、输入视频秒数与参考图片均按 `$0` 计费（计费公式与 Video 2.5 相同）
 - **重要：必须用 video_id 查询，task_id 会导致排队过长**
 
 ## 5. 常见错误速查表
