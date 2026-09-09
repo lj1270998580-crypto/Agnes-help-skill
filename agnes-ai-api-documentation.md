@@ -1,6 +1,6 @@
 # Agnes AI API 完整文档
 
-> **文档版本：** v1.2.15
+> **文档版本：** v1.3.0
 > **来源：** https://agnes-ai.com/doc/overview 及其子页面
 > **整理时间：** 2026-06-06
 > **GitHub 仓库：** https://github.com/lj1270998580-crypto/Agnes-help-skill
@@ -25,6 +25,8 @@
 10. [Token Plan 与 RPM 限制](#十token-plan-与-rpm-限制)
 11. [隐私政策](#十一隐私政策)
 12. [服务条款](#十二服务条款)
+13. [Agnes 3.0 Flash](#十二agnes-30-flash)（2026-09 新增）
+14. [Agnes Image 2.5 Flash](#十三agnes-image-25-flash)（2026-09 新增）
 
 ---
 
@@ -1681,6 +1683,130 @@ num_frames  必须满足 8n + 1 ，例如 81 、121 、161 、241  或 441 ；
 
 ---
 
+## 十二、Agnes 3.0 Flash（2026-09 新增）
+
+> Agnes 3.0 Flash 是面向 **Agent 编程与工具驱动任务** 的新一代文本模型，当前免费。
+> 官方文档：国际站 https://www.agnes-ai.com/zh-Hans/docs/agnes-30-flash
+> 国内站 https://www.agnes-ai.cn/zh-Hans/docs/agnes-30-flash
+
+### 模型 ID
+
+`agnes-3.0-flash`
+
+### 三个端点（共用同一 Base URL 与同一把 Key）
+
+| 风格 | Endpoint | 认证头 | 适用客户端 |
+|------|----------|--------|-----------|
+| OpenAI Chat Completions | `POST /v1/chat/completions` | `Authorization: Bearer <KEY>` | Codex / OpenCode / Cline / NextChat / LobeChat |
+| OpenAI Responses | `POST /v1/responses` | `Authorization: Bearer <KEY>` | OpenAI Cookbook / 官方 SDK / Agents 项目 |
+| Anthropic Messages | `POST /v1/messages` | `x-api-key: <KEY>` + `anthropic-version: 2023-06-01` | Claude Code / Continue / aider / Anthropic SDK |
+
+> 注意：国际站与国内站账号不互通、Key 不通用，混用会返回「无效的令牌」。
+
+### 核心规格
+
+| 项 | 值 |
+|----|-----|
+| Context window | 512K |
+| Maximum output | 65,536 Token |
+| 输入模态 | 文本 + 图像 URL |
+| 输出模态 | 文本 |
+| 工具调用 | 支持（`tool_calls`） |
+| Thinking 模式 | 支持（2.x 系列不支持） |
+
+### 价格
+
+| 计费项 | 刊例价 | 现价 |
+|--------|--------|------|
+| 输入缓存命中 | $0.005 / M | **$0 / M** |
+| 输入 Token | $0.05 / M | **$0 / M** |
+| 输出 Token | $0.15 / M | **$0 / M** |
+
+### Thinking 模式
+
+OpenAI 兼容格式：
+
+```json
+{
+  "model": "agnes-3.0-flash",
+  "messages": [{"role": "user", "content": "请规划此仓库任务的实现步骤"}],
+  "chat_template_kwargs": {"enable_thinking": true}
+}
+```
+
+Anthropic 兼容格式（`budget_tokens` 至少给最终输出留 1/3，否则可能撞 `max_tokens` 被截断）：
+
+```json
+{
+  "model": "agnes-3.0-flash",
+  "max_tokens": 2048,
+  "messages": [{"role": "user", "content": "请规划此仓库任务的实现步骤"}],
+  "thinking": {"type": "enabled", "budget_tokens": 2048}
+}
+```
+
+### 官方强调的四个方向
+
+1. **任务执行**：减少「话说完了活没干」
+2. **工具编排**：少瞎调工具、少进死循环
+3. **上下文遵循**：长任务不跑偏、不漏要求
+4. **可信交付**：不假装干完、不编结论；输出更干净，不暴露内部推理
+
+`usage` 中可见 `reasoning_tokens`。
+
+### 请求示例
+
+```bash
+curl https://apihub.agnes-ai.com/v1/chat/completions   -H "Authorization: Bearer $AGNES_API_KEY"   -H "Content-Type: application/json"   -d '{
+    "model": "agnes-3.0-flash",
+    "messages": [{"role": "user", "content": "只回复OK"}],
+    "max_tokens": 32
+  }'
+```
+
+---
+
+## 十三、Agnes Image 2.5 Flash（2026-09 新增）
+
+> Agnes 最新一代图像模型，**整体能力全面超过 Agnes Image 2.1 Flash**（生成质量、编辑、构图、细节呈现、提示词遵循）。
+> 官方文档：国际站 https://www.agnes-ai.com/zh-Hans/docs/agnes-image-25-flash
+
+### 模型 ID
+
+`agnes-image-2.5-flash`
+
+### API Endpoint
+
+`POST /v1/images/generations`
+
+### 与 2.1 Flash 的关系
+
+**请求与响应参数、支持尺寸、价格和计费方法均与 Agnes Image 2.1 Flash 保持一致**，可直接替换模型名升级：
+
+- `size` 档位：`1K` / `2K` / `3K` / `4K`，配合 `ratio` 使用
+- `ratio` 支持：1:1、3:4、4:3、16:9、9:16、2:3、3:2、21:9（默认 1:1）
+- 图生图：图片 URL 或 Base64 放在 `extra_body.image`
+- 多图合成：支持多张参考图组合生成
+- 输出：图像 URL 或 Base64
+
+### 核心优化
+
+- **高信息密度图像**：更适合复杂场景、丰富构图和多层视觉元素
+- **复杂视觉细节与语义对齐**
+- **构图保留**：图生图编辑时尽量保留原始构图和主体布局
+
+### 价格（当前免费）
+
+| 计费项 | 刊例价 | 现价 |
+|--------|--------|------|
+| 1K 输出图片 | $0.010 / 张 | **$0** |
+| 2K 输出图片 | $0.018 / 张 | **$0** |
+| 3K 输出图片 | $0.021 / 张 | **$0** |
+| 4K 输出图片 | $0.024 / 张 | **$0** |
+| 第 4 张起的输入参考图片 | $0.003 / 张 | **$0** |
+
+---
+
 ## 七、Agnes Video 2.5
 
 > 使用 OpenAI Videos 兼容 API 接入 Agnes Video 2.5，支持文生视频、首尾帧控制和图片/音频/视频参考生成。
@@ -1706,8 +1832,11 @@ num_frames  必须满足 8n + 1 ，例如 81 、121 、161 、241  或 441 ；
 | 输出分辨率 | 单价 |
 |-----------|------|
 | 720P | $0.025 / 秒 |
-| 960P | $0.040 / 秒 |
+| 1080P | $0.040 / 秒 |
+| 1K（固定 1024x1024） | $0.040 / 秒 |
 | 2K | $0.055 / 秒 |
+
+> ⚠️ 2026-09 核对：官方已取消 `960P` 档位，改为 `720P` / `1080P` / `1K` / `2K`。传入旧值会返回 400。
 
 - 输入图片：前 5 张免费，第 6 张起按 `$0.005 / 张` 计费
 - 输入视频：时长计入总计费时长，与输出时长相加后按输出分辨率单价计费
@@ -1728,21 +1857,37 @@ num_frames  必须满足 8n + 1 ，例如 81 、121 、161 、241  或 441 ；
 | 参数 | 取值 | 默认值 |
 |------|------|--------|
 | `seconds` | 字符串 `"4"`–`"12"` | `"5"` |
-| `size` | `"720P"`、`"960P"`、`"2K"` | — |
+| `size` | `"720P"`、`"1080P"`、`"1K"`、`"2K"` | — |
 | `aspect_ratio` | 21:9 / 16:9 / 4:3 / 1:1 / 3:4 / 9:16 | `16:9` |
 | `n` | 仅支持 `1` | `1` |
 | `seed` | integer | — |
 
-### 720P 画幅对应像素
+### 画幅与输出像素（720P / 1080P / 2K）
 
-| aspect_ratio | 输出像素 |
-|--------------|----------|
-| 21:9 | 1680x720 |
-| 16:9 | 1280x720 |
-| 4:3 | 960x720 |
-| 1:1 | 720x720 |
-| 3:4 | 720x960 |
-| 9:16 | 720x1280 |
+| aspect_ratio | 720P | 1080P | 2K（720P 的 2 倍） | 推荐场景 |
+|--------------|------|-------|-------------------|----------|
+| 21:9 | 1470x630 | 2206x946 | 2940x1260 | 超宽银幕、电影感场景 |
+| 16:9 | 1280x720 | 1920x1080 | 2560x1440 | 横版视频、产品展示（默认） |
+| 4:3 | 1112x834 | 1664x1248 | 2224x1668 | 通用横版和传统画幅 |
+| 1:1 | 960x960 | 1440x1440 | 1920x1920 | 社交媒体信息流、方形内容 |
+| 3:4 | 834x1112 | 1248x1664 | 1668x2224 | 竖版展示、人物内容 |
+| 9:16 | 720x1280 | 1080x1920 | 1440x2560 | 移动端短视频、竖屏 |
+
+`1K` 固定输出 `1024x1024`。`2K` 宽高为对应 `720P` 宽高的 2 倍。不支持直接传 `WIDTHxHEIGHT` 或 `auto`。
+
+### 参考媒体限制
+
+| 媒体 | 限制 |
+|------|------|
+| 图片 | 最多 8 张；单张 < 15 MB；单次请求总大小 < 50 MB；宽高各 `256`–`5760` 像素 |
+| 视频 | 最多 1 个；总时长 `2`–`12` 秒；单个 < 50 MB；帧率 `24`–`60` FPS |
+| 音频 | 最多 3 段；总时长 `2`–`12` 秒；单个 < 15 MB；单次请求总大小 < 64 MB |
+
+单次请求参考媒体文件总数不超过 12 个。参考视频对象字段：`{url, start_seconds?, require_audio?}`；`require_audio: true` 时片源必须带音轨，否则请求失败。
+
+### 音画协同
+
+可结合音频或带音轨的视频参考，增强画面节奏与声音的一致性。
 
 ---
 
@@ -1780,7 +1925,10 @@ Agnes Video 2.5 Flash 复用 Agnes Video 2.5 的模型能力和异步任务接�
 |--------|-----------|-------------|
 | `size` | 仅支持字符串 `"720P"` | HTTP 400：`size must be 720P` |
 | `reference` 图片数量 | `images` 最多 5 张 | HTTP 400：`images length must not exceed 5` |
+| `reference` 音频数量 | `audios` 最多 3 段 | HTTP 400：`audios length must not exceed 3` |
 | `reference` 视频输入 | 不支持有效的 `videos` 内容 | HTTP 400：`videos is not supported` |
+
+同一次请求存在多个 Flash 参数错误时，按 `size` → `images` → `audios` → `videos` 顺序返回首个检测到的错误。Flash 专属校验在任务创建、排队、计费和推理前执行，校验失败不创建任务、不产生费用。
 
 Flash 专属校验在任务创建、排队、计费和推理前执行。校验失败的请求不会创建视频任务，也不会产生费用。
 
@@ -1822,7 +1970,7 @@ curl -sS -X POST "https://apihub.agnes-ai.com/v1/videos" \
 | `first_frame` | string | `keyframe` | 首帧图片 URL；与 `last_frame` 至少提供一个 |
 | `last_frame` | string | `keyframe` | 尾帧图片 URL；与 `first_frame` 至少提供一个 |
 | `images` | string[] | `reference` | 参考图片 URL 列表，Flash 最多支持 5 张 |
-| `audios` | string[] | `reference` | 参考音频 URL 列表，沿用 Agnes Video 2.5 公共规则 |
+| `audios` | string[] | `reference` | 参考音频 URL 列表，Flash 最多支持 **3 段** |
 | `videos` | object[] | `reference` | Flash 不支持；传入有效内容返回 HTTP 400 |
 
 ### 生成模式规则
@@ -1837,7 +1985,7 @@ curl -sS -X POST "https://apihub.agnes-ai.com/v1/videos" \
 
 ### 视频尺寸与画幅
 
-`size` 必须使用 `"720P"`，具体输出尺寸通过 `aspect_ratio` 选择：
+`size` 必须使用 `"720P"`，具体输出尺寸通过 `aspect_ratio` 选择（2026-09 官方实测值）：
 
 | `aspect_ratio` | 输出像素 |
 |----------------|----------|
@@ -1852,7 +2000,7 @@ curl -sS -X POST "https://apihub.agnes-ai.com/v1/videos" \
 
 - 模型 ID 使用 `agnes-video-2.5-flash`
 - `size` 固定为字符串 `"720P"`
-- `mode=reference` 时，`images` 不超过 5 张，且不要传入有效的 `videos` 内容
+- `mode=reference` 时，`images` 不超过 5 张，`audios` 不超过 3 段，且不要传入有效的 `videos` 内容
 - `seconds` 使用字符串 `"4"`–`"12"`，`n` 固定为 `1`
 - 所有模式推荐使用 `video_id` 和 `model_name=agnes-video-2.5-flash` 查询
 - 不要在前端代码、日志或公开仓库中暴露 API Key

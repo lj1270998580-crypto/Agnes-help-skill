@@ -104,20 +104,22 @@ Headers:
 ```
 
 **模型名称：**
+- **Agent 编程 / 工具调用（最新）：`agnes-3.0-flash`（免费）** — 512K 上下文、65,536 最大输出、Chat Completions / Responses / Messages 三端点、支持 Thinking
 - 通用对话：`agnes-2.5-flash`（免费）
 - 编程/Agent/推理：`agnes-2.5-flash`（免费）
 - 高级推理（付费，GA）：`agnes-2.5-pro`
 - 高级推理（付费，Beta）：`agnes-2.5-pro-beta`
 - 高级推理（付费，Alpha）：`agnes-2.5-pro-alpha`
 - 兼容旧版：`agnes-2.0-flash`（免费）
-- 图像生成（推荐）：`agnes-image-2.1-flash`（免费）
+- **图像生成（最新 · 推荐）：`agnes-image-2.5-flash`（免费）**
+- 图像生成：`agnes-image-2.1-flash`（免费）
 - 视频生成（推荐 / 免费）：`agnes-video-2.5-flash`
 - 视频生成（付费，高清）：`agnes-video-2.5`
 - 视频生成（旧版 / 免费）：`agnes-video-v2.0`
 
 **⚠️ 视频接口重要提醒：**
 - 🎬 **Agnes Video 2.5 Flash 已正式上线，限时免费（$0/秒）**：支持 text / keyframe / reference 三种模式，详见[国际站文档](https://www.agnes-ai.com/zh-Hans/docs/agnes-video-25-flash) / [国内站文档](https://www.agnes-ai.cn/zh-Hans/docs/agnes-video-25-flash)
-- **Agnes Video 2.5（付费高清版）**也已上线：720P/960P/2K 三档，`reference` 模式支持视频输入，详见[国际站文档](https://www.agnes-ai.com/zh-Hans/docs/agnes-video-25) / [国内站文档](https://www.agnes-ai.cn/zh-Hans/docs/agnes-video-25)
+- **Agnes Video 2.5（付费高清版）**也已上线：720P/1080P/1K/2K 四档（2026-09 起取消 960P），`reference` 模式支持视频输入，详见[国际站文档](https://www.agnes-ai.com/zh-Hans/docs/agnes-video-25) / [国内站文档](https://www.agnes-ai.cn/zh-Hans/docs/agnes-video-25)
 - **必须用 `video_id` 查询视频结果**：`GET /agnesapi?video_id=<ID>`
 - **不要用 `task_id` 查询**，会导致排队异常延长（超过 5 分钟大概率是接口搞错了）
 
@@ -162,6 +164,8 @@ Headers:
 ## 🔄 更新记录
 
 | 日期 | 更新内容 |
+|------|----------|
+| 2026-09-09 | **新增 Agnes 3.0 Flash**：`agnes-3.0-flash`，面向 Agent 编程与工具驱动任务，512K 上下文 / 65,536 最大输出，支持 Chat Completions、Responses、Anthropic 兼容 Messages 三端点与 Thinking 模式，当前免费（刊例价 $0.005/$0.05/$0.15，现价全 $0）；**新增 Agnes Image 2.5 Flash**：`agnes-image-2.5-flash`，整体能力全面超过 2.1 Flash，参数与尺寸完全一致可直接换名升级，当前免费；**`agnes-video-2.5` 分辨率档位更新**：`960P` 取消，改为 `720P` / `1080P` / `1K` / `2K`，补充三档画幅像素表、参考媒体限制（图片 8 / 视频 1 / 音频 3，总数 ≤12）与音画协同说明；`agnes-video-2.5-flash` 补充参考音频上限 3 段与 720P 实测像素表；Skill 版本更新至 **v1.3.0** |
 |------|----------|
 | 2026-08-27 | 核验官方 Token Plan FAQ 与定价页：**RPM 数值全部确认无误**（文本 20/40/1000，图片 1K:20/2K:10/3K-4K:1，视频 1/2/5）；新增 **Token Plan 订阅配额说明**（文本 `agnes-2.5-flash` 每 5 小时 1,500~30,000 次、图片每天 4,000 张、视频每天 500 秒）；明确 **所有 Flash 系列模型当前全部免费**（文本/图像/视频均 $0，仅 Pro 系列与 `agnes-video-2.5` 付费）；补全 `agnes-video-2.5` 输入视频时长计入总时长的计费规则；模型选择表统一标注免费/付费；Skill 版本更新至 **v1.2.22** |
 | 2026-08-27 | 同步官方文档大版本更新：`agnes-2.5-pro-alpha` 已转**付费模型**（Context 1M，Cache hit $0.045，权重 Apache 2.0 开源）；新增付费推理模型 `agnes-2.5-pro`（GA）与 `agnes-2.5-pro-beta`（Beta，$0.10/$0.30/1M）；新增视频模型 `agnes-video-2.5`（付费高清，720P/960P/2K，reference 支持视频输入）；`agnes-2.5-flash` 与 Pro 系列补充 Responses / Messages 端点；修正 `agnes-2.0-flash` 价格（$0.03/$0.15）与图像模型按张计费明细（1K $0.010–4K $0.024，前 3 张参考图免费）；官方文档链接统一至新站 /zh-Hans/docs；Skill 版本更新至 **v1.2.21** |

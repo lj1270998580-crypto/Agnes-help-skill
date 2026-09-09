@@ -1,6 +1,6 @@
 ---
 name: agnes-ai-support
-version: "1.2.22"
+version: "1.3.0"
 description: |
   Agnes AI API 接入支持与问题排查 Skill。帮助新用户完成 Agnes AI API 的接入配置，
   诊断和解决接入过程中遇到的认证、参数、响应、图像生成、视频生成等各类问题。
@@ -14,7 +14,7 @@ description: |
 
 # Agnes AI API 接入支持与问题排查
 
-> **Skill 版本：** v1.2.22
+> **Skill 版本：** v1.3.0
 > **适用工具：** OpenClaw / Claude Code / Claude Desktop / Hermes / Codex / WorkBuddy / Cherry Studio / Opencode / Kimi Work
 > **更新日期：** 2026-08-27
 > **官方 Bug 反馈：** https://github.com/AgnesAI-Labs/Agnes-AI/issues
@@ -289,6 +289,32 @@ Agent：（参考 Skill 视频排查指南 → 检查 video_id vs task_id → �
 
 **平台直达：** https://platform.agnes-ai.com
 
+### 🚀 Agnes 3.0 Flash 上线通知（2026-09-09 更新）
+
+- **Agnes 3.0 Flash 已上线，定位为「面向 Agent 编程与工具驱动任务」的新一代文本模型，当前免费**
+- 模型 ID：`agnes-3.0-flash`
+- **三个端点，同一把 Key**（这是 3.0 与 2.x 最大的差异）：
+  - OpenAI 兼容：`POST /v1/chat/completions`（`Authorization: Bearer`）
+  - OpenAI Responses：`POST /v1/responses`
+  - Anthropic 兼容：`POST /v1/messages`（请求头用 `x-api-key` + `anthropic-version: 2023-06-01`，**不是** `Authorization`）
+- **上下文 512K，最大输出 65,536 Token**；输入支持文本 + 图像 URL（多模态）
+- **Thinking 模式**（2.x 不支持）：
+  - OpenAI 风格：`"chat_template_kwargs": {"enable_thinking": true}`
+  - Anthropic 风格：顶层 `"thinking": {"type": "enabled", "budget_tokens": N}`（`budget_tokens` 至少给最终输出留 1/3，否则可能撞 `max_tokens` 被截断）
+- 官方强调的四个方向：任务端到端交付更可靠、工具编排更稳定（少瞎调 / 少死循环）、长任务指令遵循更强、输出更干净（不暴露内部推理）
+- 价格：刊例价 输入缓存命中 `$0.005/M`、输入 `$0.05/M`、输出 `$0.15/M`；**现价三项均 `$0/M`（免费）**
+- 官方文档（国际站）：https://www.agnes-ai.com/zh-Hans/docs/agnes-30-flash
+- 官方文档（国内站）：https://www.agnes-ai.cn/zh-Hans/docs/agnes-30-flash
+- 注意：国际站与国内站账号不互通、Key 不通用，混用会报「无效的令牌」
+
+### 🖼️ Agnes Image 2.5 Flash 上线通知（2026-09-09 更新）
+
+- 模型 ID：`agnes-image-2.5-flash`，端点 `POST /v1/images/generations`
+- 官方定位：Agnes 最新一代图像模型，**整体能力全面超过 Agnes Image 2.1 Flash**（生成质量、编辑、构图、细节、提示词遵循）
+- 请求/响应参数、支持尺寸（`1K`/`2K`/`3K`/`4K` + `ratio`）、价格与计费方法**与 2.1 Flash 完全一致**，可直接替换模型名升级
+- 当前免费：所有输出分辨率档位与输入参考图片均 `$0`
+- 官方文档（国际站）：https://www.agnes-ai.com/zh-Hans/docs/agnes-image-25-flash
+
 ### 🎬 Agnes Video 2.5 Flash 上线通知（2026-08-27 更新）
 
 - **Agnes Video 2.5 Flash 已正式上线 API 平台，限时免费开放使用（$0/秒，原价 $0.025/秒）**
@@ -306,13 +332,15 @@ Agent：（参考 Skill 视频排查指南 → 检查 video_id vs task_id → �
 
 | 模型 | 类型 | 免费状态 |
 |------|------|----------|
+| `agnes-3.0-flash` | 文本（Agent） | ✅ 免费（输入缓存/输入/输出 均 $0，刊例价 $0.005/$0.05/$0.15） |
 | `agnes-2.0-flash` | 文本 | ✅ 免费（输入/输出 Token 均 $0） |
 | `agnes-2.5-flash` | 文本 | ✅ 免费（输入/输出 Token 均 $0） |
 | `agnes-image-2.0-flash` | 图像 | ✅ 免费（1K/2K/3K/4K 全档位 $0，参考图 $0） |
 | `agnes-image-2.1-flash` | 图像 | ✅ 免费（1K/2K/3K/4K 全档位 $0，参考图 $0） |
+| `agnes-image-2.5-flash` | 图像 | ✅ 免费（1K/2K/3K/4K 全档位 $0，参考图 $0） |
 | `agnes-video-v2.0` | 视频 | ✅ 免费（$0/秒） |
 | `agnes-video-2.5-flash` | 视频 | ✅ 免费（$0/秒，限时免费；原价 $0.025/秒） |
-| `agnes-video-2.5` | 视频 | 💰 付费（720P $0.025/秒、960P $0.040/秒、2K $0.055/秒） |
+| `agnes-video-2.5` | 视频 | 💰 付费（720P $0.025/秒、1080P 与 1K $0.040/秒、2K $0.055/秒） |
 | `agnes-2.5-pro` / `-beta` / `-alpha` | 文本推理 | 💰 付费（$0.10~$0.45 输入，$0.30~$0.90 输出） |
 
 > 官方定价来源：https://www.agnes-ai.com/zh-Hans/docs/pricing
@@ -362,13 +390,15 @@ Agent：（参考 Skill 视频排查指南 → 检查 video_id vs task_id → �
 
 | 场景 | 推荐模型 | 端点 |
 |------|----------|------|
+| **Agent 编程 / 工具调用 / 长任务（最新 · 免费）** | `agnes-3.0-flash`（免费） | `/v1/chat/completions`、`/v1/responses`、`/v1/messages` |
 | 通用对话 / 高并发 / 低成本 | `agnes-2.5-flash`（免费） | `/v1/chat/completions` |
 | 编程 / Agent / 推理 / 图片理解 | `agnes-2.5-flash`（免费） | `/v1/chat/completions` |
 | 高级推理 / 复杂编码（付费，GA） | `agnes-2.5-pro` | `/v1/chat/completions` |
 | 高级推理 / 复杂编码（付费，Beta） | `agnes-2.5-pro-beta` | `/v1/chat/completions` |
 | 高级推理 / 复杂编码（付费，Alpha） | `agnes-2.5-pro-alpha` | `/v1/chat/completions` |
 | 兼容旧版 / 通用对话 | `agnes-2.0-flash`（免费） | `/v1/chat/completions` |
-| 图像生成 / 编辑（推荐） | `agnes-image-2.1-flash`（免费） | `/v1/images/generations` |
+| 图像生成 / 编辑（最新 · 推荐） | `agnes-image-2.5-flash`（免费） | `/v1/images/generations` |
+| 图像生成 / 编辑 | `agnes-image-2.1-flash`（免费） | `/v1/images/generations` |
 | 图像快速生成 | `agnes-image-2.0-flash`（免费） | `/v1/images/generations` |
 | 视频生成（推荐 / 免费） | `agnes-video-2.5-flash` | `/v1/videos` |
 | 视频生成（付费，高清） | `agnes-video-2.5` | `/v1/videos` |
@@ -499,7 +529,9 @@ curl https://apihub.agnes-ai.com/v1/chat/completions \
 
 ## 3. 高级功能指南
 
-### 3.1 Thinking 模式（agnes-2.0-flash）
+### 3.1 Thinking 模式（agnes-2.0-flash / agnes-3.0-flash）
+
+> `agnes-3.0-flash` 同样支持 Thinking；Anthropic 兼容端点（`/v1/messages`）另可用顶层 `thinking` 块：`"thinking": {"type": "enabled", "budget_tokens": 2048}`，注意 `budget_tokens` 至少给最终输出留 1/3。
 
 **OpenAI 兼容格式：**
 ```json
@@ -597,6 +629,22 @@ curl https://apihub.agnes-ai.com/v1/chat/completions \
 
 ## 4. 各模型参数速查
 
+### agnes-3.0-flash（新增 · 免费 · Agent 向，2026-09 上线）
+
+- 端点（三选一，共用同一 Base URL 与同一把 Key）：
+  - `POST /v1/chat/completions`（OpenAI 兼容，请求头 `Authorization: Bearer`）
+  - `POST /v1/responses`（OpenAI Responses）
+  - `POST /v1/messages`（Anthropic 兼容，请求头用 `x-api-key` + `anthropic-version: 2023-06-01`）
+- Context：512K；Max Output：65,536 Token
+- 输入模态：文本 + 图像 URL；输出：文本
+- **Thinking 模式**（2.x 系列不支持）：
+  - OpenAI 风格：`"chat_template_kwargs": {"enable_thinking": true}`
+  - Anthropic 风格：顶层 `"thinking": {"type": "enabled", "budget_tokens": N}`，`budget_tokens` 至少给最终输出留 1/3，否则易撞 `max_tokens` 被截断
+- 参数：model, messages, temperature, top_p, max_tokens, stream, tools, tool_choice, chat_template_kwargs, thinking
+- 官方强调：任务端到端交付更可靠、工具编排更稳定、长任务指令遵循更强、输出更干净；`usage` 中可见 `reasoning_tokens`
+- 价格：输入缓存命中 `$0.005/M`、输入 `$0.05/M`、输出 `$0.15/M`；**现价三项均 $0/M（免费）**
+- **适合**：Agent / 工具调用 / 多步任务编排；普通对话继续用 `agnes-2.5-flash` 即可
+
 ### agnes-2.5-flash
 - 端点：`POST /v1/chat/completions`（另支持 Responses `POST /v1/responses`、Anthropic 兼容 Messages `POST /v1/messages`）
 - Context：512K
@@ -646,7 +694,9 @@ curl https://apihub.agnes-ai.com/v1/chat/completions \
 - 价格：Input $0.03/1M, Output $0.15/1M（**现价 $0，RPM ≤ 20**）
 - **已升级至 2.5-flash，建议迁移**
 
-### agnes-image-2.0/2.1-flash
+### agnes-image-2.0/2.1/2.5-flash
+
+> `agnes-image-2.5-flash`（2026-09 上线，免费）为最新一代，整体能力全面超过 2.1 Flash；**请求/响应参数、支持尺寸、价格与计费方法与 2.1 完全一致，直接换模型名即可升级**。以下说明三者通用。
 - 端点：`POST /v1/images/generations`
 - 必填：model, prompt, size
 - 图生图必填：`extra_body.image`（URL 数组或 Data URI Base64，**必须放在 extra_body 中！**）
@@ -676,10 +726,19 @@ curl https://apihub.agnes-ai.com/v1/chat/completions \
 - **查询（强烈推荐）：`GET /agnesapi?video_id=<ID>&model_name=agnes-video-2.5`**
 - 查询（兼容，仅 text 模式）：`GET /agnesapi?video_id=<ID>`
 - 模式：`text`（文生视频）、`keyframe`（首尾帧控制）、`reference`（图片/音频/**视频**参考）
-- `size`：`"720P"` / `"960P"` / `"2K"`；`aspect_ratio` 支持 21:9 / 16:9 / 4:3 / 1:1 / 3:4 / 9:16
+- `size`：`"720P"` / `"1080P"` / `"1K"` / `"2K"`（`1K` 固定 `1024x1024`；`2K` 宽高为 720P 的 2 倍）；`aspect_ratio` 支持 21:9 / 16:9 / 4:3 / 1:1 / 3:4 / 9:16
+  - 720P：21:9 `1470x630`、16:9 `1280x720`、4:3 `1112x834`、1:1 `960x960`、3:4 `834x1112`、9:16 `720x1280`
+  - 1080P：21:9 `2206x946`、16:9 `1920x1080`、4:3 `1664x1248`、1:1 `1440x1440`、3:4 `1248x1664`、9:16 `1080x1920`
+  - 2K：21:9 `2940x1260`、16:9 `2560x1440`、4:3 `2224x1668`、1:1 `1920x1920`、3:4 `1668x2224`、9:16 `1440x2560`
+  - ⚠️ 旧文档的 `960P` 档位已取消，传入会返回 400
 - `seconds`：字符串 `"4"`–`"12"`（默认 `"5"`）；`n` 固定 `1`
-- `reference` 模式：`images`/`audios`/`videos` 至少一类非空，输入图片前 5 张免费（第 6 张起 $0.005/张）
-- 价格：720P $0.025/秒、960P $0.040/秒、2K $0.055/秒（**付费模型**）
+- `reference` 模式：`images`/`audios`/`videos` 至少一类非空
+  - 参考图片：最多 **8 张**，单张 < 15 MB，宽高各 `256`–`5760` 像素；前 5 张免费，第 6 张起 $0.005/张
+  - 参考视频：最多 **1 个**，时长 `2`–`12` 秒，< 50 MB，帧率 `24`–`60` FPS；对象字段 `{url, start_seconds?, require_audio?}`（`require_audio: true` 时片源必须带音轨）
+  - 参考音频：最多 **3 段**，总时长 `2`–`12` 秒，单个 < 15 MB
+  - 单次请求参考媒体文件总数 ≤ 12 个，总大小 < 50 MB
+- 支持**音画协同**：可结合音频或带音轨的视频参考增强画面节奏与声音一致性
+- 价格：720P $0.025/秒、**1080P 与 1K $0.040/秒**、2K $0.055/秒（**付费模型**）
 - 计费：`总金额 = 输出秒数 × 输出分辨率单价 + 输入视频秒数 × 输出分辨率单价 + max(0, 图片数 - 5) × $0.005`（**输入视频时长也会计入总时长，按输出分辨率单价计费**）
 - **重要：必须用 video_id 查询，task_id 会导致排队过长**
 
@@ -689,9 +748,11 @@ curl https://apihub.agnes-ai.com/v1/chat/completions \
 - **查询（强烈推荐）：`GET /agnesapi?video_id=<ID>&model_name=agnes-video-2.5-flash`**
 - 查询（兼容，仅 text 模式）：`GET /agnesapi?video_id=<ID>`
 - 模式：`text`（文生视频）、`keyframe`（首尾帧控制）、`reference`（图片/音频参考）
-- `size` 固定字符串 `"720P"`；`aspect_ratio` 支持 21:9 / 16:9 / 4:3 / 1:1 / 3:4 / 9:16
+- `size` 固定字符串 `"720P"`（传其他值返回 400 `size must be 720P`）；`aspect_ratio` 支持 21:9 / 16:9 / 4:3 / 1:1 / 3:4 / 9:16
+  - 720P 输出像素：21:9 `1680x720`、16:9 `1280x704`、4:3 `960x720`、1:1 `720x720`、3:4 `720x960`、9:16 `720x1280`（以实际生成文件为准）
 - `seconds`：字符串 `"4"`–`"12"`（默认 `"5"`）；`n` 固定 `1`
-- `reference` 模式：`images` 最多 5 张，不支持 `videos` 输入
+- `reference` 模式：`images` 最多 **5 张**、`audios` 最多 **3 段**（可单独或同时使用）；不支持 `videos` 输入（传有效内容返回 400 `videos is not supported`）
+- Flash 专属校验顺序：`size` → `images` → `audios` → `videos`，返回首个检测到的错误；校验失败不创建任务、不计费
 - 价格：原价 $0.025/second，**现价 $0/second（限时免费）**；限时免费期间输出视频秒数、输入视频秒数与参考图片均按 `$0` 计费（计费公式与 Video 2.5 相同）
 - **重要：必须用 video_id 查询，task_id 会导致排队过长**
 
