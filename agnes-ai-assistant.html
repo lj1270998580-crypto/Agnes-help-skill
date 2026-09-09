@@ -225,11 +225,15 @@
           <div class="card-title">🤖 第二步：选择适合你的模型</div>
           <table>
             <tr><th>场景</th><th>推荐模型</th><th>特点</th></tr>
-            <tr><td>通用对话 / 高并发</td><td><code>agnes-1.5-flash</code></td><td>轻量、低延迟、成本最低</td></tr>
-            <tr><td>编程 / Agent / 推理</td><td><code>agnes-2.0-flash</code></td><td>支持工具调用、Thinking、图片理解</td></tr>
-            <tr><td>图像生成 / 编辑</td><td><code>agnes-image-2.1-flash</code></td><td>高信息密度、结构保持</td></tr>
-            <tr><td>图像快速生成</td><td><code>agnes-image-2.0-flash</code></td><td>快速出图、兼容 OpenAI Images API</td></tr>
-            <tr><td>视频生成</td><td><code>agnes-video-v2.0</code></td><td>文生视频、图生视频、关键帧动画</td></tr>
+            <tr><td>Agent 编程 / 工具调用（最新）</td><td><code>agnes-3.0-flash</code></td><td>512K 上下文、65,536 输出、三端点、支持 Thinking</td></tr>
+            <tr><td>通用对话 / 高并发</td><td><code>agnes-2.5-flash</code></td><td>免费、512K 上下文、支持图片理解</td></tr>
+            <tr><td>编程 / Agent / 推理</td><td><code>agnes-2.5-flash</code></td><td>工具调用、图片理解、流式</td></tr>
+            <tr><td>高级推理（付费）</td><td><code>agnes-2.5-pro</code> / <code>-beta</code> / <code>-alpha</code></td><td>1M 上下文、复杂推理与长任务</td></tr>
+            <tr><td>图像生成 / 编辑（最新）</td><td><code>agnes-image-2.5-flash</code></td><td>能力全面超过 2.1，参数一致可直接换名升级</td></tr>
+            <tr><td>图像快速生成</td><td><code>agnes-image-2.0/2.1-flash</code></td><td>兼容 OpenAI Images API</td></tr>
+            <tr><td>视频生成（推荐）</td><td><code>agnes-video-2.5-flash</code></td><td>限时免费、720P、text/keyframe/reference 三模式</td></tr>
+            <tr><td>视频生成（高清付费）</td><td><code>agnes-video-2.5</code></td><td>720P/1080P/1K/2K，支持参考视频与音画协同</td></tr>
+            <tr><td>视频生成（旧版）</td><td><code>agnes-video-v2.0</code></td><td>文生视频、图生视频、关键帧动画</td></tr>
           </table>
         </div>
         <button class="btn btn-secondary btn-sm" onclick="nextStep(1)">← 上一步</button>
@@ -255,7 +259,7 @@ Headers:
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
-    "model": "agnes-2.0-flash",
+    "model": "agnes-3.0-flash",
     "messages": [{"role": "user", "content": "Hello Agnes!"}]
   }'</code><button class="copy-btn" onclick="copyCode(this)">复制</button></pre>
         </div>
@@ -302,31 +306,32 @@ Headers:
       <h2>🤖 模型速查与选择</h2>
       <div class="grid-2">
         <div class="card">
-          <div class="card-title"><span class="badge badge-green">文本</span> agnes-1.5-flash</div>
+          <div class="card-title"><span class="badge badge-green">文本 · 最新</span> agnes-3.0-flash</div>
           <table>
-            <tr><td>端点</td><td><code>/v1/chat/completions</code></td></tr>
+            <tr><td>端点</td><td><code>/v1/chat/completions</code>、<code>/v1/responses</code>、<code>/v1/messages</code></td></tr>
             <tr><td>Context</td><td>512K</td></tr>
-            <tr><td>Max Output</td><td>64K</td></tr>
+            <tr><td>Max Output</td><td>65,536 Token</td></tr>
             <tr><td>多模态</td><td>文本 + 图片 URL</td></tr>
-            <tr><td>价格(Input)</td><td>$0.07 / 1M tokens <span class="badge badge-green">现价 $0</span></td></tr>
+            <tr><td>Thinking</td><td>支持（2.x 系列不支持）</td></tr>
+            <tr><td>价格(Input)</td><td>$0.05 / 1M tokens <span class="badge badge-green">现价 $0</span></td></tr>
             <tr><td>价格(Output)</td><td>$0.15 / 1M tokens <span class="badge badge-green">现价 $0</span></td></tr>
           </table>
-          <div class="tip-box">适合：实时交互、高并发、成本敏感场景</div>
+          <div class="tip-box">适合：Agent 编程、工具调用、长任务执行（<code>/v1/messages</code> 用 <code>x-api-key</code> 头，不是 Bearer）</div>
         </div>
         <div class="card">
-          <div class="card-title"><span class="badge badge-purple">文本+</span> agnes-2.0-flash</div>
+          <div class="card-title"><span class="badge badge-purple">文本+</span> agnes-2.5-flash</div>
           <table>
-            <tr><td>端点</td><td><code>/v1/chat/completions</code></td></tr>
+            <tr><td>端点</td><td><code>/v1/chat/completions</code>、<code>/v1/responses</code>、<code>/v1/messages</code></td></tr>
             <tr><td>Context</td><td>512K</td></tr>
-            <tr><td>Max Output</td><td>64K</td></tr>
-            <tr><td>特殊能力</td><td>工具调用、Thinking、图片理解、流式</td></tr>
+            <tr><td>Max Output</td><td>65,536 Token</td></tr>
+            <tr><td>特殊能力</td><td>工具调用、图片理解、流式（不支持 Thinking）</td></tr>
             <tr><td>价格(Input)</td><td>$0.1 / 1M tokens <span class="badge badge-green">现价 $0</span></td></tr>
             <tr><td>价格(Output)</td><td>$0.2 / 1M tokens <span class="badge badge-green">现价 $0</span></td></tr>
           </table>
           <div class="tip-box">适合：编程、Agent 工作流、推理任务</div>
         </div>
         <div class="card">
-          <div class="card-title"><span class="badge badge-blue">图像</span> agnes-image-2.0-flash</div>
+          <div class="card-title"><span class="badge badge-blue">图像 · 最新</span> agnes-image-2.5-flash</div>
           <table>
             <tr><td>端点</td><td><code>/v1/images/generations</code></td></tr>
             <tr><td>能力</td><td>文生图、图生图、多图合成</td></tr>
@@ -344,11 +349,11 @@ Headers:
             <tr><td>尺寸</td><td>支持自定义，如 1024x768</td></tr>
             <tr><td>价格</td><td>$0.003 / image <span class="badge badge-green">现价 $0</span></td></tr>
           </table>
-          <div class="tip-box">2.1 是 2.0 的升级版，新用户建议直接用 2.1</div>
+          <div class="tip-box">最新为 <code>agnes-image-2.5-flash</code>，参数与尺寸完全一致，直接换模型名即可升级</div>
         </div>
       </div>
       <div class="card">
-        <div class="card-title"><span class="badge badge-amber">视频</span> agnes-video-v2.0</div>
+        <div class="card-title"><span class="badge badge-amber">视频</span> agnes-video-v2.0（旧版）</div>
         <table>
           <tr><th>项目</th><th>说明</th></tr>
           <tr><td>创建端点</td><td><code>POST /v1/videos</code></td></tr>
@@ -384,7 +389,7 @@ Headers:
       <div class="card">
         <div class="card-title">2. 参数配置</div>
         <div id="gen-params">
-          <div class="param-row"><label>模型</label><select id="p-model"><option>agnes-2.0-flash</option><option>agnes-1.5-flash</option></select></div>
+          <div class="param-row"><label>模型</label><select id="p-model"><option>agnes-3.0-flash</option><option>agnes-2.5-flash</option><option>agnes-2.0-flash</option></select></div>
           <div class="param-row"><label>温度</label><input type="number" id="p-temp" value="0.7" min="0" max="2" step="0.1"></div>
           <div class="param-row"><label>Max Tokens</label><input type="number" id="p-max" value="1024" min="1" max="65536"></div>
           <div class="param-row"><label>Prompt</label><input type="text" id="p-prompt" value="Hello, how are you?"></div>
@@ -408,7 +413,7 @@ Headers:
           <div class="card-title">OpenAI 兼容格式</div>
           <p style="font-size: 13px; color: var(--muted); margin-bottom: 8px;">在请求体中添加 <code>chat_template_kwargs.enable_thinking</code></p>
           <pre><code>{
-  "model": "agnes-2.0-flash",
+  "model": "agnes-3.0-flash",
   "messages": [...],
   "chat_template_kwargs": {
     "enable_thinking": true
@@ -419,7 +424,7 @@ Headers:
           <div class="card-title">Anthropic 兼容格式</div>
           <p style="font-size: 13px; color: var(--muted); margin-bottom: 8px;">使用 <code>thinking</code> 字段控制预算</p>
           <pre><code>{
-  "model": "agnes-2.0-flash",
+  "model": "agnes-3.0-flash",
   "messages": [...],
   "thinking": {
     "type": "enabled",
@@ -517,7 +522,7 @@ Headers:
       <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">图生图需要传 tags: ["img2img"] 吗？<span class="faq-toggle">+</span></div><div class="faq-a"><strong>不需要。</strong>当前接口已简化，图生图只需在 <code>extra_body.image</code> 数组中提供输入图片 URL 即可。<strong>注意：image 必须放在 extra_body 中，不能放请求体顶层！</strong>放 tags 反而可能报错。</div></div>
       <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">输入图片 URL 不可访问怎么办？<span class="faq-toggle">+</span></div><div class="faq-a">1. 换用公网 HTTPS 地址<br>2. 或使用 Data URI Base64 格式：<code>data:image/png;base64,BASE64_HERE</code><br>3. 检查图片是否需登录/有防盗链</div></div>
       <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">图像生成超时？<span class="faq-toggle">+</span></div><div class="faq-a">图像生成通常需要数秒到几十秒。建议客户端超时设置为 <strong>60s - 360s</strong>。复杂提示词、大尺寸图片或服务高负载时会延长。</div></div>
-      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">2.0 和 2.1 图像模型怎么选？<span class="faq-toggle">+</span></div><div class="faq-a">新用户直接用 <code>agnes-image-2.1-flash</code>。2.1 在高信息密度、复杂布局、细节丰富场景表现更好，且支持结构保持。</div></div>
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">图像模型怎么选？<span class="faq-toggle">+</span></div><div class="faq-a">新用户直接用最新的 <code>agnes-image-2.5-flash</code>：整体能力全面超过 2.1 Flash，请求/响应参数、支持尺寸和计费方式完全一致，直接换模型名即可升级。</div></div>
 
       <h3>🎬 视频模型</h3>
       <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">视频生成任务状态一直 queued？<span class="faq-toggle">+</span></div><div class="faq-a">视频生成是异步任务，创建后需要轮询查询结果。建议轮询间隔 <strong>5 秒</strong>。高峰期队列可能较长，请耐心等待。如超过 10 分钟仍 queued，请联系 support。</div></div>
@@ -593,8 +598,8 @@ async function callWithRetry(fn, maxRetries = 3) {
         <table>
           <tr><th>功能</th><th>方法</th><th>端点</th><th>模型</th></tr>
           <tr><td>Chat Completion</td><td>POST</td><td><code>/v1/chat/completions</code></td><td>agnes-1.5/2.0-flash</td></tr>
-          <tr><td>图像生成</td><td>POST</td><td><code>/v1/images/generations</code></td><td>agnes-image-2.0/2.1-flash</td></tr>
-          <tr><td>创建视频</td><td>POST</td><td><code>/v1/videos</code></td><td>agnes-video-v2.0</td></tr>
+          <tr><td>图像生成</td><td>POST</td><td><code>/v1/images/generations</code></td><td>agnes-image-2.0/2.1/2.5-flash</td></tr>
+          <tr><td>创建视频</td><td>POST</td><td><code>/v1/videos</code></td><td>agnes-video-2.5 / 2.5-flash / v2.0</td></tr>
           <tr><td>查询视频(推荐)</td><td>GET</td><td><code>/agnesapi?video_id=&lt;ID&gt;</code></td><td>-</td></tr>
           <tr><td>查询视频(兼容)</td><td>GET</td><td><code>/v1/videos/{task_id}</code></td><td>-</td></tr>
         </table>
@@ -619,7 +624,7 @@ async function callWithRetry(fn, maxRetries = 3) {
         </div>
         <div class="card">
           <div class="card-title">🖼️ 图像检查</div>
-          <label style="display:block; font-size: 14px; margin: 8px 0; cursor: pointer;"><input type="checkbox"> 模型名称正确：<code>agnes-image-2.1-flash</code></label>
+          <label style="display:block; font-size: 14px; margin: 8px 0; cursor: pointer;"><input type="checkbox"> 模型名称正确：<code>agnes-image-2.5-flash</code>（或 <code>agnes-image-2.1-flash</code>）</label>
           <label style="display:block; font-size: 14px; margin: 8px 0; cursor: pointer;"><input type="checkbox"> 文生图传了 model + prompt + size</label>
           <label style="display:block; font-size: 14px; margin: 8px 0; cursor: pointer;"><input type="checkbox"> 图生图传了 <code>extra_body.image</code> 数组（<strong>不能放顶层！</strong>）</label>
           <label style="display:block; font-size: 14px; margin: 8px 0; cursor: pointer;"><input type="checkbox"> response_format 放在 extra_body 中</label>
@@ -629,7 +634,7 @@ async function callWithRetry(fn, maxRetries = 3) {
         </div>
         <div class="card">
           <div class="card-title">🎬 视频检查</div>
-          <label style="display:block; font-size: 14px; margin: 8px 0; cursor: pointer;"><input type="checkbox"> 模型名称：<code>agnes-video-v2.0</code></label>
+          <label style="display:block; font-size: 14px; margin: 8px 0; cursor: pointer;"><input type="checkbox"> 模型名称：<code>agnes-video-2.5-flash</code> / <code>agnes-video-2.5</code> / <code>agnes-video-v2.0</code></label>
           <label style="display:block; font-size: 14px; margin: 8px 0; cursor: pointer;"><input type="checkbox"> num_frames ≤ 441 且满足 8n+1</label>
           <label style="display:block; font-size: 14px; margin: 8px 0; cursor: pointer;"><input type="checkbox"> frame_rate 在 1-60 范围内</label>
           <label style="display:block; font-size: 14px; margin: 8px 0; cursor: pointer;"><input type="checkbox"> 图生视频图片 URL 公网可访问</label>
@@ -735,7 +740,7 @@ async function callWithRetry(fn, maxRetries = 3) {
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
-    "model": "agnes-image-2.1-flash",
+    "model": "agnes-image-2.5-flash",
     "prompt": "${prompt}",
     "size": "1024x768",
     "extra_body": {
@@ -807,7 +812,7 @@ async function callWithRetry(fn, maxRetries = 3) {
       <ol style="font-size:14px; line-height:2; margin-left:20px;">
         <li>检查 Header 格式：<code>Authorization: Bearer YOUR_KEY</code>（注意 Bearer 后有空格）</li>
         <li>确认 API Key 未过期，在控制台 <code>Settings → API Keys</code> 查看状态</li>
-        <li>确认账户有余额（注册送 $0.1，当前所有模型免费）</li>
+        <li>确认账户有余额（注册送 $0.1；所有 Flash 系列模型当前免费，Pro 系列与 <code>agnes-video-2.5</code> 为付费模型）</li>
         <li>检查是否有额外空格或换行符污染了 Key</li>
         <li>尝试用 curl 直接测试，排除 SDK/框架问题</li>
       </ol>`,

@@ -1,6 +1,6 @@
 ---
 name: agnes-ai-support
-version: "1.3.0"
+version: "1.3.1"
 description: |
   Agnes AI API 接入支持与问题排查 Skill。帮助新用户完成 Agnes AI API 的接入配置，
   诊断和解决接入过程中遇到的认证、参数、响应、图像生成、视频生成等各类问题。
@@ -14,7 +14,7 @@ description: |
 
 # Agnes AI API 接入支持与问题排查
 
-> **Skill 版本：** v1.3.0
+> **Skill 版本：** v1.3.1
 > **适用工具：** OpenClaw / Claude Code / Claude Desktop / Hermes / Codex / WorkBuddy / Cherry Studio / Opencode / Kimi Work
 > **更新日期：** 2026-08-27
 > **官方 Bug 反馈：** https://github.com/AgnesAI-Labs/Agnes-AI/issues
@@ -271,11 +271,13 @@ Agent：（参考 Skill 视频排查指南 → 检查 video_id vs task_id → �
 
 ---
 
-## 0. 重要公告（2026-06 更新）
+## 0. 重要公告（最新：2026-09-09）
 
-### Agnes 2.0 全模态模型 API 正式开放全球免费调用
+> 最新公告见下方「Agnes 3.0 Flash 上线通知」。以下为 2026-06 的历史公告，仅作留存。
 
-> **不限期、全模态、API 调用完全免费**
+### Agnes 2.0 全模态模型 API 正式开放全球免费调用（历史公告）
+
+> **Flash 系列模型（文本 / 图像 / 视频）当前全部免费；Pro 推理系列与 `agnes-video-2.5` 为付费模型**
 > - 文本模型：免费/默认用户 RPM 20，企业 RPM 40，Token Plan RPM 1000
 > - 图片模型：
 >   - 1K 分辨率：免费/默认 RPM 20，企业 RPM 40，Token Plan RPM 100

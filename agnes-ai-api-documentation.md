@@ -1,6 +1,6 @@
 # Agnes AI API 完整文档
 
-> **文档版本：** v1.3.0
+> **文档版本：** v1.3.1
 > **来源：** https://agnes-ai.com/doc/overview 及其子页面
 > **整理时间：** 2026-06-06
 > **GitHub 仓库：** https://github.com/lj1270998580-crypto/Agnes-help-skill
@@ -214,7 +214,7 @@ curl https://apihub.agnes-ai.com/v1/chat/completions \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
-    "model": "agnes-1.5-flash",
+    "model": "agnes-3.0-flash",
     "messages": [
       {
         "role": "user",
@@ -229,7 +229,7 @@ curl https://apihub.agnes-ai.com/v1/chat/completions \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
-    "model": "agnes-1.5-flash",
+    "model": "agnes-3.0-flash",
     "messages": [
       {
         "role": "user",
@@ -258,7 +258,7 @@ choices[0].message.content 模型返回的内容
   "id": "chatcmpl-xxx",
   "object": "chat.completion",
   "created": 1773803415,
-  "model": "agnes-1.5-flash",
+  "model": "agnes-3.0-flash",
   "choices": [
     {
       "index": 0,
