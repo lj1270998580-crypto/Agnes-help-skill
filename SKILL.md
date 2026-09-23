@@ -1,6 +1,6 @@
 ---
 name: agnes-ai-support
-version: "1.3.1"
+version: "1.3.2"
 description: |
   Agnes AI API 接入支持与问题排查 Skill。帮助新用户完成 Agnes AI API 的接入配置，
   诊断和解决接入过程中遇到的认证、参数、响应、图像生成、视频生成等各类问题。
@@ -14,9 +14,9 @@ description: |
 
 # Agnes AI API 接入支持与问题排查
 
-> **Skill 版本：** v1.3.1
+> **Skill 版本：** v1.3.2
 > **适用工具：** OpenClaw / Claude Code / Claude Desktop / Hermes / Codex / WorkBuddy / Cherry Studio / Opencode / Kimi Work
-> **更新日期：** 2026-08-27
+> **更新日期：** 2026-09-23
 > **官方 Bug 反馈：** https://github.com/AgnesAI-Labs/Agnes-AI/issues
 > **官方进度看板：** https://github.com/users/AgnesAI-Labs/projects/1
 > **官方 Bug 反馈：** https://github.com/AgnesAI-Labs/Agnes-AI/issues
@@ -271,14 +271,14 @@ Agent：（参考 Skill 视频排查指南 → 检查 video_id vs task_id → �
 
 ---
 
-## 0. 重要公告（最新：2026-09-09）
+## 0. 重要公告（最新：2026-09-23）
 
 > 最新公告见下方「Agnes 3.0 Flash 上线通知」。以下为 2026-06 的历史公告，仅作留存。
 
 ### Agnes 2.0 全模态模型 API 正式开放全球免费调用（历史公告）
 
 > **Flash 系列模型（文本 / 图像 / 视频）当前全部免费；Pro 推理系列与 `agnes-video-2.5` 为付费模型**
-> - 文本模型：免费/默认用户 RPM 20，企业 RPM 40，Token Plan RPM 1000
+> - 文本模型：免费/默认用户 RPM **10**（2026-09-23 起由 20 下调），企业 RPM **20**（由 40 下调），Token Plan RPM 1000（不变）
 > - 图片模型：
 >   - 1K 分辨率：免费/默认 RPM 20，企业 RPM 40，Token Plan RPM 100
 >   - 2K 分辨率：免费/默认 RPM 10，企业 RPM 20，Token Plan RPM 80
@@ -290,6 +290,21 @@ Agent：（参考 Skill 视频排查指南 → 检查 video_id vs task_id → �
 - 欢迎大家多用、多吐槽
 
 **平台直达：** https://platform.agnes-ai.com
+
+### ⏱️ 文本模型 RPM 调整通知（2026-09-23）
+
+> 为进一步优化高峰时段的整体稳定性，自本通知发布起，**免费额度下文本模型的 RPM 限制已下调**（官方说明：免费用户及企业用户的实际限额统一下调 50%）：
+
+| 用户类型 | 调整前 | 调整后（2026-09-23 起） |
+|----------|--------|------------------------|
+| 免费 / 默认 | 20 RPM | **10 RPM** |
+| 企业认证 | 40 RPM | **20 RPM** |
+| Token Plan | 1000 RPM | 1000 RPM（不变） |
+
+- 涉及模型：`agnes-2.5-flash`、`agnes-3.0-flash`
+- 本次**仅调整文本模型**；图片、视频模型的 RPM 保持不变
+- 短时间内超过限制会触发 429 限流，建议在客户端实现合理的重试与退避机制，避免请求过于集中
+- 官方文档：https://www.agnes-ai.com/zh-Hans/docs/tokenplan
 
 ### 🚀 Agnes 3.0 Flash 上线通知（2026-09-09 更新）
 
@@ -327,6 +342,11 @@ Agent：（参考 Skill 视频排查指南 → 检查 video_id vs task_id → �
 - 官方文档（国际站）：https://www.agnes-ai.com/zh-Hans/docs/agnes-video-25-flash
 - 官方文档（国内站）：https://www.agnes-ai.cn/zh-Hans/docs/agnes-video-25-flash
 - 使用中遇到问题或有建议，欢迎在社群内反馈
+
+> ⚠️ **视频模型参数差异提醒（官方重点强调）**：`agnes-video-2.5`、`agnes-video-2.5-flash`、`agnes-video-v2.0` 三者的请求参数**存在差异，不要直接复用或混用参数**，否则可能出现 400 参数校验失败、任务创建失败等问题。请按实际调用的模型查阅对应官方文档：
+> - Video 2.5（付费高清）：https://www.agnes-ai.com/zh-Hans/docs/agnes-video-25
+> - Video 2.5 Flash（限时免费）：https://www.agnes-ai.com/zh-Hans/docs/agnes-video-25-flash
+> - Video V2.0（旧版）：https://agnes-ai.com/doc/agnes-video-v20
 
 ### 💰 免费模型一览（2026-08-27 核对官方定价页）
 
@@ -434,7 +454,7 @@ curl https://apihub.agnes-ai.com/v1/chat/completions \
 **401 Unauthorized**
 1. 检查 Header 格式：`Authorization: Bearer YOUR_KEY`（Bearer 后有空格）
 2. 确认 Key 未过期/被删除（控制台 Settings → API Keys 查看）
-3. 确认账户有余额（注册送 $0.1；**目前所有 Flash 模型（文本/图像/视频）均免费**，但有 RPM 限制：文本 20/min，图片按分辨率 1K:20, 2K:10, 3K/4K:1，视频 1/min；仅 Pro 推理系列与 `agnes-video-2.5` 为付费模型）
+3. 确认账户有余额（注册送 $0.1；**目前所有 Flash 模型（文本/图像/视频）均免费**，但有 RPM 限制：文本 10/min（免费/默认额度，2026-09-23 起由 20 下调；企业 20、Token Plan 1000），图片按分辨率 1K:20, 2K:10, 3K/4K:1，视频 1/min；仅 Pro 推理系列与 `agnes-video-2.5` 为付费模型）
 4. 检查 Key 是否有多余空格或换行符
 5. 用 curl 直接测试，排除 SDK/框架问题
 
@@ -498,7 +518,7 @@ curl https://apihub.agnes-ai.com/v1/chat/completions \
 
 **429 Rate Limited**
 - 降低请求频率
-- 文本模型：免费/默认 RPM 20，企业 RPM 40，Token Plan RPM 1000
+- 文本模型：免费/默认 RPM **10**（2026-09-23 起由 20 下调），企业 RPM **20**（由 40 下调），Token Plan RPM 1000（不变）
 - 图片模型：按分辨率分档 — 1K RPM 20，2K RPM 10，3K/4K RPM 1（均免费/默认）
 - 视频模型：免费/默认 RPM 1（每分钟内只能生成 1 个视频），需排队等待
 - 实现客户端队列和退避
@@ -655,7 +675,7 @@ curl https://apihub.agnes-ai.com/v1/chat/completions \
 - 支持图片 URL 输入（messages[].content 数组格式）
 - 支持工具调用、Thinking 模式、流式输出
 - **升级自 2.0 Flash**：API 完全兼容，只需改模型名即可迁移
-- 价格：Input $0.03/1M, Output $0.15/1M（**现价 $0，RPM ≤ 20**）
+- 价格：Input $0.03/1M, Output $0.15/1M（**现价 $0，RPM ≤ 10（免费/默认额度）**）
 
 ### agnes-2.5-pro（正式版 · 付费）
 - 端点：`POST /v1/chat/completions`（另支持 Responses `POST /v1/responses`、Messages `POST /v1/messages`）
@@ -693,7 +713,7 @@ curl https://apihub.agnes-ai.com/v1/chat/completions \
 - 额外参数：stream, tools, tool_choice, chat_template_kwargs, thinking
 - 支持图片 URL 输入（messages[].content 数组格式）
 - 支持工具调用、Thinking 模式、流式输出
-- 价格：Input $0.03/1M, Output $0.15/1M（**现价 $0，RPM ≤ 20**）
+- 价格：Input $0.03/1M, Output $0.15/1M（**现价 $0，RPM ≤ 10（免费/默认额度）**）
 - **已升级至 2.5-flash，建议迁移**
 
 ### agnes-image-2.0/2.1/2.5-flash
@@ -765,7 +785,7 @@ curl https://apihub.agnes-ai.com/v1/chat/completions \
 | 400 | 请求无效 | 参数错误、JSON 格式、必填缺失、尺寸不是16/64倍数 | 检查格式、参数类型、必填字段、尺寸限制 |
 | 401 | 未授权 | API Key 错误/过期 | 检查 Authorization 头，确认 Key 有效 |
 | 404 | 不存在 | 视频/任务 ID 错误 | 确认 ID 正确 |
-| 429 | 速率限制 | 文本 RPM 超过 20，图片按分辨率（1K:20, 2K:10, 3K/4K:1），视频 RPM 超过 1 | 降低频率，视频需排队等待，实现退避重试 |
+| 429 | 速率限制 | 文本 RPM 超过 10（免费/默认额度，2026-09-23 起由 20 下调），图片按分辨率（1K:20, 2K:10, 3K/4K:1），视频 RPM 超过 1 | 降低频率，视频需排队等待，实现退避重试 |
 | 500 | 服务器错误 | 服务端异常、参数异常（尺寸限制） | 检查参数是否符合尺寸限制，稍后重试 |
 | 502 | 网关错误 | 本地网络环境问题 | 检查网络、修改 DNS、必要时让 AI 帮忙检查 |
 | 503 | 服务繁忙 | 负载高或维护、CC 平台配置问题 | 指数退避重试，检查模型名称/路由/兜底模型 |
@@ -790,7 +810,7 @@ curl https://apihub.agnes-ai.com/v1/chat/completions \
 - [ ] 请求头包含 Authorization 和 Content-Type
 - [ ] API Key 未暴露在公开代码中
 - [ ] 已实现错误处理和重试逻辑
-- [ ] 了解 RPM 限制（文本 20/min，图片按分辨率 1K:20, 2K:10, 3K/4K:1，视频 1/min）
+- [ ] 了解 RPM 限制（文本 10/min（免费/默认额度，2026-09-23 起由 20 下调；企业 20、Token Plan 1000），图片按分辨率 1K:20, 2K:10, 3K/4K:1，视频 1/min）
 
 ### Chat
 - [ ] 模型名称拼写正确

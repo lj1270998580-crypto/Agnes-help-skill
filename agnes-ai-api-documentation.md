@@ -1,6 +1,6 @@
 # Agnes AI API 完整文档
 
-> **文档版本：** v1.3.1
+> **文档版本：** v1.3.2
 > **来源：** https://agnes-ai.com/doc/overview 及其子页面
 > **整理时间：** 2026-06-06
 > **GitHub 仓库：** https://github.com/lj1270998580-crypto/Agnes-help-skill
@@ -1807,6 +1807,11 @@ curl https://apihub.agnes-ai.com/v1/chat/completions   -H "Authorization: Bearer
 
 ---
 
+> ⚠️ **视频模型参数差异提醒（官方重点强调）**：`agnes-video-2.5`、`agnes-video-2.5-flash`、`agnes-video-v2.0` 三者的请求参数**存在差异，不要直接复用或混用参数**，否则可能出现 400 参数校验失败、任务创建失败等问题。请按实际调用的模型查阅对应官方文档：
+> - Video 2.5（付费高清）：https://www.agnes-ai.com/zh-Hans/docs/agnes-video-25
+> - Video 2.5 Flash（限时免费）：https://www.agnes-ai.com/zh-Hans/docs/agnes-video-25-flash
+> - Video V2.0（旧版）：https://agnes-ai.com/doc/agnes-video-v20
+
 ## 七、Agnes Video 2.5
 
 > 使用 OpenAI Videos 兼容 API 接入 Agnes Video 2.5，支持文生视频、首尾帧控制和图片/音频/视频参考生成。
@@ -2029,7 +2034,7 @@ curl -sS -X POST "https://apihub.agnes-ai.com/v1/videos" \
 ## 十、Token Plan 与 RPM 限制
 
 > 来源：官方 Token Plan FAQ（https://www.agnes-ai.com/zh-Hans/docs/tokenplan）
-> 生效日期：2026-06-22；视频 RPM 更新：2026-06-28
+> 文本 RPM 调整日期：2026-09-23（免费用户实际限额 20→10、企业认证用户 40→20；Token Plan 不变）；原页面标注生效日 2026-06-22；视频 RPM 更新：2026-06-28
 > 以下数值为当前公开参考值，Agnes AI 可能根据基础设施容量、服务稳定性、滥用防范或产品策略随时调整。
 
 ### 10.1 访问类型
@@ -2046,9 +2051,9 @@ curl -sS -X POST "https://apihub.agnes-ai.com/v1/videos" \
 
 | 用户类型 | 允许发起 RPM | 实际 RPM |
 |---------|-----------:|--------:|
-| 免费 / 默认 | 30 | 20 |
-| 企业认证 | 60 | 40 |
-| Token Plan | 1000 | 1000 |
+| 免费 / 默认 | 30 | **10**（2026-09-23 起由 20 下调） |
+| 企业认证 | 60 | **20**（由 40 下调） |
+| Token Plan | 1000 | 1000（不变） |
 
 ### 10.3 图片模型 RPM（按分辨率）
 
