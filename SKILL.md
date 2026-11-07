@@ -1,6 +1,6 @@
 ---
 name: agnes-ai-support
-version: "1.3.3"
+version: "1.3.4"
 description: |
   Agnes AI API 接入支持与问题排查 Skill。帮助新用户完成 Agnes AI API 的接入配置，
   诊断和解决接入过程中遇到的认证、参数、响应、图像生成、视频生成等各类问题。
@@ -14,7 +14,7 @@ description: |
 
 # Agnes AI API 接入支持与问题排查
 
-> **Skill 版本：** v1.3.3
+> **Skill 版本：** v1.3.4
 > **适用工具：** OpenClaw / Claude Code / Claude Desktop / Hermes / Codex / WorkBuddy / Cherry Studio / Opencode / Kimi Work
 > **更新日期：** 2026-11-07
 > **官方 Bug 反馈：** https://github.com/AgnesAI-Labs/Agnes-AI/issues
@@ -293,6 +293,19 @@ Agent：（参考 Skill 视频排查指南 → 检查 video_id vs task_id → �
 >
 > 公告来源：Agnes AI 运营团队（2026-10-26）
 
+### 📦 Agent Plan 订阅体系上线通知（2026-10-29 官方调整）
+
+> **订阅体系重大调整：** 官方新增 **Agent Plan**（Lite / Plus / Pro / Max，文本/图片/视频共用 Credits 计费）作为**当前主推订阅**；原有 **Token Plan 降级为「老用户保留」**（现有用户权益不变，暂不重新开放购买）。
+>
+> **要点：**
+> - Agent Plan 套餐：Lite $2.99（文本 60 RPM）、Plus $14.99（100）、Pro $29.99（200，推荐）、Max $75（500）；全模态共享 Credits，按套餐享模型折扣
+> - **免费 / 默认用户与企业认证用户的 RPM 限额改为「动态调整」**（以控制台当前展示的限额为准），不再固定为 10 / 20
+> - ⚠️ **免费 / 限时免费仅适用于 default（默认）用户**：Agent Plan 与 Token Plan 用户按刊例价（或对应折扣）计费，不参与默认用户的免费与体验价优惠
+> - Token Plan **仅可调用 Flash 模型**；Pro 推理系列与付费高清视频 `agnes-video-2.5` 不在其范围内
+> - 订阅控制台：https://platform.agnes-ai.com/subscribe/subscription?from=website
+>
+> 详见官方订阅计划页：https://www.agnes-ai.com/zh-Hans/docs/tokenplan
+
 ### Agnes 2.0 全模态模型 API 正式开放全球免费调用（历史公告）
 
 > **Flash 系列模型（文本 / 图像 / 视频）当前全部免费；Pro 推理系列与 `agnes-video-2.5` 为付费模型**
@@ -368,7 +381,7 @@ Agent：（参考 Skill 视频排查指南 → 检查 video_id vs task_id → �
 
 ### 💰 免费模型一览（2026-08-27 核对官方定价页）
 
-> **目前所有 Flash 系列模型均免费开放**，仅 Pro 推理系列（`agnes-2.5-pro` / `-beta` / `-alpha`）与高清视频 `agnes-video-2.5` 为付费模型：
+> **目前所有 Flash 系列模型均免费开放（仅适用于 default/默认用户）**，仅 Pro 推理系列（`agnes-2.5-pro` / `-beta` / `-alpha`）与高清视频 `agnes-video-2.5` 为付费模型；**Agent Plan / Token Plan 用户按刊例价（或套餐折扣）计费，不参与默认用户的免费与体验价优惠**。
 
 | 模型 | 类型 | 免费状态 |
 |------|------|----------|
@@ -385,6 +398,7 @@ Agent：（参考 Skill 视频排查指南 → 检查 video_id vs task_id → �
 
 > 官方定价来源：https://www.agnes-ai.com/zh-Hans/docs/pricing
 > 注意：免费/付费状态可能随官方活动调整，以官方定价页与账户账单为准。
+> 新增预告：`agnes-3.0-pro` 即将上线（刊例价 $0.045/$0.45/$0.90，与 2.5-pro 同档），发布前仍以 2.5-pro 系列为付费文本推理主力。
 
 ### 视频接口重要更新
 
@@ -472,7 +486,7 @@ curl https://apihub.agnes-ai.com/v1/chat/completions \
 **401 Unauthorized**
 1. 检查 Header 格式：`Authorization: Bearer YOUR_KEY`（Bearer 后有空格）
 2. 确认 Key 未过期/被删除（控制台 Settings → API Keys 查看）
-3. 确认账户有余额（注册送 $0.1；**目前所有 Flash 模型（文本/图像/视频）均免费**，但有 RPM 限制：文本 10/min（免费/默认额度，2026-09-23 起由 20 下调；企业 20、Token Plan 1000），图片按分辨率 1K:20, 2K:10, 3K/4K:1，视频 1/min；仅 Pro 推理系列与 `agnes-video-2.5` 为付费模型）
+3. 确认账户有余额（注册送 $0.1；**目前所有 Flash 模型（文本/图像/视频）对 default/默认用户均免费**，但 RPM 限制：免费/默认与企业用户的 RPM 为**动态调整**（以控制台为准，2026-09-23 起整体收紧、未实名国内站账号进一步降低）；Token Plan 文本 1000、图片 1K:100/2K:80/3K-4K:1、视频 5；Agent Plan 各套餐文本 RPM 60/100/200/500；仅 Pro 推理系列与 `agnes-video-2.5` 为付费模型）
 4. 检查 Key 是否有多余空格或换行符
 5. 用 curl 直接测试，排除 SDK/框架问题
 
@@ -803,7 +817,7 @@ curl https://apihub.agnes-ai.com/v1/chat/completions \
 | 400 | 请求无效 | 参数错误、JSON 格式、必填缺失、尺寸不是16/64倍数 | 检查格式、参数类型、必填字段、尺寸限制 |
 | 401 | 未授权 | API Key 错误/过期 | 检查 Authorization 头，确认 Key 有效 |
 | 404 | 不存在 | 视频/任务 ID 错误 | 确认 ID 正确 |
-| 429 | 速率限制 | 文本 RPM 超过 10（免费/默认额度，2026-09-23 起由 20 下调），图片按分辨率（1K:20, 2K:10, 3K/4K:1），视频 RPM 超过 1 | 降低频率，视频需排队等待，实现退避重试 |
+| 429 | 速率限制 | 请求频率超过账户当前 RPM 限额（免费/默认与企业 RPM **动态调整**，以控制台为准；Token Plan 文本 1000、图片 1K:100/2K:80/3K-4K:1、视频 5；Agent Plan 文本 60/100/200/500）；或订阅配额（Token Plan / Agent Plan Credits）耗尽 | 降低频率，视频需排队等待，实现退避重试；Agent Plan 注意 5 小时窗口与 Credits 余额 |
 | 500 | 服务器错误 | 服务端异常、参数异常（尺寸限制） | 检查参数是否符合尺寸限制，稍后重试 |
 | 502 | 网关错误 | 本地网络环境问题 | 检查网络、修改 DNS、必要时让 AI 帮忙检查 |
 | 503 | 服务繁忙 | 负载高或维护、CC 平台配置问题 | 指数退避重试，检查模型名称/路由/兜底模型 |
