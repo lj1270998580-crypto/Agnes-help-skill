@@ -1,6 +1,6 @@
 ---
 name: agnes-ai-support
-version: "1.3.2"
+version: "1.3.3"
 description: |
   Agnes AI API 接入支持与问题排查 Skill。帮助新用户完成 Agnes AI API 的接入配置，
   诊断和解决接入过程中遇到的认证、参数、响应、图像生成、视频生成等各类问题。
@@ -14,15 +14,16 @@ description: |
 
 # Agnes AI API 接入支持与问题排查
 
-> **Skill 版本：** v1.3.2
+> **Skill 版本：** v1.3.3
 > **适用工具：** OpenClaw / Claude Code / Claude Desktop / Hermes / Codex / WorkBuddy / Cherry Studio / Opencode / Kimi Work
-> **更新日期：** 2026-09-23
+> **更新日期：** 2026-11-07
 > **官方 Bug 反馈：** https://github.com/AgnesAI-Labs/Agnes-AI/issues
 > **官方进度看板：** https://github.com/users/AgnesAI-Labs/projects/1
 > **官方 Bug 反馈：** https://github.com/AgnesAI-Labs/Agnes-AI/issues
 > **官方进度看板：** https://github.com/users/AgnesAI-Labs/projects/1
 > **GitHub 仓库：** https://github.com/lj1270998580-crypto/Agnes-help-skill
 > **官方平台：** https://platform.agnes-ai.com
+> **国内官网：** https://platform.agnes-ai.cn
 > **官方文档：** https://agnes-ai.com/doc/overview
 > **操作手册：** https://agnes-ai.com/doc/%E5%B8%B8%E7%94%A8%E6%8E%A5%E5%85%A5%E6%96%87%E6%A1%A3
 > **社区教程：** https://github.com/Yacey/agnes-ai-generation-skill
@@ -271,9 +272,26 @@ Agent：（参考 Skill 视频排查指南 → 检查 video_id vs task_id → �
 
 ---
 
-## 0. 重要公告（最新：2026-09-23）
+## 0. 重要公告（最新：2026-11-07）
 
-> 最新公告见下方「Agnes 3.0 Flash 上线通知」。以下为 2026-06 的历史公告，仅作留存。
+> 最新公告见下方「Agnes AI 实名认证及风控升级通知」。以下为模型上线与历史公告，仅作留存。
+
+### 🔒 Agnes AI 实名认证及风控升级通知（2026-10-26 官方公告）
+
+> **背景：** 平台为打击灰产与恶意使用、保障正常用户权益，对**国内站**账号启用实名认证与风控升级。
+>
+> **操作指引：**
+> - 请于 **2026 年 10 月 26 日 12:00 前** 完成实名认证（⚠️ 该期限已过：当前为 2026-11-07，未认证账号的频率限制现已生效，建议尽快补认证以解除限制）
+> - 前往国内站官网：**https://platform.agnes-ai.cn/** → 登录后按实名认证弹窗提示完成认证
+> - 认证完成后，可在「个人资料」页查看认证状态
+>
+> **影响与说明：**
+> - 本次实名认证**仅限国内站**，国际站（platform.agnes-ai.com）暂不需要认证
+> - **未实名认证的国内站用户，调用频率（RPM）将被降低**；完成实名认证后即可解除限制
+> - 请仅通过官网完成认证，**切勿在群内发送身份证照片、证件号码等敏感信息**
+> - 实名信息仅用于合规核验；如有疑问请联系官方客服
+>
+> 公告来源：Agnes AI 运营团队（2026-10-26）
 
 ### Agnes 2.0 全模态模型 API 正式开放全球免费调用（历史公告）
 
