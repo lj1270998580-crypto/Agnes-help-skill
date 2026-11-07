@@ -1,6 +1,6 @@
 ---
 name: agnes-ai-support
-version: "1.3.4"
+version: "1.3.5"
 description: |
   Agnes AI API 接入支持与问题排查 Skill。帮助新用户完成 Agnes AI API 的接入配置，
   诊断和解决接入过程中遇到的认证、参数、响应、图像生成、视频生成等各类问题。
@@ -14,7 +14,7 @@ description: |
 
 # Agnes AI API 接入支持与问题排查
 
-> **Skill 版本：** v1.3.4
+> **Skill 版本：** v1.3.5
 > **适用工具：** OpenClaw / Claude Code / Claude Desktop / Hermes / Codex / WorkBuddy / Cherry Studio / Opencode / Kimi Work
 > **更新日期：** 2026-11-07
 > **官方 Bug 反馈：** https://github.com/AgnesAI-Labs/Agnes-AI/issues
@@ -298,13 +298,17 @@ Agent：（参考 Skill 视频排查指南 → 检查 video_id vs task_id → �
 > **订阅体系重大调整：** 官方新增 **Agent Plan**（Lite / Plus / Pro / Max，文本/图片/视频共用 Credits 计费）作为**当前主推订阅**；原有 **Token Plan 降级为「老用户保留」**（现有用户权益不变，暂不重新开放购买）。
 >
 > **要点：**
-> - Agent Plan 套餐：Lite $2.99（文本 60 RPM）、Plus $14.99（100）、Pro $29.99（200，推荐）、Max $75（500）；全模态共享 Credits，按套餐享模型折扣
+> - **Agent Plan 套餐（月付 / 年付·付 10 个月）**：Lite $2.99/月（$29.90/年）、Plus $14.99/月（$149.90/年）、Pro $29.99/月（$299.90/年，推荐）、Max $75/月（$750/年）；全模态共享 Credits（20K / 100K / 240K / 600K 每月），文本 RPM 60 / 100 / 200 / 500，按套餐享模型折扣；**可加购永久有效的 Credits 积分包**（Mini 20K $2.99 / Standard 100K $14.99 / Premium 240K $34.99 / Ultimate 600K $85.99，不受 5 小时窗口约束）
+> - **模型折扣（限时，1.0=原价）**：文本 Flash Lite 0.8 / Plus 0.7 / Pro 0.6 / Max 0.5；图片 Lite 0.8 / Plus 0.7 / Pro 0.6 / Max 0.5；视频 Lite 0.8 / Plus 0.8 / Pro 0.7 / Max 0.7；文本 Pro 模型 Lite 1.0 / Plus 0.95 / Pro 0.9 / Max 0.85（折扣以控制台为准）
+> - **换算基准：6,600 Credits = $1**；套餐 Credits 按模型刊例价折算后再乘当前套餐折扣系数，不使用体验价、不参与模型限时免费
 > - **免费 / 默认用户与企业认证用户的 RPM 限额改为「动态调整」**（以控制台当前展示的限额为准），不再固定为 10 / 20
 > - ⚠️ **免费 / 限时免费仅适用于 default（默认）用户**：Agent Plan 与 Token Plan 用户按刊例价（或对应折扣）计费，不参与默认用户的免费与体验价优惠
 > - Token Plan **仅可调用 Flash 模型**；Pro 推理系列与付费高清视频 `agnes-video-2.5` 不在其范围内
 > - 订阅控制台：https://platform.agnes-ai.com/subscribe/subscription?from=website
 >
 > 详见官方订阅计划页：https://www.agnes-ai.com/zh-Hans/docs/tokenplan
+>
+> 注：年付档位、加购 Credits 积分包价格与完整模型折扣系数于 2026-11-07 据官方订阅计划页补充。
 
 ### Agnes 2.0 全模态模型 API 正式开放全球免费调用（历史公告）
 
