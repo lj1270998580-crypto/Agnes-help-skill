@@ -1,6 +1,6 @@
 ---
 name: agnes-ai-support
-version: "1.3.6"
+version: "1.3.7"
 description: |
   Agnes AI API 接入支持与问题排查 Skill。帮助新用户完成 Agnes AI API 的接入配置，
   诊断和解决接入过程中遇到的认证、参数、响应、图像生成、视频生成等各类问题。
@@ -14,9 +14,9 @@ description: |
 
 # Agnes AI API 接入支持与问题排查
 
-> **Skill 版本：** v1.3.6
+> **Skill 版本：** v1.3.7
 > **适用工具：** OpenClaw / Claude Code / Claude Desktop / Hermes / Codex / WorkBuddy / Cherry Studio / Opencode / Kimi Work
-> **更新日期：** 2026-11-08
+> **更新日期：** 2026-11-10
 > **官方 Bug 反馈：** https://github.com/AgnesAI-Labs/Agnes-AI/issues
 > **官方进度看板：** https://github.com/users/AgnesAI-Labs/projects/1
 > **官方 Bug 反馈：** https://github.com/AgnesAI-Labs/Agnes-AI/issues
@@ -272,19 +272,19 @@ Agent：（参考 Skill 视频排查指南 → 检查 video_id vs task_id → �
 
 ---
 
-## 0. 重要公告（最新：2026-11-08）
+## 0. 重要公告（最新：2026-11-10）
 
 > 最新公告见下方「Agnes AI 实名认证及风控升级通知」。以下为模型上线与历史公告，仅作留存。
 
-### 🆕 官方定价页新增付费推理模型 agnes-2.5-pro-theta（2026-11-08 巡检发现）
+### 🆕 官方定价页付费推理模型 agnes-2.5-pro-theta 价格调整（2026-11-10 巡检发现）
 
-> **新增模型：** 官方定价页（https://www.agnes-ai.com/zh-Hans/docs/pricing）新增付费推理模型 **`agnes-2.5-pro-theta`**，与 `agnes-2.5-pro` 同属付费推理系列、**刊例价完全一致**：
-> - 输入缓存命中 `$0.045 / M`、输入 `$0.45 / M`、输出 `$0.90 / M`
+> **价格调整：** 官方定价页（https://www.agnes-ai.com/zh-Hans/docs/pricing）的付费推理模型 **`agnes-2.5-pro-theta`** 刊例价由此前与 `agnes-2.5-pro` 同档（缓存命中 `$0.045 / M`、输入 `$0.45 / M`、输出 `$0.90 / M`）**下调至与 `agnes-2.5-pro-beta` / 即将上线的 `agnes-3.0-pro` 同档**：
+> - 输入缓存命中 `$0.01 / M`、输入 `$0.10 / M`、输出 `$0.30 / M`（输入成本较此前下降约 78%）
 > - 端点：`POST /v1/chat/completions`（另支持 Responses `POST /v1/responses`、Messages `POST /v1/messages`）
 > - 适用：`default` 用户按刊例价计费（不参与 Flash 系列的免费 / 体验价）；Agent Plan 用户按刊例价折算 Credits 并享对应套餐折扣（文本 Pro 折扣系数 Lite 1.0 / Plus 0.95 / Pro 0.9 / Max 0.85）
 > - ⚠️ 该模型暂未在官方「模型文档」独立成页，具体 Context 窗口、是否支持 Thinking / 工具调用等能力以官方后续文档为准；当前仅定价页列出
 >
-> 注：本次为定价页巡检发现的新增模型（非独立发布公告）；本站已同步至三文件（SKILL.md / README / API 文档）并递增版本至 v1.3.6。
+> 注：本次为定价页巡检发现的**价格调整**（非独立发布公告）；本站已同步至三文件（SKILL.md / README / API 文档）并递增版本至 v1.3.7（2026-11-10）。
 
 ### 🔒 Agnes AI 实名认证及风控升级通知（2026-10-26 官方公告）
 
@@ -309,7 +309,7 @@ Agent：（参考 Skill 视频排查指南 → 检查 video_id vs task_id → �
 >
 > **要点：**
 > - **Agent Plan 套餐（月付 / 年付·付 10 个月）**：Lite $2.99/月（$29.90/年）、Plus $14.99/月（$149.90/年）、Pro $29.99/月（$299.90/年，推荐）、Max $75/月（$750/年）；全模态共享 Credits（20K / 100K / 240K / 600K 每月），文本 RPM 60 / 100 / 200 / 500，按套餐享模型折扣；**可加购永久有效的 Credits 积分包**（Mini 20K $2.99 / Standard 100K $14.99 / Premium 240K $34.99 / Ultimate 600K $85.99，不受 5 小时窗口约束）；各套餐图片 RPM（1K/2K/3K/4K）为 Lite 60/40/1/1、Plus 80/60/1/1、Pro 100/80/2/2、Max 150/100/2/2，视频 RPM 为 Lite 2 / Plus 2 / Pro 3 / Max 5（详见 API 文档 10.7）
-> - **模型折扣（限时，1.0=原价）**：文本 Flash Lite 0.8 / Plus 0.7 / Pro 0.6 / Max 0.5；图片 Lite 0.8 / Plus 0.7 / Pro 0.6 / Max 0.5；视频 Lite 0.8 / Plus 0.8 / Pro 0.7 / Max 0.7；文本 Pro 模型 Lite 1.0 / Plus 0.95 / Pro 0.9 / Max 0.85（折扣以控制台为准）
+> - **模型折扣（限时，1.0=原价；括号外为基础会员折扣、括号内为限时促销折扣）**：文本 Flash Lite 1.0（限时0.8）/ Plus 0.9（限时0.7）/ Pro 0.8（限时0.6）/ Max 0.7（限时0.5）；图片 Lite 1.0（限时0.8）/ Plus 0.98（限时0.7）/ Pro 0.95（限时0.6）/ Max 0.9（限时0.5）；视频 Lite 1.0（限时0.8）/ Plus 1.0（限时0.8）/ Pro 0.98（限时0.7）/ Max 0.95（限时0.7）；文本 Pro 模型 Lite 1.0 / Plus 0.95 / Pro 0.9 / Max 0.85（折扣以控制台为准）
 > - **换算基准：6,600 Credits = $1**；套餐 Credits 按模型刊例价折算后再乘当前套餐折扣系数，不使用体验价、不参与模型限时免费
 > - **免费 / 默认用户与企业认证用户的 RPM 限额改为「动态调整」**（以控制台当前展示的限额为准），不再固定为 10 / 20
 > - ⚠️ **免费 / 限时免费仅适用于 default（默认）用户**：Agent Plan 与 Token Plan 用户按刊例价（或对应折扣）计费，不参与默认用户的免费与体验价优惠
@@ -408,11 +408,11 @@ Agent：（参考 Skill 视频排查指南 → 检查 video_id vs task_id → �
 | `agnes-video-v2.0` | 视频 | ✅ 免费（$0/秒） |
 | `agnes-video-2.5-flash` | 视频 | ✅ 免费（$0/秒，限时免费；原价 $0.025/秒） |
 | `agnes-video-2.5` | 视频 | 💰 付费（720P $0.025/秒、1080P 与 1K $0.040/秒、2K $0.055/秒） |
-| `agnes-2.5-pro` / `-beta` / `-alpha` / `-theta` | 文本推理 | 💰 付费（$0.045~$0.45 输入，$0.045~$0.90 缓存命中/输入，$0.30~$0.90 输出；theta 刊例价与 pro 相同：$0.045/$0.45/$0.90） |
+| `agnes-2.5-pro` / `-beta` / `-alpha` / `-theta` | 文本推理 | 💰 付费（pro/alpha：$0.045/$0.45/$0.90；beta/theta：$0.01/$0.10/$0.30；theta 于 2026-11-10 由 pro 档下调至 beta 档） |
 
 > 官方定价来源：https://www.agnes-ai.com/zh-Hans/docs/pricing
 > 注意：免费/付费状态可能随官方活动调整，以官方定价页与账户账单为准。
-> 新增预告：`agnes-3.0-pro` 即将上线（刊例价 $0.045/$0.45/$0.90，与 2.5-pro 同档），发布前仍以 2.5-pro 系列为付费文本推理主力。
+> 新增预告：`agnes-3.0-pro` 即将上线（刊例价 $0.01/$0.10/$0.30，与 2.5-pro-beta / theta 同档，低于 2.5-pro 的 $0.045/$0.45/$0.90），发布前仍以 2.5-pro 系列为付费文本推理主力。
 
 ### 视频接口重要更新
 
@@ -757,11 +757,11 @@ curl https://apihub.agnes-ai.com/v1/chat/completions \
 
 - 模型 ID：`agnes-2.5-pro-theta`
 - 端点：`POST /v1/chat/completions`（另支持 Responses `POST /v1/responses`、Messages `POST /v1/messages`）
-- 类型：**付费推理模型**，与 `agnes-2.5-pro` 同属付费推理系列，刊例价一致
+- 类型：**付费推理模型**，定价档位与 `agnes-2.5-pro-beta` / 即将上线的 `agnes-3.0-pro` 一致（低于 `agnes-2.5-pro`）
 - 输入模态：文本、图像 URL；输出：文本（推理）
-- 价格：Input $0.45/1M, Output $0.90/1M, Cache hit $0.045/1M（与 `agnes-2.5-pro` 完全相同）
+- 价格：Input $0.10/1M, Output $0.30/1M, Cache hit $0.01/1M（与 `agnes-2.5-pro-beta` 相同，低于 `agnes-2.5-pro` 的 $0.45/$0.90/$0.045）
 - 计费：`default` 用户按刊例价计费（不参与 Flash 系列的免费 / 体验价）；Agent Plan 用户按刊例价折算 Credits 并享文本 Pro 折扣（Lite 1.0 / Plus 0.95 / Pro 0.9 / Max 0.85）
-- 说明：2026-11-08 巡检发现官方定价页新增此模型；其 Context 窗口、Thinking / 工具调用等能力暂未在官方独立文档页说明，以官方后续文档为准
+- 说明：2026-11-08 巡检发现官方定价页新增此模型；2026-11-10 巡检发现其刊例价由 pro 档（$0.045/$0.45/$0.90）下调至 beta 档（$0.01/$0.10/$0.30）；其 Context 窗口、Thinking / 工具调用等能力暂未在官方独立文档页说明，以官方后续文档为准
 
 ### agnes-2.0-flash
 - 端点：`POST /v1/chat/completions`

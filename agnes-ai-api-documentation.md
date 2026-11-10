@@ -1,8 +1,8 @@
 # Agnes AI API 完整文档
 
-> **文档版本：** v1.3.6
+> **文档版本：** v1.3.7
 > **来源：** https://agnes-ai.com/doc/overview 及其子页面
-> **整理时间：** 2026-11-08（2026-10-29 订阅体系重构：新增 Agent Plan 主推订阅，免费/企业 RPM 改为动态调整；2026-11-08 定价页新增付费推理模型 agnes-2.5-pro-theta）
+> **整理时间：** 2026-11-10（2026-10-29 订阅体系重构：新增 Agent Plan 主推订阅，免费/企业 RPM 改为动态调整；2026-11-08 定价页新增付费推理模型 agnes-2.5-pro-theta；2026-11-10 该模型刊例价由 pro 档 $0.045/$0.45/$0.90 下调至 beta 档 $0.01/$0.10/$0.30）
 > **GitHub 仓库：** https://github.com/lj1270998580-crypto/Agnes-help-skill
 > **本文档整合了 Agnes AI API 官方在线文档的全部内容，方便 Agent 快速获取信息**
 
@@ -28,7 +28,7 @@
 13. [Agnes 3.0 Flash](#十二agnes-30-flash)（2026-09 新增）
 14. [Agnes Image 2.5 Flash](#十三agnes-image-25-flash)（2026-09 新增）
 
-> **🆕 2026-11-08 定价页新增付费推理模型 `agnes-2.5-pro-theta`：** 官方定价页（/zh-Hans/docs/pricing）新增 `agnes-2.5-pro-theta`，与 `agnes-2.5-pro` 同属付费推理系列、刊例价完全一致：输入缓存命中 `$0.045/M`、输入 `$0.45/M`、输出 `$0.90/M`。`default` 用户按刊例价计费（不参与 Flash 免费/体验价），Agent Plan 用户按刊例价折算 Credits 并享文本 Pro 折扣（Lite 1.0 / Plus 0.95 / Pro 0.9 / Max 0.85）。该模型暂无独立官方文档页，Context 窗口与 Thinking / 工具调用能力以官方后续文档为准。
+> **🆕 2026-11-10 官方定价页 `agnes-2.5-pro-theta` 价格调整：** `agnes-2.5-pro-theta` 刊例价由此前与 `agnes-2.5-pro` 同档（输入缓存命中 `$0.045/M`、输入 `$0.45/M`、输出 `$0.90/M`）**下调至与 `agnes-2.5-pro-beta` / 即将上线的 `agnes-3.0-pro` 同档**：输入缓存命中 `$0.01/M`、输入 `$0.10/M`、输出 `$0.30/M`（输入成本降约 78%）。`default` 用户按刊例价计费（不参与 Flash 免费/体验价），Agent Plan 用户按刊例价折算 Credits 并享文本 Pro 折扣（Lite 1.0 / Plus 0.95 / Pro 0.9 / Max 0.85）。该模型暂无独立官方文档页，Context 窗口与 Thinking / 工具调用能力以官方后续文档为准。
 
 ---
 
