@@ -1,8 +1,8 @@
 # Agnes AI API 完整文档
 
-> **文档版本：** v1.3.7
+> **文档版本：** v1.3.8
 > **来源：** https://agnes-ai.com/doc/overview 及其子页面
-> **整理时间：** 2026-11-10（2026-10-29 订阅体系重构：新增 Agent Plan 主推订阅，免费/企业 RPM 改为动态调整；2026-11-08 定价页新增付费推理模型 agnes-2.5-pro-theta；2026-11-10 该模型刊例价由 pro 档 $0.045/$0.45/$0.90 下调至 beta 档 $0.01/$0.10/$0.30）
+> **整理时间：** 2026-11-20（2026-11-20 定价页新增决策模型 agnes-sys1-1.0 及独立文档页 agnes-sys1-10、agnes-3.0-pro 标注「已正式上线」；2026-10-29 订阅体系重构：新增 Agent Plan 主推订阅，免费/企业 RPM 改为动态调整；2026-11-08 定价页新增付费推理模型 agnes-2.5-pro-theta；2026-11-10 该模型刊例价由 pro 档 $0.045/$0.45/$0.90 下调至 beta 档 $0.01/$0.10/$0.30）
 > **GitHub 仓库：** https://github.com/lj1270998580-crypto/Agnes-help-skill
 > **本文档整合了 Agnes AI API 官方在线文档的全部内容，方便 Agent 快速获取信息**
 
@@ -27,7 +27,12 @@
 12. [服务条款](#十二服务条款)
 13. [Agnes 3.0 Flash](#十二agnes-30-flash)（2026-09 新增）
 14. [Agnes Image 2.5 Flash](#十三agnes-image-25-flash)（2026-09 新增）
+15. [Agnes Sys1 1.0 决策模型](#agnes-sys1-10-决策模型)（2026-11 新增，即将上线）
 
+> **🧠 2026-11-20 官方定价页新增决策模型 `agnes-sys1-1.0`：** 官方定价页新增「决策模型」分类，并上线独立文档页 https://www.agnes-ai.com/zh-Hans/docs/agnes-sys1-10 。`agnes-sys1-1.0`（**即将上线**，API 开放时间以上线公告为准）使用**专用决策接口 `POST /v1/systemone`**，以 `state` + `questions` 输入、在 `answers` 中返回结构化结果（题型 `choice` / `noul`），输入 Token `$0.03/M`、**输出免费**。官方定位为 Agnes Harness 的 9B「System 1」决策模型（双系统决策、TTT 测试时训练）。详见新增章节「Agnes Sys1 1.0 决策模型」。
+>
+> **🆕 2026-11-20 `agnes-3.0-pro` 状态更新：** 官方定价页将 `agnes-3.0-pro` 由「即将上线」改为**「已正式上线」**（刊例价 `$0.01/M` 缓存命中 / `$0.10/M` 输入 / `$0.30/M` 输出，与 2.5-pro-beta / theta 同档）；但独立文档页 https://www.agnes-ai.com/zh-Hans/docs/agnes-30-pro 仍写「即将上线」，实际可用性与账户权限以控制台 / 上线公告为准。
+>
 > **🆕 2026-11-10 官方定价页 `agnes-2.5-pro-theta` 价格调整：** `agnes-2.5-pro-theta` 刊例价由此前与 `agnes-2.5-pro` 同档（输入缓存命中 `$0.045/M`、输入 `$0.45/M`、输出 `$0.90/M`）**下调至与 `agnes-2.5-pro-beta` / 即将上线的 `agnes-3.0-pro` 同档**：输入缓存命中 `$0.01/M`、输入 `$0.10/M`、输出 `$0.30/M`（输入成本降约 78%）。`default` 用户按刊例价计费（不参与 Flash 免费/体验价），Agent Plan 用户按刊例价折算 Credits 并享文本 Pro 折扣（Lite 1.0 / Plus 0.95 / Pro 0.9 / Max 0.85）。该模型暂无独立官方文档页，Context 窗口与 Thinking / 工具调用能力以官方后续文档为准。
 
 ---
@@ -2014,20 +2019,23 @@ curl -sS -X POST "https://apihub.agnes-ai.com/v1/videos" \
 
 ---
 
-## 九、Agnes 2.5 Pro 系列
+## 九、Agnes 2.5 Pro 系列（含 agnes-3.0-pro）
 
 > Pro 系列为**付费推理模型**，支持文本与图像 URL 输入、工具调用、Thinking 模式、流式输出。
-> 三个模型均支持三种端点：Chat Completions `POST /v1/chat/completions`、Responses `POST /v1/responses`、Anthropic 兼容 Messages `POST /v1/messages`。
-> 上下文窗口均 **1M tokens**，最大输出 **65536 tokens**。
+> 各模型均支持三种端点：Chat Completions `POST /v1/chat/completions`、Responses `POST /v1/responses`、Anthropic 兼容 Messages `POST /v1/messages`。
+> 2.5 Pro 系列上下文窗口 **1M tokens**，最大输出 **65536 tokens**。
 
 | 模型 | 状态 | 输入 Token（未命中缓存） | 输出 Token | Cache hit | 权重 |
 |------|------|------------------------|-----------|-----------|------|
+| `agnes-3.0-pro` | 定价页标注「已正式上线」（2026-11-20；文档页仍写即将上线） | $0.10 / M | $0.30 / M | $0.01 / M | Proprietary |
 | `agnes-2.5-pro` | 正式版（GA，2026-08-01） | $0.45 / M | $0.90 / M | $0.045 / M | Proprietary |
 | `agnes-2.5-pro-beta` | Beta，已上线 | $0.10 / M | $0.30 / M | $0.01 / M | Proprietary |
 | `agnes-2.5-pro-alpha` | Alpha（2026-07-24） | $0.45 / M | $0.90 / M | $0.045 / M | Apache 2.0 开源 |
+| `agnes-2.5-pro-theta` | 付费推理（2026-11-08 定价页新增） | $0.10 / M | $0.30 / M | $0.01 / M | Proprietary |
 
+- `agnes-3.0-pro` 为新一代 Pro 模型（智能体工作 / 专业文档分析 / 科学编码 / 长上下文推理），定价页已标注「已正式上线」但独立文档页仍写「即将上线」，实际可用性以控制台 / 上线公告为准；官方文档 https://www.agnes-ai.com/zh-Hans/docs/agnes-30-pro
 - `agnes-2.5-pro` 是 Alpha 打榜模型的商业化稳定版本，官方权重为闭源；Alpha 权重已在 Hugging Face 以 Apache 2.0 开源
-- 三个模型均为付费模型，调用需确认账户已开通对应模型访问权限
+- 各模型均为付费模型，调用需确认账户已开通对应模型访问权限
 - 输入缓存命中单价为普通输入 Token 单价的 10%
 - 图像 URL 输入格式与 2.5 Flash 一致（`messages[].content[].image_url`）
 
@@ -2951,6 +2959,135 @@ Agnes AI可以在您同意的情况下将本协议转让给任何关联公司或
 23. 联系方式
 / /
 
+
+---
+
+## Agnes Sys1 1.0 决策模型（2026-11 新增，即将上线）
+
+> 来源：官方 https://www.agnes-ai.com/zh-Hans/docs/agnes-sys1-10 及官方定价页 https://www.agnes-ai.com/zh-Hans/docs/pricing
+> ⚠️ **状态「即将上线」**：本文用于提前准备接入，API 正式开放时间及账户访问权限以上线公告为准；以下示例不代表接口当前已开放调用。
+
+Agnes Sys1 1.0 是 Agnes AI 的**决策模型**。通过 `state` 描述当前状态，在 `questions` 中定义需要判断的问题，接口在 `answers` 中按对应名称返回**结构化决策结果**，而不是生成聊天回复。官方将其定位为 Agnes Harness 的 9B「System 1」决策模型（配合 LLM「System 2」的双系统决策，支持 TTT 测试时训练）；可用于工作流路由、意图分类和业务规则辅助判断。
+
+### 概述
+
+| 项目 | 说明 |
+|------|------|
+| 模型名称 | `agnes-sys1-1.0` |
+| 上线状态 | 即将上线 |
+| 请求方式 | POST |
+| 对外接口 | `https://apihub.agnes-ai.com/v1/systemone`（**专用决策接口，非 Chat Completions**） |
+| 输入 | 状态文本（`state`）与命名问题对象（`questions`） |
+| 输出 | `answers` 中的结构化决策结果 |
+| 计费 | 输入 Token 收费，输出免费 |
+
+### 请求头
+
+```
+Authorization: Bearer YOUR_API_KEY
+Content-Type: application/json
+```
+
+### 输入参数
+
+| 字段 | JSON 类型 | 说明 |
+|------|-----------|------|
+| `model` | string | 模型标识，使用 `agnes-sys1-1.0` |
+| `state` | string | 需要判断的当前状态或输入文本 |
+| `questions` | object | 按名称组织的问题定义 |
+| `questions.<name>.type` | string | 问题类型，示例包含 `choice` 和 `noul` |
+| `questions.<name>.instructions` | string | 当前问题的判断指令 |
+| `questions.<name>.criteria` | object | `choice` 示例中的候选项映射（键为标识，值为说明） |
+
+- 选择型问题 `choice`：在 `criteria` 列出候选项，结果通过 `answers.route.choice` 返回
+- 数值型问题 `noul`：结果在 `answers.urgent.noul` 返回；**类型名须保留为 `noul`，不要自行改写**；保留原始数值，不要仅凭单条示例推定取值范围、视为已校准概率或设固定业务阈值
+
+### 发起决策请求
+
+```
+curl --request POST 'https://apihub.agnes-ai.com/v1/systemone' \
+  --header 'Authorization: Bearer YOUR_API_KEY' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "model": "agnes-sys1-1.0",
+  "state": "用户反馈：套餐升级后发票金额不正确，请尽快帮忙核查。",
+  "questions": {
+    "route": {
+      "type": "choice",
+      "instructions": "这个请求应该交给哪个团队处理？",
+      "criteria": {
+        "billing": "账单与费用支持",
+        "technical": "技术支持",
+        "sales": "销售咨询"
+      }
+    },
+    "urgent": {
+      "type": "noul",
+      "instructions": "用户是否要求尽快处理？"
+    }
+  }
+}'
+```
+
+### 响应格式
+
+```
+{
+  "model": "agnes-sys1-1.0",
+  "answers": {
+    "route": {
+      "type": "choice",
+      "choice": "billing",
+      "probabilities": {"billing": 0.998, "technical": 0.0009, "sales": 0.001},
+      "confidence": 0.997
+    },
+    "urgent": {"type": "noul", "noul": 0.9988}
+  },
+  "usage": {"input_tokens": 164, "output_tokens": 0}
+}
+```
+
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| `answers` | object | 按问题名称组织的结果对象 |
+| `answers.<name>.choice` | string | 选中的候选项标识 |
+| `answers.<name>.probabilities` | object | 各候选项概率值 |
+| `answers.<name>.confidence` | number | 选择结果置信度（独立字段，不要用最大概率替代） |
+| `answers.<name>.noul` | number | 数值型问题返回的数值结果 |
+| `usage.input_tokens` | integer | 输入 Token 用量 |
+| `usage.output_tokens` | integer | 输出 Token 用量（示例为 0） |
+
+按问题名称读取结果（`answers.route.choice` / `answers.urgent.noul`），**不要解析自然语言正文或 `message.content`**。
+
+### 定价
+
+国际站美元刊例价（`M` = 一百万 Token）：
+
+| 计费项 | 刊例价 |
+|--------|--------|
+| 输入 Token | $0.03 / M |
+| 输出（结构化决策结果） | 免费 |
+
+输入费用 = 输入 Token 数 ÷ 1,000,000 × $0.03；结构化决策结果不收输出费用。示例 `usage.output_tokens` 为 0 不代表没有结果，结果仍通过 `answers` 读取。最终计费细则以正式服务说明及账户账单为准。
+
+### 内部自测估算成绩（官方标注为「预估」，非独立验证）
+
+| Benchmark | 内部自测估算 | 权重 |
+|-----------|--------------|------|
+| HLE-MultiChoice | 39.0% | 25% |
+| When2Call | 95.2% | 25% |
+| WildGuardTest | 93.6% | 25% |
+| Omniscience 准确率 | 38.8% | 12.5% |
+| Omniscience 非幻觉率 | 73.7% | 12.5% |
+| 内部综合折算分 | 71.0 / 100 | 100% |
+
+> 上述数值来自团队内部评估汇总，原始表格均标注「预估」，不是 Artificial Analysis 官方测评或公开榜单排名；评测版本、样本量及方法尚未公开，最终上线表现可能不同。
+
+### 接入检查清单
+
+- `model` 使用 `agnes-sys1-1.0`；使用 `state` 和 `questions`，不改成聊天模型的 `messages` 等字段
+- 请求问题名称与 `answers` 中的结果键保持对应；保留 `choice` / `noul` 原始类型名称
+- 记录用量时保留 `usage`；API 正式开放后确认账户访问权限，并结合正式服务说明验证数值判断规则
 
 ---
 

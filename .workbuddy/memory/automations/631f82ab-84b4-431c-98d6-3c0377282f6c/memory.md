@@ -23,3 +23,17 @@
 ## 注意
 - WebFetch 在沙箱内可能失败，验证线上页需用 dangerouslyDisableSandbox 的 curl（或退出沙箱）。
 - 网页 skillKnowledge 模板字符串内不得出现反引号或 ${}。
+
+## 最近执行（续 4）
+- 2026-11-11 21:00：**今日 Agnes 官方无更新**。国际站 pricing / tokenplan / overview 三页 + WebSearch 公告检索，与本地 v1.3.7（2026-11-10）逐条一致：模型列表、USD 价格、RPM、Agent Plan / Token Plan、折扣表、agnes-3.0-pro（仍「即将上线」）均无新增/下线/改价/新公告；国内站 .cn 返回人民币价格（国内站固有币种，非变更）。按规则结束，未改文件、未提交、未上传；技能仓库维持 v1.3.7。
+
+## 最近执行（续 5）
+- 2026-11-12 21:00：**今日 Agnes 官方无更新**。国际站 pricing / tokenplan / overview 三页 + WebSearch 公告检索，与本地 v1.3.7（2026-11-10）逐条一致：模型列表、USD 价格、RPM、Agent Plan / Token Plan、折扣表、agnes-3.0-pro（仍「即将上线」）均无新增/下线/改价/新公告；tokenplan 页新增 Credits 使用细则/5 小时窗口/退款声明/Harness API 规划说明与图片尺寸档位表，均属文档细化非实质性变更。按规则结束，未改文件、未提交、未上传；技能仓库维持 v1.3.7。
+
+## 最近执行（续 6）
+- 2026-11-13 21:00：**今日 Agnes 官方无更新**。国际站 pricing / tokenplan / overview 三页 + WebSearch 公告检索，与本地 v1.3.7（2026-11-10，commit aa4461e）逐条一致：模型列表、USD 价格（agnes-2.5-pro-theta 已 $0.01/$0.10/$0.30、agnes-3.0-pro 仍「即将上线」）均无新增/下线/改价/新公告；WebSearch 仅返回 7-9 月历史文章，无 11 月新官方公告。按规则结束，未改文件、未提交、未上传；技能仓库维持 v1.3.7。
+- 2026-11-14 21:00：**今日 Agnes 官方无更新**。国际站 pricing / tokenplan / overview 三页 + WebSearch 公告检索，与本地 v1.3.7（2026-11-10，commit aa4461e）逐条一致：模型列表、USD 价格（agnes-2.5-pro-theta 已 $0.01/$0.10/$0.30、agnes-3.0-pro 仍「即将上线」同档预告）、RPM、Agent Plan / Token Plan、折扣表、积分包价格均无新增/下线/改价/新公告；WebSearch 仅返回历史文章（7-9 月），无 11 月新官方公告。按规则结束，未改文件、未提交、未上传；技能仓库维持 v1.3.7。
+- 2026-11-15 21:00：**今日 Agnes 官方无更新**。国际站 pricing / tokenplan / overview 三页 + 国内站定价页交叉核对 + WebSearch 公告检索，与本地 v1.3.7（2026-11-10，commit aa4461e）逐条一致：模型列表、USD 价格（theta 已 $0.01/$0.10/$0.30、agnes-3.0-pro 仍「即将上线」同档）、RPM、Agent Plan 月/年付、Token Plan 老用户保留、折扣表、积分包价格均无新增/下线/改价/新公告；WebSearch 无 11 月新官方公告（freellm/sovyron 为第三方聚合站非官方）。本地 agnes-2.5-flash 刊例输入价记 $0.03（官方 $0.05）属历史遗留差异、体验价长期 $0 不影响计费，非今日新变化，不改。按规则结束，未改文件、未提交、未上传；技能仓库维持 v1.3.7。
+- 2026-11-17 21:00：**今日 Agnes 官方无更新**。国际站 pricing / tokenplan / overview 三页 + 国内站定价页交叉核对 + WebSearch 公告检索，与本地 v1.3.7（2026-11-10，commit aa4461e）逐条一致：模型列表、USD 价格（theta $0.01/$0.10/$0.30、agnes-3.0-pro 仍「即将上线」同档）、RPM、Agent Plan 月/年付、Token Plan 老用户保留、折扣表、积分包价格、换算基准 6,600 Credits=$1 均无新增/下线/改价/新公告；WebSearch 无 11 月新官方公告（mindber/learncs/freellm/头条均第三方或历史文章，头条提及的 agnes-3.0-flash-max 官方定价页未列，不改）。按规则结束，未改文件、未提交、未上传；技能仓库维持 v1.3.7。
+- 2026-11-18 21:00：**今日 Agnes 官方无更新**。国际站 pricing / tokenplan / overview 三页 + WebSearch 公告检索，与本地 v1.3.7（2026-11-10，commit aa4461e）逐条一致：模型列表、USD 价格（theta $0.01/$0.10/$0.30、agnes-3.0-flash 体验价全 $0）、RPM、Agent Plan 月/年付、Token Plan 老用户保留、折扣表、积分包、换算基准均无新增/下线/改价/新公告。核实要点：agnes-3.0-pro 已有独立文档页 agnes-30-pro，但状态明确「Coming soon / 即将上线」、API 未开放、定价 $0.01/$0.10/$0.30（与本地预告一致）；WebSearch 快照中的 $0.045/$0.45/$0.90 为旧缓存、实际页面已订正，非改价。按规则结束，未改文件、未提交、未上传；技能仓库维持 v1.3.7。
+- 2026-11-19 21:00：**今日 Agnes 官方无更新**。国际站 pricing / tokenplan / overview 三页 + 国内站 pricing 交叉核对（¥ 币种，模型集合一致）+ agnes-3.0-pro 模型页（仍「即将上线」、$0.01/$0.10/$0.30）+ WebSearch 公告检索，与本地 v1.3.7（2026-11-10，commit aa4461e）逐条一致：模型列表、USD 价格、RPM、Agent Plan 月/年付、Token Plan 老用户保留、折扣表、积分包、换算基准 6,600 Credits=$1 均无新增/下线/改价/新公告。WebSearch 仅返回第三方媒体对 11-15 theta 开源权重（HF/Apache 2.0/187.8B MoE）的报道，非官方 API 文档变更。按规则结束，未改文件、未提交、未上传；技能仓库维持 v1.3.7。
