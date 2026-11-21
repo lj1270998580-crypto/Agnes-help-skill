@@ -2,13 +2,17 @@
 
 > Agnes AI，让世界级 AI 属于每一个人。
 >
-> **当前 Skill 版本：v1.3.8**（2026-11-20 更新）
+> **当前 Skill 版本：v1.3.9**（2026-11-21 更新）
 
 本仓库是 Agnes AI API 的**非官方帮助资源集合**，包含完整 API 文档与通用支持 Skill，帮助开发者快速接入 Agnes AI 全模态 API（文本、图像、视频）。
 
 ---
 
 ## 📢 重要公告
+
+**⏳ agnes-2.5-flash 下线公告（2026-11-21 巡检发现）**：官方 [Agnes 2.5 Flash 模型文档](https://www.agnes-ai.com/zh-Hans/docs/agnes-25-flash) 与[定价页](https://www.agnes-ai.com/zh-Hans/docs/pricing)已发布公告——`agnes-2.5-flash` 将于 **2026 年 11 月 30 日**正式下线，请提前迁移至 `agnes-3.0-flash`（免费、512K 上下文、65,536 最大输出、三端点 + Thinking）。下线前的可用性、RPM 与计费以账户 / API Key 权限为准；`agnes-2.0-flash` 已废弃，勿作为兼容回退。
+
+**🧠 agnes-sys1-1.0 已正式上线（2026-11-21 状态更新）**：官方定价页与独立文档页 `agnes-sys1-10` 均已由「即将上线」改为**「已正式上线」**，可通过 API 接入（权限以账户为准）；专用接口 `POST /v1/systemone`，`state` + `questions` 输入 / `answers` 输出（choice / noul），输入 `$0.03/M`、输出免费。官方新增内部自测估算成绩（均标注「预估」，非独立验证、非 AA 官方成绩）：HLE-MultiChoice 39.0%、When2Call 95.2%、WildGuardTest 93.6%、Omniscience 准确率 38.8% / 非幻觉率 73.7%、综合 71.0/100；`noul` 与 `confidence` 均保留原始数值，不做业务推定。
 
 **Agnes 3.0 Flash 已上线：面向 Agent 编程与工具驱动任务的新一代文本模型，当前免费！**
 
@@ -124,8 +128,9 @@ Headers:
 
 **模型名称：**
 - **Agent 编程 / 工具调用（最新）：`agnes-3.0-flash`（免费）** — 512K 上下文、65,536 最大输出、Chat Completions / Responses / Messages 三端点、支持 Thinking
-- 通用对话：`agnes-2.5-flash`（免费）
-- 编程/Agent/推理：`agnes-2.5-flash`（免费）
+- 通用对话：`agnes-3.0-flash`（免费；`agnes-2.5-flash` 将于 2026-11-30 下线）
+- 编程/Agent/推理：`agnes-3.0-flash`（免费，支持 Thinking）
+- 结构化决策（已正式上线）：`agnes-sys1-1.0`，专用接口 `POST /v1/systemone`（输入 $0.03/M、输出免费）
 - 高级推理（付费，GA）：`agnes-2.5-pro`
 - 高级推理（付费，Beta）：`agnes-2.5-pro-beta`
 - 高级推理（付费，Alpha）：`agnes-2.5-pro-alpha`
@@ -187,6 +192,7 @@ Headers:
 
 | 日期 | 更新内容 |
 |------|----------|
+| 2026-11-21 | **同步官方 agnes-2.5-flash 下线公告与 agnes-sys1-1.0 正式上线**：`agnes-2.5-flash` 将于 **2026-11-30** 下线，官方建议迁移至 `agnes-3.0-flash`；更新 SKILL.md 公告区/免费模型一览/模型选择表/第 4 章模型小节/最佳实践与 Codex 模型表，README 公告区，API 文档顶部状态说明与 Sys1 章节；`agnes-sys1-1.0` 定价页与独立文档页均由「即将上线」改为「已正式上线」（接口 `POST /v1/systemone`、输入 $0.03/M、输出免费不变），并补录官方内部自测估算成绩（标注预估、非独立验证）；Skill 版本更新至 **v1.3.9** |
 | 2026-11-20 | **同步官方新增决策模型 agnes-sys1-1.0 与 agnes-3.0-pro 状态更新**：官方定价页新增「决策模型」分类并上线独立文档页 `agnes-sys1-10`；新增 `agnes-sys1-1.0`（即将上线，专用接口 `POST /v1/systemone`，`state`+`questions` 输入、`answers` 结构化输出，含 choice/noul 题型，输入 $0.03/M、输出免费，Agnes Harness 的 9B System 1 决策模型）；`agnes-3.0-pro` 定价页标注由「即将上线」改为「已正式上线」（$0.01/$0.10/$0.30，独立文档页仍写即将上线、以控制台 / 上线公告为准）；同步更新 SKILL.md 公告区/模型选择表/第 4 章新增两小节、README 公告区、API 文档新增决策模型章节与目录；Skill 版本更新至 **v1.3.8** |
 | 2026-11-10 | **官方定价页 agnes-2.5-pro-theta 价格调整**：agnes-2.5-pro-theta 刊例价由此前 pro 档（$0.045/$0.45/$0.90）下调至与 pro-beta / 即将上线的 agnes-3.0-pro 同档（$0.01/$0.10/$0.30，输入成本降约 78%）；同步修正 SKILL.md 模型选择表/免费模型一览/公告区/第 4 章 theta 小节、README 公告区与更新记录、API 文档定价页说明与文档版本号；补全三文件模型折扣表为「基础折扣（限时促销折扣）」格式以对齐官方页；Skill 版本更新至 **v1.3.7**；另将 agnes-3.0-pro（即将上线）预览刊例价由旧的 pro 档 $0.045/$0.45/$0.90 订正为官方定价页当前同档 $0.01/$0.10/$0.30 |
 | 2026-11-08 | **官方定价页新增付费推理模型 agnes-2.5-pro-theta**：官方 pricing 页新增 `agnes-2.5-pro-theta`，与 `agnes-2.5-pro` 同属付费推理系列、刊例价完全一致（缓存命中 $0.045 / 输入 $0.45 / 输出 $0.90 / 1M）；同步 SKILL.md 模型选择表、免费模型一览、第 4 章新增小节与公告区，README 公告区与更新记录，API 文档目录、版本号与定价页新增说明；并就 Agent Plan 各档图片/视频 RPM 与 API 文档 10.7 对齐；Skill 版本更新至 **v1.3.6** |

@@ -1,8 +1,8 @@
 # Agnes AI API 完整文档
 
-> **文档版本：** v1.3.8
+> **文档版本：** v1.3.9
 > **来源：** https://agnes-ai.com/doc/overview 及其子页面
-> **整理时间：** 2026-11-20（2026-11-20 定价页新增决策模型 agnes-sys1-1.0 及独立文档页 agnes-sys1-10、agnes-3.0-pro 标注「已正式上线」；2026-10-29 订阅体系重构：新增 Agent Plan 主推订阅，免费/企业 RPM 改为动态调整；2026-11-08 定价页新增付费推理模型 agnes-2.5-pro-theta；2026-11-10 该模型刊例价由 pro 档 $0.045/$0.45/$0.90 下调至 beta 档 $0.01/$0.10/$0.30）
+> **整理时间：** 2026-11-21（2026-11-21 官方发布 agnes-2.5-flash 下线公告：2026-11-30 下线并迁移至 agnes-3.0-flash；agnes-sys1-1.0 已正式上线；2026-11-20 定价页新增决策模型 agnes-sys1-1.0 及独立文档页 agnes-sys1-10、agnes-3.0-pro 标注「已正式上线」；2026-10-29 订阅体系重构：新增 Agent Plan 主推订阅，免费/企业 RPM 改为动态调整；2026-11-08 定价页新增付费推理模型 agnes-2.5-pro-theta；2026-11-10 该模型刊例价由 pro 档 $0.045/$0.45/$0.90 下调至 beta 档 $0.01/$0.10/$0.30）
 > **GitHub 仓库：** https://github.com/lj1270998580-crypto/Agnes-help-skill
 > **本文档整合了 Agnes AI API 官方在线文档的全部内容，方便 Agent 快速获取信息**
 
@@ -27,8 +27,12 @@
 12. [服务条款](#十二服务条款)
 13. [Agnes 3.0 Flash](#十二agnes-30-flash)（2026-09 新增）
 14. [Agnes Image 2.5 Flash](#十三agnes-image-25-flash)（2026-09 新增）
-15. [Agnes Sys1 1.0 决策模型](#agnes-sys1-10-决策模型)（2026-11 新增，即将上线）
+15. [Agnes Sys1 1.0 决策模型](#agnes-sys1-10-决策模型)（2026-11 新增，已正式上线）
 
+> **⏳ 2026-11-21 官方发布 `agnes-2.5-flash` 下线公告：** 模型文档 https://www.agnes-ai.com/zh-Hans/docs/agnes-25-flash 与定价页 https://www.agnes-ai.com/zh-Hans/docs/pricing 均已标注：`agnes-2.5-flash` 将于 **2026 年 11 月 30 日**正式下线，请提前迁移至 `agnes-3.0-flash`（https://www.agnes-ai.com/zh-Hans/docs/agnes-30-flash；default 用户免费、512K 上下文、65,536 最大输出、三端点 + Thinking）。下线前的可用性、RPM 与计费以账户 / API Key 权限为准；`agnes-2.0-flash` 已废弃，不作为兼容回退。Token Plan 文本配额对应模型亦为 `agnes-3.0-flash`。
+>
+> **🧠 2026-11-21 `agnes-sys1-1.0` 已正式上线：** 官方定价页与独立文档页 https://www.agnes-ai.com/zh-Hans/docs/agnes-sys1-10 均已由「即将上线」改为**「已正式上线」**，可通过 Agnes AI API 接入（账户权限与速率限制以控制台为准）。接口 `POST /v1/systemone`、输入 `$0.03/M`、输出免费均不变；官方新增内部自测估算成绩（原始表格均标注「预估」，非独立验证、非 Artificial Analysis 官方成绩，方法未公开）：HLE-MultiChoice 39.0%、When2Call 95.2%、WildGuardTest 93.6%、Omniscience 准确率 38.8% / 非幻觉率 73.7%、内部综合折算 71.0/100。
+>
 > **🧠 2026-11-20 官方定价页新增决策模型 `agnes-sys1-1.0`：** 官方定价页新增「决策模型」分类，并上线独立文档页 https://www.agnes-ai.com/zh-Hans/docs/agnes-sys1-10 。`agnes-sys1-1.0`（**即将上线**，API 开放时间以上线公告为准）使用**专用决策接口 `POST /v1/systemone`**，以 `state` + `questions` 输入、在 `answers` 中返回结构化结果（题型 `choice` / `noul`），输入 Token `$0.03/M`、**输出免费**。官方定位为 Agnes Harness 的 9B「System 1」决策模型（双系统决策、TTT 测试时训练）。详见新增章节「Agnes Sys1 1.0 决策模型」。
 >
 > **🆕 2026-11-20 `agnes-3.0-pro` 状态更新：** 官方定价页将 `agnes-3.0-pro` 由「即将上线」改为**「已正式上线」**（刊例价 `$0.01/M` 缓存命中 / `$0.10/M` 输入 / `$0.30/M` 输出，与 2.5-pro-beta / theta 同档）；但独立文档页 https://www.agnes-ai.com/zh-Hans/docs/agnes-30-pro 仍写「即将上线」，实际可用性与账户权限以控制台 / 上线公告为准。
@@ -2962,10 +2966,10 @@ Agnes AI可以在您同意的情况下将本协议转让给任何关联公司或
 
 ---
 
-## Agnes Sys1 1.0 决策模型（2026-11 新增，即将上线）
+## Agnes Sys1 1.0 决策模型（2026-11 新增，已正式上线）
 
 > 来源：官方 https://www.agnes-ai.com/zh-Hans/docs/agnes-sys1-10 及官方定价页 https://www.agnes-ai.com/zh-Hans/docs/pricing
-> ⚠️ **状态「即将上线」**：本文用于提前准备接入，API 正式开放时间及账户访问权限以上线公告为准；以下示例不代表接口当前已开放调用。
+> **状态（2026-11-21 更新）：官方定价页与独立文档页均已标注「已正式上线」**，可通过 Agnes AI API 接入；模型访问权限与速率限制以账户及 API Key 权限为准，响应示例仅用于说明格式。
 
 Agnes Sys1 1.0 是 Agnes AI 的**决策模型**。通过 `state` 描述当前状态，在 `questions` 中定义需要判断的问题，接口在 `answers` 中按对应名称返回**结构化决策结果**，而不是生成聊天回复。官方将其定位为 Agnes Harness 的 9B「System 1」决策模型（配合 LLM「System 2」的双系统决策，支持 TTT 测试时训练）；可用于工作流路由、意图分类和业务规则辅助判断。
 
@@ -2974,7 +2978,7 @@ Agnes Sys1 1.0 是 Agnes AI 的**决策模型**。通过 `state` 描述当前状
 | 项目 | 说明 |
 |------|------|
 | 模型名称 | `agnes-sys1-1.0` |
-| 上线状态 | 即将上线 |
+| 上线状态 | 已正式上线（2026-11-21 核对） |
 | 请求方式 | POST |
 | 对外接口 | `https://apihub.agnes-ai.com/v1/systemone`（**专用决策接口，非 Chat Completions**） |
 | 输入 | 状态文本（`state`）与命名问题对象（`questions`） |
@@ -3081,13 +3085,13 @@ curl --request POST 'https://apihub.agnes-ai.com/v1/systemone' \
 | Omniscience 非幻觉率 | 73.7% | 12.5% |
 | 内部综合折算分 | 71.0 / 100 | 100% |
 
-> 上述数值来自团队内部评估汇总，原始表格均标注「预估」，不是 Artificial Analysis 官方测评或公开榜单排名；评测版本、样本量及方法尚未公开，最终上线表现可能不同。
+> 上述数值来自团队内部评估汇总，原始表格均标注「预估」，不是 Artificial Analysis 官方测评或公开榜单排名；评测版本、样本量及方法尚未公开，实际使用表现可能有所不同。模型已正式上线，但上述成绩仍为内部预估值，不代表独立验证结果。
 
 ### 接入检查清单
 
 - `model` 使用 `agnes-sys1-1.0`；使用 `state` 和 `questions`，不改成聊天模型的 `messages` 等字段
 - 请求问题名称与 `answers` 中的结果键保持对应；保留 `choice` / `noul` 原始类型名称
-- 记录用量时保留 `usage`；API 正式开放后确认账户访问权限，并结合正式服务说明验证数值判断规则
+- 记录用量时保留 `usage`；确认账户访问权限（以控制台为准），并结合当前服务说明验证数值判断规则
 
 ---
 
