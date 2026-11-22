@@ -1,6 +1,6 @@
 ---
 name: agnes-ai-support
-version: "1.3.9"
+version: "1.3.10"
 description: |
   Agnes AI API 接入支持与问题排查 Skill。帮助新用户完成 Agnes AI API 的接入配置，
   诊断和解决接入过程中遇到的认证、参数、响应、图像生成、视频生成等各类问题。
@@ -14,9 +14,9 @@ description: |
 
 # Agnes AI API 接入支持与问题排查
 
-> **Skill 版本：** v1.3.9
+> **Skill 版本：** v1.3.10
 > **适用工具：** OpenClaw / Claude Code / Claude Desktop / Hermes / Codex / WorkBuddy / Cherry Studio / Opencode / Kimi Work
-> **更新日期：** 2026-11-21
+> **更新日期：** 2026-11-22
 > **官方 Bug 反馈：** https://github.com/AgnesAI-Labs/Agnes-AI/issues
 > **官方进度看板：** https://github.com/users/AgnesAI-Labs/projects/1
 > **官方 Bug 反馈：** https://github.com/AgnesAI-Labs/Agnes-AI/issues
@@ -272,9 +272,19 @@ Agent：（参考 Skill 视频排查指南 → 检查 video_id vs task_id → �
 
 ---
 
-## 0. 重要公告（最新：2026-11-21）
+## 0. 重要公告（最新：2026-11-22）
 
-> 最新公告见下方「⏳ agnes-2.5-flash 下线公告与 agnes-sys1-1.0 正式上线」。以下为模型上线与历史公告，仅作留存。
+> 最新公告见下方「✅ agnes-3.0-pro 独立文档页改为已正式上线」。以下为模型上线与历史公告，仅作留存。
+
+### ✅ agnes-3.0-pro 独立文档页改为「已正式上线」（2026-11-22 巡检发现）
+
+> - 官方 `agnes-3.0-pro` 独立文档页（国际站 https://www.agnes-ai.com/zh-Hans/docs/agnes-30-pro 与国内站 https://www.agnes-ai.cn/zh-Hans/docs/agnes-30-pro）均已由此前「即将上线」改为 **「已正式上线」**，与定价页口径一致，可通过 Agnes AI API 接入；模型访问权限与速率限制以账户及 API Key 权限为准
+> - 此前（2026-11-20 / 11-21）记录的「定价页已上线、独立文档页仍写即将上线」口径不一致问题**现已消除**，两处均为「已正式上线」
+> - 官方独立文档页补齐规格：**上下文 1M Token、最大输出 256K Token**（此前本地记录为 65,536 输出，以官方文档当前 256K 为准），输入文本 + 图像 URL、输出文本（Reasoning），支持工具调用 / Thinking / 流式输出，三端点（`POST /v1/chat/completions`、`POST /v1/responses`、`POST /v1/messages`）
+> - 价格不变：输入缓存命中 `$0.01/M`、输入 `$0.10/M`、输出 `$0.30/M`（与 2.5-pro-beta / theta 同档，低于 2.5-pro）
+> - 接入提醒：`max_tokens` 给足，响应 `status: incomplete` 时提高后重试；Responses 输出从 `output[].content[].text`（`output_text`）读取，无顶层 `output_text`
+>
+> 注：本次为 2026-11-22 官方独立文档页（国际站 + 国内站交叉核对）状态与规格更新，三文件已更新并递增版本至 v1.3.10。
 
 ### ⏳ agnes-2.5-flash 下线公告与 agnes-sys1-1.0 正式上线（2026-11-21 巡检发现）
 
@@ -304,7 +314,7 @@ Agent：（参考 Skill 视频排查指南 → 检查 video_id vs task_id → �
 >
 > **② `agnes-3.0-pro` 状态更新：官方定价页标注「已正式上线」**
 > - 官方定价页（pricing）此前标注「即将上线」，本次巡检已改为 **`agnes-3.0-pro` 已正式上线**；刊例价维持 `$0.01 / M`（缓存命中）/ `$0.10 / M`（输入）/ `$0.30 / M`（输出），与 2.5-pro-beta / theta 同档
-> - ⚠️ **官方口径暂不一致**：独立文档页 https://www.agnes-ai.com/zh-Hans/docs/agnes-30-pro 仍写「即将上线，API 开放时间以正式上线公告为准」。是否已有账户可调用请以控制台与上线公告为准；三端点（Chat Completions / Responses / Messages）、文本+图像 URL 输入、Reasoning，接入准备可参照该文档
+> - 官方口径曾短暂不一致：独立文档页 https://www.agnes-ai.com/zh-Hans/docs/agnes-30-pro 当时仍写「即将上线」。✅ **该问题已于 2026-11-22 解决**：独立文档页（国际站 + 国内站）均已改为「已正式上线」，详见顶部最新公告；账户可用性仍以控制台为准；三端点（Chat Completions / Responses / Messages）、文本+图像 URL 输入、Reasoning
 >
 > 注：本次为 2026-11-20 官方定价页 + 新增独立文档页 + 官方新闻（量子位/腾讯网 11-20 报道 Agnes Harness / Sys1 1.0）巡检同步，已更新三文件（SKILL.md / README / API 文档）并递增版本至 v1.3.8。
 
@@ -445,7 +455,8 @@ Agent：（参考 Skill 视频排查指南 → 检查 video_id vs task_id → �
 > 官方定价来源：https://www.agnes-ai.com/zh-Hans/docs/pricing
 > 注意：免费/付费状态可能随官方活动调整，以官方定价页与账户账单为准。
 > 状态更新（2026-11-21）：`agnes-2.5-flash` 官方已公告 **2026-11-30 下线**，请迁移至 `agnes-3.0-flash`（下线前仍按现行免费/计费规则）；`agnes-sys1-1.0` 已由「即将上线」改为 **「已正式上线」**（专用接口 `POST /v1/systemone`，输入 $0.03/M、输出免费，账户权限以控制台为准）。
-> 状态更新（2026-11-20）：`agnes-3.0-pro` 在官方定价页已标注**「已正式上线」**（刊例价 $0.01/$0.10/$0.30，与 2.5-pro-beta / theta 同档，低于 2.5-pro 的 $0.045/$0.45/$0.90），但独立文档页仍写「即将上线」，实际可用性以控制台与上线公告为准。另新增决策模型 `agnes-sys1-1.0`（即将上线，专用接口 `POST /v1/systemone`，输入 $0.03/M、输出免费）。
+> 状态更新（2026-11-22）：`agnes-3.0-pro` 独立文档页（国际站 + 国内站）已由「即将上线」改为 **「已正式上线」**，与定价页口径一致（刊例价 $0.01/$0.10/$0.30，与 2.5-pro-beta / theta 同档；上下文 1M、最大输出 256K），账户可用性以控制台为准。
+> 状态更新（2026-11-20）：`agnes-3.0-pro` 在官方定价页已标注**「已正式上线」**（刊例价 $0.01/$0.10/$0.30），当时独立文档页仍写「即将上线」（该口径不一致已于 2026-11-22 消除）。另新增决策模型 `agnes-sys1-1.0`（已正式上线，专用接口 `POST /v1/systemone`，输入 $0.03/M、输出免费）。
 
 ### 视频接口重要更新
 
@@ -494,7 +505,7 @@ Agent：（参考 Skill 视频排查指南 → 检查 video_id vs task_id → �
 | **Agent 编程 / 工具调用 / 长任务（最新 · 免费）** | `agnes-3.0-flash`（免费） | `/v1/chat/completions`、`/v1/responses`、`/v1/messages` |
 | 通用对话 / 高并发 / 低成本（推荐） | `agnes-3.0-flash`（免费） | `/v1/chat/completions`、`/v1/responses`、`/v1/messages` |
 | 编程 / Agent / 推理 / 图片理解（存量，2026-11-30 下线） | `agnes-2.5-flash`（免费，请在下线前迁至 `agnes-3.0-flash`） | `/v1/chat/completions`（另支持 Responses / Messages） |
-| 新一代 Pro / 智能体·文档·科学编码（付费，定价页标注已上线） | `agnes-3.0-pro` | `/v1/chat/completions`、`/v1/responses`、`/v1/messages` |
+| 新一代 Pro / 智能体·文档·科学编码（付费，已正式上线） | `agnes-3.0-pro` | `/v1/chat/completions`、`/v1/responses`、`/v1/messages` |
 | 高级推理 / 复杂编码（付费，GA） | `agnes-2.5-pro` | `/v1/chat/completions` |
 | 高级推理 / 复杂编码（付费，Beta） | `agnes-2.5-pro-beta` | `/v1/chat/completions` |
 | 高级推理 / 复杂编码（付费，Alpha） | `agnes-2.5-pro-alpha` | `/v1/chat/completions` |
@@ -800,14 +811,15 @@ curl https://apihub.agnes-ai.com/v1/chat/completions \
 - 计费：`default` 用户按刊例价计费（不参与 Flash 系列的免费 / 体验价）；Agent Plan 用户按刊例价折算 Credits 并享文本 Pro 折扣（Lite 1.0 / Plus 0.95 / Pro 0.9 / Max 0.85）
 - 说明：2026-11-08 巡检发现官方定价页新增此模型；2026-11-10 巡检发现其刊例价由 pro 档（$0.045/$0.45/$0.90）下调至 beta 档（$0.01/$0.10/$0.30）；其 Context 窗口、Thinking / 工具调用等能力暂未在官方独立文档页说明，以官方后续文档为准
 
-### agnes-3.0-pro（新一代 Pro · 付费 · 定价页标注已上线，2026-11-20 更新）
+### agnes-3.0-pro（新一代 Pro · 付费 · 已正式上线，2026-11-22 状态更新）
 
 - 模型 ID：`agnes-3.0-pro`
 - 端点（三选一）：`POST /v1/chat/completions`（`Authorization: Bearer`）、`POST /v1/responses`（`input` 代替 `messages`）、`POST /v1/messages`（`x-api-key` + `anthropic-version: 2023-06-01`）
+- 上下文 **1M Token**、最大输出 **256K Token**（2026-11-22 官方独立文档页补齐；此前本 Skill 记 65,536 输出，以官方文档当前 256K 为准）
 - 输入：文本 + 图像 URL；输出：文本（Reasoning）；支持工具调用、Thinking 模式、流式输出
 - 价格：输入缓存命中 `$0.01/M`、输入 `$0.10/M`、输出 `$0.30/M`（与 2.5-pro-beta / theta 同档，低于 2.5-pro）
-- 状态：官方定价页已由「即将上线」改为「已正式上线」，但独立文档页仍写「即将上线」；API 开放与账户权限以控制台 / 上线公告为准。推理类任务建议 `max_tokens` 给足，响应 `status: incomplete` 时提高后重试；Responses 输出从 `output[].content[].text`（`output_text`）读取，无顶层 `output_text`
-- 官方文档：https://www.agnes-ai.com/zh-Hans/docs/agnes-30-pro
+- 状态：官方定价页（2026-11-20）与独立文档页（2026-11-22，国际站 + 国内站）均已标注 **「已正式上线」**，此前口径不一致已消除；账户可用性以控制台为准。推理类任务建议 `max_tokens` 给足，响应 `status: incomplete` 时提高后重试；Responses 输出从 `output[].content[].text`（`output_text`）读取，无顶层 `output_text`
+- 官方文档（国际站）：https://www.agnes-ai.com/zh-Hans/docs/agnes-30-pro ；官方文档（国内站）：https://www.agnes-ai.cn/zh-Hans/docs/agnes-30-pro
 
 ### agnes-sys1-1.0（决策模型 · 已正式上线 · 2026-11-21 状态更新）
 

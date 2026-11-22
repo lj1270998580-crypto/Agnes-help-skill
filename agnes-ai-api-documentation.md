@@ -1,8 +1,8 @@
 # Agnes AI API 完整文档
 
-> **文档版本：** v1.3.9
+> **文档版本：** v1.3.10
 > **来源：** https://agnes-ai.com/doc/overview 及其子页面
-> **整理时间：** 2026-11-21（2026-11-21 官方发布 agnes-2.5-flash 下线公告：2026-11-30 下线并迁移至 agnes-3.0-flash；agnes-sys1-1.0 已正式上线；2026-11-20 定价页新增决策模型 agnes-sys1-1.0 及独立文档页 agnes-sys1-10、agnes-3.0-pro 标注「已正式上线」；2026-10-29 订阅体系重构：新增 Agent Plan 主推订阅，免费/企业 RPM 改为动态调整；2026-11-08 定价页新增付费推理模型 agnes-2.5-pro-theta；2026-11-10 该模型刊例价由 pro 档 $0.045/$0.45/$0.90 下调至 beta 档 $0.01/$0.10/$0.30）
+> **整理时间：** 2026-11-22（2026-11-22 agnes-3.0-pro 独立文档页「即将上线」改为「已正式上线」、补齐 1M 上下文 / 256K 最大输出、与定价页口径一致；2026-11-21 官方发布 agnes-2.5-flash 下线公告：2026-11-30 下线并迁移至 agnes-3.0-flash；agnes-sys1-1.0 已正式上线；2026-11-20 定价页新增决策模型 agnes-sys1-1.0 及独立文档页 agnes-sys1-10、agnes-3.0-pro 定价页标注「已正式上线」；2026-10-29 订阅体系重构：新增 Agent Plan 主推订阅，免费/企业 RPM 改为动态调整；2026-11-08 定价页新增付费推理模型 agnes-2.5-pro-theta；2026-11-10 该模型刊例价由 pro 档 $0.045/$0.45/$0.90 下调至 beta 档 $0.01/$0.10/$0.30）
 > **GitHub 仓库：** https://github.com/lj1270998580-crypto/Agnes-help-skill
 > **本文档整合了 Agnes AI API 官方在线文档的全部内容，方便 Agent 快速获取信息**
 
@@ -35,7 +35,9 @@
 >
 > **🧠 2026-11-20 官方定价页新增决策模型 `agnes-sys1-1.0`：** 官方定价页新增「决策模型」分类，并上线独立文档页 https://www.agnes-ai.com/zh-Hans/docs/agnes-sys1-10 。`agnes-sys1-1.0`（**即将上线**，API 开放时间以上线公告为准）使用**专用决策接口 `POST /v1/systemone`**，以 `state` + `questions` 输入、在 `answers` 中返回结构化结果（题型 `choice` / `noul`），输入 Token `$0.03/M`、**输出免费**。官方定位为 Agnes Harness 的 9B「System 1」决策模型（双系统决策、TTT 测试时训练）。详见新增章节「Agnes Sys1 1.0 决策模型」。
 >
-> **🆕 2026-11-20 `agnes-3.0-pro` 状态更新：** 官方定价页将 `agnes-3.0-pro` 由「即将上线」改为**「已正式上线」**（刊例价 `$0.01/M` 缓存命中 / `$0.10/M` 输入 / `$0.30/M` 输出，与 2.5-pro-beta / theta 同档）；但独立文档页 https://www.agnes-ai.com/zh-Hans/docs/agnes-30-pro 仍写「即将上线」，实际可用性与账户权限以控制台 / 上线公告为准。
+> **✅ 2026-11-22 `agnes-3.0-pro` 独立文档页改为「已正式上线」：** 官方独立文档页（国际站 https://www.agnes-ai.com/zh-Hans/docs/agnes-30-pro 与国内站 https://www.agnes-ai.cn/zh-Hans/docs/agnes-30-pro）均已由「即将上线」改为 **「已正式上线」**，与定价页口径一致，此前（2026-11-20 / 11-21）记录的口径不一致已消除。官方文档补齐规格：上下文 **1M Token**、最大输出 **256K Token**，输入文本 + 图像 URL、输出文本（Reasoning），三端点 `POST /v1/chat/completions` / `POST /v1/responses` / `POST /v1/messages`，支持工具调用 / Thinking / 流式输出；价格不变（`$0.01/M` 缓存命中 / `$0.10/M` 输入 / `$0.30/M` 输出）。账户可用性与速率限制以控制台 / API Key 权限为准。
+>
+> **🆕 2026-11-20 `agnes-3.0-pro` 状态更新：** 官方定价页将 `agnes-3.0-pro` 由「即将上线」改为**「已正式上线」**（刊例价 `$0.01/M` 缓存命中 / `$0.10/M` 输入 / `$0.30/M` 输出，与 2.5-pro-beta / theta 同档）；当时独立文档页仍写「即将上线」（该口径不一致已于 2026-11-22 消除）。
 >
 > **🆕 2026-11-10 官方定价页 `agnes-2.5-pro-theta` 价格调整：** `agnes-2.5-pro-theta` 刊例价由此前与 `agnes-2.5-pro` 同档（输入缓存命中 `$0.045/M`、输入 `$0.45/M`、输出 `$0.90/M`）**下调至与 `agnes-2.5-pro-beta` / 即将上线的 `agnes-3.0-pro` 同档**：输入缓存命中 `$0.01/M`、输入 `$0.10/M`、输出 `$0.30/M`（输入成本降约 78%）。`default` 用户按刊例价计费（不参与 Flash 免费/体验价），Agent Plan 用户按刊例价折算 Credits 并享文本 Pro 折扣（Lite 1.0 / Plus 0.95 / Pro 0.9 / Max 0.85）。该模型暂无独立官方文档页，Context 窗口与 Thinking / 工具调用能力以官方后续文档为准。
 
@@ -2027,17 +2029,17 @@ curl -sS -X POST "https://apihub.agnes-ai.com/v1/videos" \
 
 > Pro 系列为**付费推理模型**，支持文本与图像 URL 输入、工具调用、Thinking 模式、流式输出。
 > 各模型均支持三种端点：Chat Completions `POST /v1/chat/completions`、Responses `POST /v1/responses`、Anthropic 兼容 Messages `POST /v1/messages`。
-> 2.5 Pro 系列上下文窗口 **1M tokens**，最大输出 **65536 tokens**。
+> 2.5 Pro 系列上下文窗口 **1M tokens**，最大输出 **65536 tokens**；`agnes-3.0-pro` 官方文档（2026-11-22）标注上下文 **1M tokens**、最大输出 **256K tokens**。
 
 | 模型 | 状态 | 输入 Token（未命中缓存） | 输出 Token | Cache hit | 权重 |
 |------|------|------------------------|-----------|-----------|------|
-| `agnes-3.0-pro` | 定价页标注「已正式上线」（2026-11-20；文档页仍写即将上线） | $0.10 / M | $0.30 / M | $0.01 / M | Proprietary |
+| `agnes-3.0-pro` | **已正式上线**（定价页 2026-11-20；独立文档页 2026-11-22 改为已上线，口径一致；1M 上下文 / 256K 输出） | $0.10 / M | $0.30 / M | $0.01 / M | Proprietary |
 | `agnes-2.5-pro` | 正式版（GA，2026-08-01） | $0.45 / M | $0.90 / M | $0.045 / M | Proprietary |
 | `agnes-2.5-pro-beta` | Beta，已上线 | $0.10 / M | $0.30 / M | $0.01 / M | Proprietary |
 | `agnes-2.5-pro-alpha` | Alpha（2026-07-24） | $0.45 / M | $0.90 / M | $0.045 / M | Apache 2.0 开源 |
 | `agnes-2.5-pro-theta` | 付费推理（2026-11-08 定价页新增） | $0.10 / M | $0.30 / M | $0.01 / M | Proprietary |
 
-- `agnes-3.0-pro` 为新一代 Pro 模型（智能体工作 / 专业文档分析 / 科学编码 / 长上下文推理），定价页已标注「已正式上线」但独立文档页仍写「即将上线」，实际可用性以控制台 / 上线公告为准；官方文档 https://www.agnes-ai.com/zh-Hans/docs/agnes-30-pro
+- `agnes-3.0-pro` 为新一代 Pro 模型（智能体工作 / 专业文档分析 / 科学编码 / 长上下文推理），定价页（2026-11-20）与独立文档页（2026-11-22，国际站 + 国内站）均已标注「已正式上线」，此前口径不一致已消除；上下文 1M Token、最大输出 256K Token，账户可用性以控制台为准；官方文档（国际站）https://www.agnes-ai.com/zh-Hans/docs/agnes-30-pro ，（国内站）https://www.agnes-ai.cn/zh-Hans/docs/agnes-30-pro
 - `agnes-2.5-pro` 是 Alpha 打榜模型的商业化稳定版本，官方权重为闭源；Alpha 权重已在 Hugging Face 以 Apache 2.0 开源
 - 各模型均为付费模型，调用需确认账户已开通对应模型访问权限
 - 输入缓存命中单价为普通输入 Token 单价的 10%
