@@ -1,6 +1,6 @@
 ---
 name: agnes-ai-support
-version: "1.3.10"
+version: "1.3.11"
 description: |
   Agnes AI API 接入支持与问题排查 Skill。帮助新用户完成 Agnes AI API 的接入配置，
   诊断和解决接入过程中遇到的认证、参数、响应、图像生成、视频生成等各类问题。
@@ -14,9 +14,9 @@ description: |
 
 # Agnes AI API 接入支持与问题排查
 
-> **Skill 版本：** v1.3.10
+> **Skill 版本：** v1.3.11
 > **适用工具：** OpenClaw / Claude Code / Claude Desktop / Hermes / Codex / WorkBuddy / Cherry Studio / Opencode / Kimi Work
-> **更新日期：** 2026-11-22
+> **更新日期：** 2026-11-23
 > **官方 Bug 反馈：** https://github.com/AgnesAI-Labs/Agnes-AI/issues
 > **官方进度看板：** https://github.com/users/AgnesAI-Labs/projects/1
 > **官方 Bug 反馈：** https://github.com/AgnesAI-Labs/Agnes-AI/issues
@@ -272,9 +272,17 @@ Agent：（参考 Skill 视频排查指南 → 检查 video_id vs task_id → �
 
 ---
 
-## 0. 重要公告（最新：2026-11-22）
+## 0. 重要公告（最新：2026-11-23）
 
-> 最新公告见下方「✅ agnes-3.0-pro 独立文档页改为已正式上线」。以下为模型上线与历史公告，仅作留存。
+> 最新公告见下方「📢 官方新模型上线及旧模型下线通知」。以下为模型上线与历史公告，仅作留存。
+
+### 📢 官方新模型上线及旧模型下线通知（2026-11-23 官方通知汇总）
+
+> 官方发布《Agnes 新模型上线及旧模型下线通知》，以正式通知形式统一确认此前已巡检到的三件事，并明确付费口径：
+> - **新模型正式上线（两款均为付费模型）**：`agnes-3.0-pro`（Agnes 3.0 Pro 文本模型）与 `agnes-sys1-1.0`（Agnes Sys1 1.0 决策模型）均已正式上线 API 平台，**两款均为付费模型**。3.0 Pro 刊例价缓存 `$0.01/M` / 输入 `$0.10/M` / 输出 `$0.30/M`；Sys1 1.0 输入 `$0.03/M`、输出免费（专用决策接口 `POST /v1/systemone`）
+> - **旧模型下线**：`agnes-2.5-flash` 将于 **2026 年 11 月 30 日**在**国内、国际站**正式下线，请提前将应用与 API 调用迁移至 `agnes-3.0-flash`（免费、512K 上下文、65,536 最大输出、三端点 + Thinking），完成配置调整与测试
+> - 官方文档已同步更新（国际站 / 国内站 overview）：https://agnes-ai.com/zh-Hans/docs/overview 、https://www.agnes-ai.cn/zh-Hans/docs/overview
+> - 说明：本通知中的模型状态、价格与下线日期均已在 v1.3.7–v1.3.10 逐条同步；本次仅以官方正式通知口径汇总固化为一条公告，并明确「3.0 Pro / Sys1 1.0 两款均为付费模型」，无新增模型、改价或日期变更。
 
 ### ✅ agnes-3.0-pro 独立文档页改为「已正式上线」（2026-11-22 巡检发现）
 
@@ -823,7 +831,7 @@ curl https://apihub.agnes-ai.com/v1/chat/completions \
 
 ### agnes-sys1-1.0（决策模型 · 已正式上线 · 2026-11-21 状态更新）
 
-- 模型 ID：`agnes-sys1-1.0`；**专用决策接口 `POST /v1/systemone`**（不是 Chat Completions），Base URL `https://apihub.agnes-ai.com/v1`
+- 模型 ID：`agnes-sys1-1.0`（**付费模型**，官方 2026-11-23 通知明确）；**专用决策接口 `POST /v1/systemone`**（不是 Chat Completions），Base URL `https://apihub.agnes-ai.com/v1`
 - 输入：`state`（当前状态文本）+ `questions`（按名称组织的问题对象，问题类型如 `choice` / `noul`）；输出：`answers` 中的结构化决策结果（不是 `choices`、`message.content`）
 - 响应示例：`answers.route.choice`（选中项）、`answers.route.probabilities`、`answers.route.confidence`（独立字段，勿用最大概率替代）、`answers.urgent.noul`；`usage.input_tokens` / `output_tokens`
 - 价格：输入 Token `$0.03/M`，输出免费；`noul` 为官方定义的类型名，保留原样，不要自行推定取值范围 / 设为已校准概率 / 设固定业务阈值

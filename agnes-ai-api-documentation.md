@@ -1,8 +1,8 @@
 # Agnes AI API 完整文档
 
-> **文档版本：** v1.3.10
+> **文档版本：** v1.3.11
 > **来源：** https://agnes-ai.com/doc/overview 及其子页面
-> **整理时间：** 2026-11-22（2026-11-22 agnes-3.0-pro 独立文档页「即将上线」改为「已正式上线」、补齐 1M 上下文 / 256K 最大输出、与定价页口径一致；2026-11-21 官方发布 agnes-2.5-flash 下线公告：2026-11-30 下线并迁移至 agnes-3.0-flash；agnes-sys1-1.0 已正式上线；2026-11-20 定价页新增决策模型 agnes-sys1-1.0 及独立文档页 agnes-sys1-10、agnes-3.0-pro 定价页标注「已正式上线」；2026-10-29 订阅体系重构：新增 Agent Plan 主推订阅，免费/企业 RPM 改为动态调整；2026-11-08 定价页新增付费推理模型 agnes-2.5-pro-theta；2026-11-10 该模型刊例价由 pro 档 $0.045/$0.45/$0.90 下调至 beta 档 $0.01/$0.10/$0.30）
+> **整理时间：** 2026-11-23（2026-11-23 官方发布《Agnes 新模型上线及旧模型下线通知》，正式确认 agnes-3.0-pro 文本模型与 agnes-sys1-1.0 决策模型已上线且**两款均为付费模型**、agnes-2.5-flash 于 2026-11-30 在国内/国际站下线并迁移 agnes-3.0-flash；2026-11-22 agnes-3.0-pro 独立文档页「即将上线」改为「已正式上线」、补齐 1M 上下文 / 256K 最大输出、与定价页口径一致；2026-11-21 官方发布 agnes-2.5-flash 下线公告：2026-11-30 下线并迁移至 agnes-3.0-flash；agnes-sys1-1.0 已正式上线；2026-11-20 定价页新增决策模型 agnes-sys1-1.0 及独立文档页 agnes-sys1-10、agnes-3.0-pro 定价页标注「已正式上线」；2026-10-29 订阅体系重构：新增 Agent Plan 主推订阅，免费/企业 RPM 改为动态调整；2026-11-08 定价页新增付费推理模型 agnes-2.5-pro-theta；2026-11-10 该模型刊例价由 pro 档 $0.045/$0.45/$0.90 下调至 beta 档 $0.01/$0.10/$0.30）
 > **GitHub 仓库：** https://github.com/lj1270998580-crypto/Agnes-help-skill
 > **本文档整合了 Agnes AI API 官方在线文档的全部内容，方便 Agent 快速获取信息**
 
@@ -34,6 +34,8 @@
 > **🧠 2026-11-21 `agnes-sys1-1.0` 已正式上线：** 官方定价页与独立文档页 https://www.agnes-ai.com/zh-Hans/docs/agnes-sys1-10 均已由「即将上线」改为**「已正式上线」**，可通过 Agnes AI API 接入（账户权限与速率限制以控制台为准）。接口 `POST /v1/systemone`、输入 `$0.03/M`、输出免费均不变；官方新增内部自测估算成绩（原始表格均标注「预估」，非独立验证、非 Artificial Analysis 官方成绩，方法未公开）：HLE-MultiChoice 39.0%、When2Call 95.2%、WildGuardTest 93.6%、Omniscience 准确率 38.8% / 非幻觉率 73.7%、内部综合折算 71.0/100。
 >
 > **🧠 2026-11-20 官方定价页新增决策模型 `agnes-sys1-1.0`：** 官方定价页新增「决策模型」分类，并上线独立文档页 https://www.agnes-ai.com/zh-Hans/docs/agnes-sys1-10 。`agnes-sys1-1.0`（**即将上线**，API 开放时间以上线公告为准）使用**专用决策接口 `POST /v1/systemone`**，以 `state` + `questions` 输入、在 `answers` 中返回结构化结果（题型 `choice` / `noul`），输入 Token `$0.03/M`、**输出免费**。官方定位为 Agnes Harness 的 9B「System 1」决策模型（双系统决策、TTT 测试时训练）。详见新增章节「Agnes Sys1 1.0 决策模型」。
+>
+> **📢 2026-11-23 官方《Agnes 新模型上线及旧模型下线通知》：** 官方以正式通知形式统一确认——`agnes-3.0-pro`（Agnes 3.0 Pro 文本模型）与 `agnes-sys1-1.0`（Agnes Sys1 1.0 决策模型）**已正式上线 API 平台，两款均为付费模型**（3.0 Pro 缓存 `$0.01/M` / 输入 `$0.10/M` / 输出 `$0.30/M`；Sys1 1.0 输入 `$0.03/M`、输出免费、专用接口 `POST /v1/systemone`）；`agnes-2.5-flash` 将于 **2026-11-30** 在**国内、国际站**正式下线，请迁移至 `agnes-3.0-flash` 并完成配置调整与测试。官方文档已同步（国际站 / 国内站 overview：https://agnes-ai.com/zh-Hans/docs/overview 、https://www.agnes-ai.cn/zh-Hans/docs/overview ）。本通知中的状态、价格与下线日期均已在 v1.3.7–v1.3.10 逐条同步，本次仅按官方正式通知口径汇总固化，并明确「3.0 Pro / Sys1 1.0 两款均为付费模型」，无新增模型、改价或日期变更。
 >
 > **✅ 2026-11-22 `agnes-3.0-pro` 独立文档页改为「已正式上线」：** 官方独立文档页（国际站 https://www.agnes-ai.com/zh-Hans/docs/agnes-30-pro 与国内站 https://www.agnes-ai.cn/zh-Hans/docs/agnes-30-pro）均已由「即将上线」改为 **「已正式上线」**，与定价页口径一致，此前（2026-11-20 / 11-21）记录的口径不一致已消除。官方文档补齐规格：上下文 **1M Token**、最大输出 **256K Token**，输入文本 + 图像 URL、输出文本（Reasoning），三端点 `POST /v1/chat/completions` / `POST /v1/responses` / `POST /v1/messages`，支持工具调用 / Thinking / 流式输出；价格不变（`$0.01/M` 缓存命中 / `$0.10/M` 输入 / `$0.30/M` 输出）。账户可用性与速率限制以控制台 / API Key 权限为准。
 >
