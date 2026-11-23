@@ -1,6 +1,6 @@
 # Agnes AI API 完整文档
 
-> **文档版本：** v1.3.11
+> **文档版本：** v1.3.12
 > **来源：** https://agnes-ai.com/doc/overview 及其子页面
 > **整理时间：** 2026-11-23（2026-11-23 官方发布《Agnes 新模型上线及旧模型下线通知》，正式确认 agnes-3.0-pro 文本模型与 agnes-sys1-1.0 决策模型已上线且**两款均为付费模型**、agnes-2.5-flash 于 2026-11-30 在国内/国际站下线并迁移 agnes-3.0-flash；2026-11-22 agnes-3.0-pro 独立文档页「即将上线」改为「已正式上线」、补齐 1M 上下文 / 256K 最大输出、与定价页口径一致；2026-11-21 官方发布 agnes-2.5-flash 下线公告：2026-11-30 下线并迁移至 agnes-3.0-flash；agnes-sys1-1.0 已正式上线；2026-11-20 定价页新增决策模型 agnes-sys1-1.0 及独立文档页 agnes-sys1-10、agnes-3.0-pro 定价页标注「已正式上线」；2026-10-29 订阅体系重构：新增 Agent Plan 主推订阅，免费/企业 RPM 改为动态调整；2026-11-08 定价页新增付费推理模型 agnes-2.5-pro-theta；2026-11-10 该模型刊例价由 pro 档 $0.045/$0.45/$0.90 下调至 beta 档 $0.01/$0.10/$0.30）
 > **GitHub 仓库：** https://github.com/lj1270998580-crypto/Agnes-help-skill
@@ -131,6 +131,8 @@ API密钥
 ## 五、接口兼容性
 ## 六、基本网址
 https://apihub.agnes-ai.com/v1
+
+> **🌐 国内站 Base URL（2026-11-23 补充）：** 国际站与国内站账号/Key 不互通。国际站账号用 `https://apihub.agnes-ai.com/v1`（国内网络访问困难时可用镜像 `https://apihub.agnes-ai.cn/v1`）；**国内站（`platform.agnes-ai.cn` 账号）官方 Base URL 为 `https://api.agnes-ai.cn/v1`**，见国内站 overview（https://www.agnes-ai.cn/zh-Hans/docs/overview）与 agnes-30-pro 文档（https://www.agnes-ai.cn/zh-Hans/docs/agnes-30-pro）。域名须与账号站点匹配，混用报「无效的令牌」。
 ## 七、身份认证
 Authorization: Bearer YOUR_API_KEY
 / /

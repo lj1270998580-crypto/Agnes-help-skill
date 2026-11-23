@@ -2,7 +2,7 @@
 
 > Agnes AI，让世界级 AI 属于每一个人。
 >
-> **当前 Skill 版本：v1.3.11**（2026-11-23 更新）
+> **当前 Skill 版本：v1.3.12**（2026-11-23 更新）
 
 本仓库是 Agnes AI API 的**非官方帮助资源集合**，包含完整 API 文档与通用支持 Skill，帮助开发者快速接入 Agnes AI 全模态 API（文本、图像、视频）。
 
@@ -123,8 +123,9 @@
 ## 🔑 接入要点速记
 
 ```
-Base URL（国际）: https://apihub.agnes-ai.com/v1
-Base URL（国内）: https://apihub.agnes-ai.cn/v1
+Base URL（国际站账号）: https://apihub.agnes-ai.com/v1
+Base URL（国内站账号）: https://api.agnes-ai.cn/v1
+Base URL（国际站账号·国内网络镜像）: https://apihub.agnes-ai.cn/v1
 Headers:
   Authorization: Bearer YOUR_API_KEY
   Content-Type: application/json
@@ -196,6 +197,7 @@ Headers:
 
 | 日期 | 更新内容 |
 |------|----------|
+| 2026-11-23 | **修复 GitHub issues #2 与 #4**：① **#2 frontmatter 非法 YAML**——删除 SKILL.md 第 9 行 `>  触发词` 行首 `>` 并补齐 2 空格缩进，PyYAML `safe_load` 实测通过、description 恢复完整 431 字符（此前严格解析器报 ScannerError、触发词段丢失）；② **#4 国内站 Endpoint 未说明**——按官方国内站 overview / agnes-30-pro 补上原生 Base URL `https://api.agnes-ai.cn/v1`，明确与 `apihub.agnes-ai.cn`（国际站国内网络镜像）的区别及账号/Key 不互通；同步 SKILL.md 域名段落/接入速记/排障/检查清单、README 速记、API 文档基本网址；四处版本更新至 **v1.3.12** |
 | 2026-11-23 | **按官方正式通知汇总固化，明确两款新模型均为付费模型**：官方发布《Agnes 新模型上线及旧模型下线通知》——`agnes-3.0-pro` 文本模型与 `agnes-sys1-1.0` 决策模型已正式上线 API 平台且**两款均为付费模型**，`agnes-2.5-flash` 将于 2026-11-30 在国内、国际站下线并迁移 `agnes-3.0-flash`；状态/价格/日期均已在 v1.3.7–v1.3.10 逐条同步，本次仅按官方正式通知口径汇总并补充「付费模型」定性，无新增模型/改价/日期变更；更新 SKILL.md 公告区与 Sys1 付费定性、README 公告区、API 文档顶部通知；四处版本更新至 **v1.3.11** |
 | 2026-11-22 | **同步官方 agnes-3.0-pro 独立文档页「已正式上线」与规格补齐**：官方独立文档页（国际站 + 国内站）由「即将上线」改为 **「已正式上线」**，与定价页口径一致，此前「定价页已上线、文档页仍写即将上线」的不一致已消除；官方文档补齐 **1M 上下文 / 256K 最大输出**（本地此前记 65,536 输出，以官方文档当前 256K 为准），价格不变（$0.01/$0.10/$0.30）；更新 SKILL.md 公告区/免费模型一览状态/模型选择表/第 4 章 3.0-pro 小节、README 公告区、API 文档顶部说明与第九章 2.5 Pro 系列表；四处版本更新至 **v1.3.10** |
 | 2026-11-21 | **同步官方 agnes-2.5-flash 下线公告与 agnes-sys1-1.0 正式上线**：`agnes-2.5-flash` 将于 **2026-11-30** 下线，官方建议迁移至 `agnes-3.0-flash`；更新 SKILL.md 公告区/免费模型一览/模型选择表/第 4 章模型小节/最佳实践与 Codex 模型表，README 公告区，API 文档顶部状态说明与 Sys1 章节；`agnes-sys1-1.0` 定价页与独立文档页均由「即将上线」改为「已正式上线」（接口 `POST /v1/systemone`、输入 $0.03/M、输出免费不变），并补录官方内部自测估算成绩（标注预估、非独立验证）；Skill 版本更新至 **v1.3.9** |

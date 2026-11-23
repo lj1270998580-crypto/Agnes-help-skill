@@ -1,12 +1,12 @@
 ---
 name: agnes-ai-support
-version: "1.3.11"
+version: "1.3.12"
 description: |
   Agnes AI API 接入支持与问题排查 Skill。帮助新用户完成 Agnes AI API 的接入配置，
   诊断和解决接入过程中遇到的认证、参数、响应、图像生成、视频生成等各类问题。
   涵盖 Thinking 模式开启、视频长度调节、流式输出、工具调用等高级功能指导。
   兼容 OpenClaw、Claude Code、Hermes、Codex 等工具链。
->  触发词：Agnes AI、agnes、接入、API Key、401、400、排查、错误、视频生成、图像生成、
+  触发词：Agnes AI、agnes、接入、API Key、401、400、排查、错误、视频生成、图像生成、
   thinking、stream、tool calling、模型选择、Base URL、响应格式、timeout、超时、轮询、
   FAQ、问题排查、调试、免费调用、RPM、video_id、task_id、Prompt 模板、提示词、
   生图、生视频、图生图、文生图、图生视频、文生视频、灰度自检、1M 上下文、4K 图片、4K 图、4K、灰度、自检、反馈、Bug、issue、问题反馈、功能建议。
@@ -14,7 +14,7 @@ description: |
 
 # Agnes AI API 接入支持与问题排查
 
-> **Skill 版本：** v1.3.11
+> **Skill 版本：** v1.3.12
 > **适用工具：** OpenClaw / Claude Code / Claude Desktop / Hermes / Codex / WorkBuddy / Cherry Studio / Opencode / Kimi Work
 > **更新日期：** 2026-11-23
 > **官方 Bug 反馈：** https://github.com/AgnesAI-Labs/Agnes-AI/issues
@@ -484,17 +484,20 @@ Agent：（参考 Skill 视频排查指南 → 检查 video_id vs task_id → �
 >
 > 1.5 Flash 保持 512K/64K 不变。
 
-### 🌐 国内网络域名切换通知（2026-07-28 更新）
+### 🌐 国内站与国际站 Base URL 说明（2026-11-23 补充国内站原生域名）
 
-> **针对部分国内网络无法正常访问 Agnes API 的情况，请将 API Endpoint 切换为：**
+> Agnes AI 有**国际站**与**国内站**两套站点，账号与 API Key **不互通、不可混用**（混用报「无效的令牌」）。请按你的账号所属站点选择 Base URL：
 >
-> - **原地址（国际）：** `https://apihub.agnes-ai.com/v1`
-> - **新地址（国内）：** `https://apihub.agnes-ai.cn/v1`（将域名中的 `.com` 替换为 `.cn`）
+> | 站点 | Base URL | 官方文档 |
+> |------|----------|----------|
+> | 国际站 | `https://apihub.agnes-ai.com/v1` | https://agnes-ai.com/zh-Hans/docs/overview |
+> | **国内站（原生）** | **`https://api.agnes-ai.cn/v1`** | https://www.agnes-ai.cn/zh-Hans/docs/overview |
 >
-> **调整说明：**
-> - 请将应用配置、环境变量或项目代码中的 `apihub.agnes-ai.com` 统一替换为 `apihub.agnes-ai.cn`
-> - 本次调整仅涉及接口域名，API Key、模型名称、请求参数及调用方式均无需修改
-> - 修改完成后，请重启应用或服务，再重新发起请求
+> - **国内站（`platform.agnes-ai.cn` 账号）**：官方国内站 overview 与模型文档当前使用的 Base URL 是 **`https://api.agnes-ai.cn/v1`**，即把 `apihub.agnes-ai.com` 换成 `api.agnes-ai.cn`（注意域名主体是 `api`，不是 `apihub`）。详见 https://www.agnes-ai.cn/zh-Hans/docs/agnes-30-pro 。国内站账号须完成实名认证，否则 RPM 受限。
+> - **国际站（`platform.agnes-ai.com` 账号）**：Base URL 为 `https://apihub.agnes-ai.com/v1`。若部分国内网络无法正常访问该域名，2026-07-28 通知可将域名主体 `apihub.agnes-ai.com` 替换为 **`https://apihub.agnes-ai.cn/v1`**（国际站的 .cn 网络镜像，**仅国际站账号可用**，国内站账号请用上表的 `api.agnes-ai.cn`）。
+> - 切换仅涉及接口域名，API Key、模型名称、请求参数及调用方式均无需修改；修改后请重启应用再发起请求。
+>
+> 注：issue #4 指出的「国内站 Endpoint 未说明」即指官方国内站原生域名 `api.agnes-ai.cn/v1`，此前 Skill 仅列了国际站的 `.com` 与 `.cn` 镜像，现已补齐并区分。
 
 ---
 
@@ -530,8 +533,9 @@ Agent：（参考 Skill 视频排查指南 → 检查 video_id vs task_id → �
 ### Step 3 — 配置请求
 
 ```
-Base URL（国际）: https://apihub.agnes-ai.com/v1
-Base URL（国内）: https://apihub.agnes-ai.cn/v1
+Base URL（国际站账号）: https://apihub.agnes-ai.com/v1
+Base URL（国内站账号）: https://api.agnes-ai.cn/v1
+Base URL（国际站账号·国内网络镜像）: https://apihub.agnes-ai.cn/v1
 Headers:
   Authorization: Bearer YOUR_API_KEY
   Content-Type: application/json
@@ -601,7 +605,7 @@ curl https://apihub.agnes-ai.com/v1/chat/completions \
 - Chat：超时建议 30s
 - 图像：超时建议 60-360s（数秒到几十秒）
 - 视频：异步任务，创建后需轮询查询，间隔 5s
-- 检查网络能否访问 `apihub.agnes-ai.com`（国际）或 `apihub.agnes-ai.cn`（国内）
+- 检查网络能否访问 `apihub.agnes-ai.com`（国际站）、`api.agnes-ai.cn`（国内站）或 `apihub.agnes-ai.cn`（国际站国内网络镜像）；**注意账号与域名须匹配**，国内站账号错用国际站域名会报「无效的令牌」
 - 如在国内网络无法访问 .com 域名，请切换至 .cn 域名
 - 检查防火墙/代理是否拦截
 
@@ -940,7 +944,7 @@ curl https://apihub.agnes-ai.com/v1/chat/completions \
 
 ### 通用
 - [ ] 已注册账户并创建 API Key（https://platform.agnes-ai.com）
-- [ ] Base URL 正确（国际：`https://apihub.agnes-ai.com/v1`，国内：`https://apihub.agnes-ai.cn/v1`）
+- [ ] Base URL 正确（国际站账号：`https://apihub.agnes-ai.com/v1`；国内站账号：`https://api.agnes-ai.cn/v1`；国际站国内网络镜像：`https://apihub.agnes-ai.cn/v1`）
 - [ ] 请求头包含 Authorization 和 Content-Type
 - [ ] API Key 未暴露在公开代码中
 - [ ] 已实现错误处理和重试逻辑
