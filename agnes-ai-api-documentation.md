@@ -1,8 +1,8 @@
 # Agnes AI API 完整文档
 
-> **文档版本：** v1.3.12
+> **文档版本：** v1.3.13
 > **来源：** https://agnes-ai.com/doc/overview 及其子页面
-> **整理时间：** 2026-11-23（2026-11-23 官方发布《Agnes 新模型上线及旧模型下线通知》，正式确认 agnes-3.0-pro 文本模型与 agnes-sys1-1.0 决策模型已上线且**两款均为付费模型**、agnes-2.5-flash 于 2026-11-30 在国内/国际站下线并迁移 agnes-3.0-flash；2026-11-22 agnes-3.0-pro 独立文档页「即将上线」改为「已正式上线」、补齐 1M 上下文 / 256K 最大输出、与定价页口径一致；2026-11-21 官方发布 agnes-2.5-flash 下线公告：2026-11-30 下线并迁移至 agnes-3.0-flash；agnes-sys1-1.0 已正式上线；2026-11-20 定价页新增决策模型 agnes-sys1-1.0 及独立文档页 agnes-sys1-10、agnes-3.0-pro 定价页标注「已正式上线」；2026-10-29 订阅体系重构：新增 Agent Plan 主推订阅，免费/企业 RPM 改为动态调整；2026-11-08 定价页新增付费推理模型 agnes-2.5-pro-theta；2026-11-10 该模型刊例价由 pro 档 $0.045/$0.45/$0.90 下调至 beta 档 $0.01/$0.10/$0.30）
+> **整理时间：** 2026-11-26（2026-11-26 官方国际站 + 国内站 agnes-30-flash / agnes-30-pro 独立文档页均补录视频理解输入模态：Chat Completions 的 `messages[].content` 支持 `video_url` 内容块 / MP4 Base64 Data URI，价格与模型集合不变；2026-11-23 官方发布《Agnes 新模型上线及旧模型下线通知》，正式确认 agnes-3.0-pro 文本模型与 agnes-sys1-1.0 决策模型已上线且**两款均为付费模型**、agnes-2.5-flash 于 2026-11-30 在国内/国际站下线并迁移 agnes-3.0-flash；2026-11-22 agnes-3.0-pro 独立文档页「即将上线」改为「已正式上线」、补齐 1M 上下文 / 256K 最大输出、与定价页口径一致；2026-11-21 官方发布 agnes-2.5-flash 下线公告：2026-11-30 下线并迁移至 agnes-3.0-flash；agnes-sys1-1.0 已正式上线；2026-11-20 定价页新增决策模型 agnes-sys1-1.0 及独立文档页 agnes-sys1-10、agnes-3.0-pro 定价页标注「已正式上线」；2026-10-29 订阅体系重构：新增 Agent Plan 主推订阅，免费/企业 RPM 改为动态调整；2026-11-08 定价页新增付费推理模型 agnes-2.5-pro-theta；2026-11-10 该模型刊例价由 pro 档 $0.045/$0.45/$0.90 下调至 beta 档 $0.01/$0.10/$0.30）
 > **GitHub 仓库：** https://github.com/lj1270998580-crypto/Agnes-help-skill
 > **本文档整合了 Agnes AI API 官方在线文档的全部内容，方便 Agent 快速获取信息**
 
@@ -29,6 +29,8 @@
 14. [Agnes Image 2.5 Flash](#十三agnes-image-25-flash)（2026-09 新增）
 15. [Agnes Sys1 1.0 决策模型](#agnes-sys1-10-决策模型)（2026-11 新增，已正式上线）
 
+> **🎞️ 2026-11-26 官方补录 Agnes 3.0 系列视频理解（video_url 输入）：** 国际站与国内站的 `agnes-3.0-flash` / `agnes-3.0-pro` 独立文档页（https://www.agnes-ai.com/zh-Hans/docs/agnes-30-flash 、https://www.agnes-ai.com/zh-Hans/docs/agnes-30-pro 、https://www.agnes-ai.cn/zh-Hans/docs/agnes-30-flash 、https://www.agnes-ai.cn/zh-Hans/docs/agnes-30-pro ）均已将输入模态写为「文本、图像 URL、视频画面（Chat Completions）」，并新增「视频理解」小节。调用方式：`POST /v1/chat/completions` 的 `messages[].content` 中传 `{"type": "video_url", "video_url": {"url": "data:video/mp4;base64,<BASE64>"}}`，官方示例将本地 MP4 编码为 Data URI，可识别短视频画面先后顺序（黄 → 蓝 → 红）。官方说明「该输入格式已在国际站完成验证，模型访问权限以账户及 API Key 权限为准」；国内站文档示例 Base URL 为 `https://api.agnes-ai.cn/v1`。规格与价格不变：3.0 Flash 512K / 65,536 输出、刊例价 `$0.005/$0.05/$0.15` 且 default 用户现价全 `$0`；3.0 Pro 1M / 256K 输出、刊例价 `$0.01/$0.10/$0.30`（付费）。非新增模型、非改价，视频理解输入与 `POST /v1/videos` 视频生成是不同能力。
+>
 > **⏳ 2026-11-21 官方发布 `agnes-2.5-flash` 下线公告：** 模型文档 https://www.agnes-ai.com/zh-Hans/docs/agnes-25-flash 与定价页 https://www.agnes-ai.com/zh-Hans/docs/pricing 均已标注：`agnes-2.5-flash` 将于 **2026 年 11 月 30 日**正式下线，请提前迁移至 `agnes-3.0-flash`（https://www.agnes-ai.com/zh-Hans/docs/agnes-30-flash；default 用户免费、512K 上下文、65,536 最大输出、三端点 + Thinking）。下线前的可用性、RPM 与计费以账户 / API Key 权限为准；`agnes-2.0-flash` 已废弃，不作为兼容回退。Token Plan 文本配额对应模型亦为 `agnes-3.0-flash`。
 >
 > **🧠 2026-11-21 `agnes-sys1-1.0` 已正式上线：** 官方定价页与独立文档页 https://www.agnes-ai.com/zh-Hans/docs/agnes-sys1-10 均已由「即将上线」改为**「已正式上线」**，可通过 Agnes AI API 接入（账户权限与速率限制以控制台为准）。接口 `POST /v1/systemone`、输入 `$0.03/M`、输出免费均不变；官方新增内部自测估算成绩（原始表格均标注「预估」，非独立验证、非 Artificial Analysis 官方成绩，方法未公开）：HLE-MultiChoice 39.0%、When2Call 95.2%、WildGuardTest 93.6%、Omniscience 准确率 38.8% / 非幻觉率 73.7%、内部综合折算 71.0/100。
@@ -1726,10 +1728,31 @@ num_frames  必须满足 8n + 1 ，例如 81 、121 、161 、241  或 441 ；
 |----|-----|
 | Context window | 512K |
 | Maximum output | 65,536 Token |
-| 输入模态 | 文本 + 图像 URL |
+| 输入模态 | 文本 + 图像 URL + **视频画面**（Chat Completions 的 `video_url`，2026-11-26 官方补录） |
 | 输出模态 | 文本 |
 | 工具调用 | 支持（`tool_calls`） |
 | Thinking 模式 | 支持（2.x 系列不支持） |
+
+### 视频理解（2026-11-26 官方补录）
+
+`agnes-3.0-flash` 支持通过 Chat Completions 分析短视频画面的变化与先后顺序。在 `messages[].content` 中传 `video_url` 内容块，`video_url.url` 使用 MP4 的 Base64 Data URI；官方示例（国际站已验证）可识别黄 → 蓝 → 红的画面变化。
+
+```json
+{
+  "model": "agnes-3.0-flash",
+  "messages": [{
+    "role": "user",
+    "content": [
+      {"type": "text", "text": "请按时间顺序描述视频中的主要画面变化。"},
+      {"type": "video_url", "video_url": {"url": "data:video/mp4;base64,<BASE64>"}}
+    ]
+  }],
+  "max_tokens": 1024,
+  "stream": false
+}
+```
+
+官方说明：该输入格式已在国际站完成验证，模型访问权限以账户及 API Key 权限为准；`agnes-3.0-pro` 同样支持此输入（`POST /v1/chat/completions`）。此能力为输入侧视频理解，不同于 `POST /v1/videos` 的视频生成。
 
 ### 价格
 
@@ -2033,7 +2056,7 @@ curl -sS -X POST "https://apihub.agnes-ai.com/v1/videos" \
 
 > Pro 系列为**付费推理模型**，支持文本与图像 URL 输入、工具调用、Thinking 模式、流式输出。
 > 各模型均支持三种端点：Chat Completions `POST /v1/chat/completions`、Responses `POST /v1/responses`、Anthropic 兼容 Messages `POST /v1/messages`。
-> 2.5 Pro 系列上下文窗口 **1M tokens**，最大输出 **65536 tokens**；`agnes-3.0-pro` 官方文档（2026-11-22）标注上下文 **1M tokens**、最大输出 **256K tokens**。
+> 2.5 Pro 系列上下文窗口 **1M tokens**，最大输出 **65536 tokens**；`agnes-3.0-pro` 官方文档（2026-11-22）标注上下文 **1M tokens**、最大输出 **256K tokens**。2026-11-26 官方独立文档页补录 `agnes-3.0-pro` 支持**视频画面输入**：`POST /v1/chat/completions` 的 `messages[].content` 中传 `video_url` 内容块（MP4 Base64 Data URI，详见第十二章 3.0 Flash 的视频理解示例）；价格与规格不变。
 
 | 模型 | 状态 | 输入 Token（未命中缓存） | 输出 Token | Cache hit | 权重 |
 |------|------|------------------------|-----------|-----------|------|
@@ -2043,7 +2066,7 @@ curl -sS -X POST "https://apihub.agnes-ai.com/v1/videos" \
 | `agnes-2.5-pro-alpha` | Alpha（2026-07-24） | $0.45 / M | $0.90 / M | $0.045 / M | Apache 2.0 开源 |
 | `agnes-2.5-pro-theta` | 付费推理（2026-11-08 定价页新增） | $0.10 / M | $0.30 / M | $0.01 / M | Proprietary |
 
-- `agnes-3.0-pro` 为新一代 Pro 模型（智能体工作 / 专业文档分析 / 科学编码 / 长上下文推理），定价页（2026-11-20）与独立文档页（2026-11-22，国际站 + 国内站）均已标注「已正式上线」，此前口径不一致已消除；上下文 1M Token、最大输出 256K Token，账户可用性以控制台为准；官方文档（国际站）https://www.agnes-ai.com/zh-Hans/docs/agnes-30-pro ，（国内站）https://www.agnes-ai.cn/zh-Hans/docs/agnes-30-pro
+- `agnes-3.0-pro` 为新一代 Pro 模型（智能体工作 / 专业文档分析 / 科学编码 / 长上下文推理），定价页（2026-11-20）与独立文档页（2026-11-22，国际站 + 国内站）均已标注「已正式上线」，此前口径不一致已消除；上下文 1M Token、最大输出 256K Token，2026-11-26 官方补录视频理解输入（`video_url` / MP4 Base64 Data URI）；账户可用性以控制台为准；官方文档（国际站）https://www.agnes-ai.com/zh-Hans/docs/agnes-30-pro ，（国内站）https://www.agnes-ai.cn/zh-Hans/docs/agnes-30-pro
 - `agnes-2.5-pro` 是 Alpha 打榜模型的商业化稳定版本，官方权重为闭源；Alpha 权重已在 Hugging Face 以 Apache 2.0 开源
 - 各模型均为付费模型，调用需确认账户已开通对应模型访问权限
 - 输入缓存命中单价为普通输入 Token 单价的 10%

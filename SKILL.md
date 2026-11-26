@@ -1,6 +1,6 @@
 ---
 name: agnes-ai-support
-version: "1.3.12"
+version: "1.3.13"
 description: |
   Agnes AI API 接入支持与问题排查 Skill。帮助新用户完成 Agnes AI API 的接入配置，
   诊断和解决接入过程中遇到的认证、参数、响应、图像生成、视频生成等各类问题。
@@ -14,9 +14,9 @@ description: |
 
 # Agnes AI API 接入支持与问题排查
 
-> **Skill 版本：** v1.3.12
+> **Skill 版本：** v1.3.13
 > **适用工具：** OpenClaw / Claude Code / Claude Desktop / Hermes / Codex / WorkBuddy / Cherry Studio / Opencode / Kimi Work
-> **更新日期：** 2026-11-23
+> **更新日期：** 2026-11-26
 > **官方 Bug 反馈：** https://github.com/AgnesAI-Labs/Agnes-AI/issues
 > **官方进度看板：** https://github.com/users/AgnesAI-Labs/projects/1
 > **官方 Bug 反馈：** https://github.com/AgnesAI-Labs/Agnes-AI/issues
@@ -272,9 +272,20 @@ Agent：（参考 Skill 视频排查指南 → 检查 video_id vs task_id → �
 
 ---
 
-## 0. 重要公告（最新：2026-11-23）
+## 0. 重要公告（最新：2026-11-26）
 
-> 最新公告见下方「📢 官方新模型上线及旧模型下线通知」。以下为模型上线与历史公告，仅作留存。
+> 最新公告见下方「🎞️ Agnes 3.0 Flash / 3.0 Pro 新增视频理解（video_url 输入）」。以下为模型上线与历史公告，仅作留存。
+
+### 🎞️ Agnes 3.0 Flash / 3.0 Pro 新增视频理解（video_url 输入）（2026-11-26 巡检发现）
+
+> **官方文档新增能力**：`agnes-3.0-flash` 与 `agnes-3.0-pro` 的独立文档页（国际站 https://www.agnes-ai.com/zh-Hans/docs/agnes-30-flash 、https://www.agnes-ai.com/zh-Hans/docs/agnes-30-pro ；国内站 https://www.agnes-ai.cn/zh-Hans/docs/agnes-30-flash 、https://www.agnes-ai.cn/zh-Hans/docs/agnes-30-pro ）均已写明 **输入模态为「文本、图像 URL、视频画面（Chat Completions）」**，并新增「视频理解」小节。本地 v1.3.12 及此前版本仅记录「文本 + 图像 URL」输入，本次据官方当前文档补录。
+>
+> - 调用方式：仍在 `POST /v1/chat/completions`，于 `messages[].content` 传入 `{"type": "video_url", "video_url": {"url": "data:video/mp4;base64,<BASE64>"}}` 内容块；官方示例将本地 MP4 文件编码为 Base64 Data URI，可分析短视频画面变化及先后顺序（示例识别黄 → 蓝 → 红）
+> - 官方说明：「该输入格式已在国际站完成验证，模型访问权限以账户及 API Key 权限为准」；国内站文档示例的 Base URL 为 `https://api.agnes-ai.cn/v1`，账户/站点须匹配
+> - 规格与价格不变：`agnes-3.0-flash` 512K 上下文 / 65,536 最大输出，刊例价 `$0.005/$0.05/$0.15`、default 用户现价全 `$0`；`agnes-3.0-pro` 1M 上下文 / 256K 最大输出，刊例价 `$0.01/$0.10/$0.30`（缓存命中/输入/输出，付费）
+> - 模型集合、RPM、订阅计划与既有下线日期（2.5-flash 2026-11-30）均无变化；本次为**新输入模态的文档更新**，非新增模型或改价；视频理解不通过 `POST /v1/videos` 生成视频，二者用途不同
+>
+> 注：本次为 2026-11-26 国际站 + 国内站模型文档交叉核对后的同步，三文件已更新并递增版本至 v1.3.13。
 
 ### 📢 官方新模型上线及旧模型下线通知（2026-11-23 官方通知汇总）
 
@@ -763,7 +774,7 @@ curl https://apihub.agnes-ai.com/v1/chat/completions \
   - `POST /v1/responses`（OpenAI Responses）
   - `POST /v1/messages`（Anthropic 兼容，请求头用 `x-api-key` + `anthropic-version: 2023-06-01`）
 - Context：512K；Max Output：65,536 Token
-- 输入模态：文本 + 图像 URL；输出：文本
+- 输入模态（2026-11-26 官方补录）：文本 + 图像 URL + **视频画面**（`messages[].content` 中 `type: "video_url"`、`video_url.url` 为 MP4 Base64 Data URI，仅 Chat Completions；详见第 0 章视频理解公告）；输出：文本
 - **Thinking 模式**（2.x 系列不支持）：
   - OpenAI 风格：`"chat_template_kwargs": {"enable_thinking": true}`
   - Anthropic 风格：顶层 `"thinking": {"type": "enabled", "budget_tokens": N}`，`budget_tokens` 至少给最终输出留 1/3，否则易撞 `max_tokens` 被截断
@@ -828,7 +839,7 @@ curl https://apihub.agnes-ai.com/v1/chat/completions \
 - 模型 ID：`agnes-3.0-pro`
 - 端点（三选一）：`POST /v1/chat/completions`（`Authorization: Bearer`）、`POST /v1/responses`（`input` 代替 `messages`）、`POST /v1/messages`（`x-api-key` + `anthropic-version: 2023-06-01`）
 - 上下文 **1M Token**、最大输出 **256K Token**（2026-11-22 官方独立文档页补齐；此前本 Skill 记 65,536 输出，以官方文档当前 256K 为准）
-- 输入：文本 + 图像 URL；输出：文本（Reasoning）；支持工具调用、Thinking 模式、流式输出
+- 输入（2026-11-26 官方补录）：文本 + 图像 URL + **视频画面**（Chat Completions 的 `messages[].content` 中传 `video_url` 内容块，MP4 Base64 Data URI；详见第 0 章视频理解公告）；输出：文本（Reasoning）；支持工具调用、Thinking 模式、流式输出
 - 价格：输入缓存命中 `$0.01/M`、输入 `$0.10/M`、输出 `$0.30/M`（与 2.5-pro-beta / theta 同档，低于 2.5-pro）
 - 状态：官方定价页（2026-11-20）与独立文档页（2026-11-22，国际站 + 国内站）均已标注 **「已正式上线」**，此前口径不一致已消除；账户可用性以控制台为准。推理类任务建议 `max_tokens` 给足，响应 `status: incomplete` 时提高后重试；Responses 输出从 `output[].content[].text`（`output_text`）读取，无顶层 `output_text`
 - 官方文档（国际站）：https://www.agnes-ai.com/zh-Hans/docs/agnes-30-pro ；官方文档（国内站）：https://www.agnes-ai.cn/zh-Hans/docs/agnes-30-pro

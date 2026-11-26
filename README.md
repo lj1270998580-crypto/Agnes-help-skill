@@ -2,13 +2,15 @@
 
 > Agnes AI，让世界级 AI 属于每一个人。
 >
-> **当前 Skill 版本：v1.3.12**（2026-11-23 更新）
+> **当前 Skill 版本：v1.3.13**（2026-11-26 更新）
 
 本仓库是 Agnes AI API 的**非官方帮助资源集合**，包含完整 API 文档与通用支持 Skill，帮助开发者快速接入 Agnes AI 全模态 API（文本、图像、视频）。
 
 ---
 
 ## 📢 重要公告
+
+**🎞️ Agnes 3.0 Flash / 3.0 Pro 新增视频理解输入（2026-11-26 巡检发现）**：官方国际站与国内站的 [3.0 Flash](https://www.agnes-ai.com/zh-Hans/docs/agnes-30-flash) / [3.0 Pro](https://www.agnes-ai.com/zh-Hans/docs/agnes-30-pro) 独立文档页均已写明**输入模态为「文本、图像 URL、视频画面（Chat Completions）」**，并新增「视频理解」小节：在 `messages[].content` 中传 `video_url` 内容块（`data:video/mp4;base64,...` MP4 Data URI）即可分析视频画面顺序变化，官方示例识别黄 → 蓝 → 红；官方称该输入格式已在国际站验证，账户权限与计费以控制台/账单为准。模型集合、价格、RPM、订阅与 2.5-flash 下线日期均无变化，本次为新输入模态的文档补录，Skill 版本更新至 **v1.3.13**。
 
 **📢 官方《Agnes 新模型上线及旧模型下线通知》（2026-11-23）**：官方正式确认 **`agnes-3.0-pro`（3.0 Pro 文本模型）与 `agnes-sys1-1.0`（Sys1 1.0 决策模型）已正式上线 API 平台，两款均为付费模型**（3.0 Pro `$0.01/$0.10/$0.30`；Sys1 1.0 输入 `$0.03/M`、输出免费、专用接口 `POST /v1/systemone`）；**`agnes-2.5-flash` 将于 2026-11-30 在国内、国际站正式下线**，请迁移至 `agnes-3.0-flash`。以上状态/价格/日期均已在 v1.3.7–v1.3.10 逐条同步，本次按官方正式通知口径汇总固化，并明确「3.0 Pro / Sys1 1.0 两款均为付费模型」。官方文档已同步：[国际站 overview](https://agnes-ai.com/zh-Hans/docs/overview) / [国内站 overview](https://www.agnes-ai.cn/zh-Hans/docs/overview)。
 
@@ -21,7 +23,7 @@
 **Agnes 3.0 Flash 已上线：面向 Agent 编程与工具驱动任务的新一代文本模型，当前免费！**
 
 - ✅ **所有 Flash 系列模型（文本 / 图像 / 视频）目前全部免费**，仅 Pro 推理系列与 `agnes-video-2.5` 为付费模型
-- ✅ 最新文本模型 `agnes-3.0-flash`：512K 上下文、65,536 最大输出、三端点（Chat Completions / Responses / Anthropic 兼容 Messages）、支持 Thinking 模式
+- ✅ 最新文本模型 `agnes-3.0-flash`：512K 上下文、65,536 最大输出、三端点（Chat Completions / Responses / Anthropic 兼容 Messages）、支持 Thinking 模式；2026-11-26 官方补录**视频理解**输入（`video_url` 内容块 / MP4 Base64 Data URI，`agnes-3.0-pro` 同样支持）
 - ✅ 最新图像模型 `agnes-image-2.5-flash`：整体能力全面超过 2.1 Flash，参数与尺寸完全一致，直接换模型名即可升级
 - ✅ 注册官网 → 生成 KEY → 直接调用
 - ✅ 文本、图像、视频全能适配，模型持续升级
@@ -197,6 +199,7 @@ Headers:
 
 | 日期 | 更新内容 |
 |------|----------|
+| 2026-11-26 | **同步官方 Agnes 3.0 Flash / 3.0 Pro 新增视频理解（video_url 输入）**：国际站 + 国内站独立文档页均已将输入模态补为「文本、图像 URL、视频画面（Chat Completions）」，新增视频理解小节与 MP4 Base64 Data URI 请求示例（黄→蓝→红画面顺序识别，官方称已在国际站验证）；更新 SKILL.md 公告区与第 4 章两模型小节、README 公告区、API 文档 3.0 Flash / Pro 系列章节与文档版本，四处版本更新至 **v1.3.13**；模型集合、价格、RPM、订阅与下线日期均无变化 |
 | 2026-11-23 | **修复 GitHub issues #2 与 #4**：① **#2 frontmatter 非法 YAML**——删除 SKILL.md 第 9 行 `>  触发词` 行首 `>` 并补齐 2 空格缩进，PyYAML `safe_load` 实测通过、description 恢复完整 431 字符（此前严格解析器报 ScannerError、触发词段丢失）；② **#4 国内站 Endpoint 未说明**——按官方国内站 overview / agnes-30-pro 补上原生 Base URL `https://api.agnes-ai.cn/v1`，明确与 `apihub.agnes-ai.cn`（国际站国内网络镜像）的区别及账号/Key 不互通；同步 SKILL.md 域名段落/接入速记/排障/检查清单、README 速记、API 文档基本网址；四处版本更新至 **v1.3.12** |
 | 2026-11-23 | **按官方正式通知汇总固化，明确两款新模型均为付费模型**：官方发布《Agnes 新模型上线及旧模型下线通知》——`agnes-3.0-pro` 文本模型与 `agnes-sys1-1.0` 决策模型已正式上线 API 平台且**两款均为付费模型**，`agnes-2.5-flash` 将于 2026-11-30 在国内、国际站下线并迁移 `agnes-3.0-flash`；状态/价格/日期均已在 v1.3.7–v1.3.10 逐条同步，本次仅按官方正式通知口径汇总并补充「付费模型」定性，无新增模型/改价/日期变更；更新 SKILL.md 公告区与 Sys1 付费定性、README 公告区、API 文档顶部通知；四处版本更新至 **v1.3.11** |
 | 2026-11-22 | **同步官方 agnes-3.0-pro 独立文档页「已正式上线」与规格补齐**：官方独立文档页（国际站 + 国内站）由「即将上线」改为 **「已正式上线」**，与定价页口径一致，此前「定价页已上线、文档页仍写即将上线」的不一致已消除；官方文档补齐 **1M 上下文 / 256K 最大输出**（本地此前记 65,536 输出，以官方文档当前 256K 为准），价格不变（$0.01/$0.10/$0.30）；更新 SKILL.md 公告区/免费模型一览状态/模型选择表/第 4 章 3.0-pro 小节、README 公告区、API 文档顶部说明与第九章 2.5 Pro 系列表；四处版本更新至 **v1.3.10** |
